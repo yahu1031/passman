@@ -1,0 +1,12 @@
+{
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 10,
+    "editor.fontFamily": "Consolas, 'Courier New', monospace",
+    "editor.fontLigatures": true,
+    "editor.fontSize": 16,
+    "font-switcher.fontFamily": "Consolas, DejaVu Sans Mono, monospace",
+    "editor.fontWeight": "600",
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.formatOnPaste": true
+}
