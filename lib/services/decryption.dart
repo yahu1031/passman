@@ -8,9 +8,10 @@ class Decryption {
   );
   final decrypt.Key key = decrypt.Key.fromUtf8(secretPassKey);
   final decrypt.IV iv = decrypt.IV.fromLength(16);
-  String stringDecryption(decrypt.Encrypted encryptedString) {
-    final decrypt.Encrypter decrypter = decrypt.Encrypter(decrypt.AES(key));
-    final String decrypted = decrypter.decrypt(encryptedString, iv: iv);
+  String stringDecryption(String encryptedString) {
+    final decrypt.Encrypter decrypter = decrypt.Encrypter(decrypt.AES(key, iv));
+    final String decrypted =
+        decrypter.decrypt64(encryptedString);
     return decrypted;
   }
 }

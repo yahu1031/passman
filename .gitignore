@@ -1,7 +1,7 @@
 # File created using '.gitignore Generator' for Visual Studio Code: https://bit.ly/vscode-gig
 
-# Created by https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,android,androidstudio,dart,flutter,gradle,linux,macos,vscode
-# Edit at https://www.toptal.com/developers/gitignore?templates=windows,visualstudiocode,android,androidstudio,dart,flutter,gradle,linux,macos,vscode
+# Created by https://www.toptal.com/developers/gitignore/api/windows,vscode,visualstudiocode,macos,linux,gradle,flutter,dart,androidstudio,android
+# Edit at https://www.toptal.com/developers/gitignore?templates=windows,vscode,visualstudiocode,macos,linux,gradle,flutter,dart,androidstudio,android
 
 ### Android ###
 # Built application files
@@ -66,7 +66,7 @@ captures/
 .cxx/
 
 # Google Services (e.g. APIs or Firebase)
-# google-services.json
+google-services.json
 
 # Freeline
 freeline.py
@@ -391,7 +391,7 @@ fabric.properties
 
 !/gradle/wrapper/gradle-wrapper.jar
 
-# End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,android,androidstudio,dart,flutter,gradle,linux,macos,vscode
+# End of https://www.toptal.com/developers/gitignore/api/windows,vscode,visualstudiocode,macos,linux,gradle,flutter,dart,androidstudio,android
 
 # Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
 

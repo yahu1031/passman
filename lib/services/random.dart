@@ -1,17 +1,12 @@
 import 'dart:math';
-import 'package:flutter/material.dart';
 
-class RandomNumberGenerator extends ChangeNotifier {
+class RandomNumberGenerator {
   final Random _rnd = Random();
-  String _randomString;
   static const String _chars =
-      '0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
-  String get getString {
-    return _randomString;
-  }
+      '0123456789AaBbCcDdEeFfGgHhIiJjKkMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
 
-  void randomStringGenerator(int length) {
-    _randomString = String.fromCharCodes(
+  String randomStringGenerator(int length) {
+    return String.fromCharCodes(
       Iterable<int>.generate(
         length,
         (_) => _chars.codeUnitAt(
@@ -19,6 +14,5 @@ class RandomNumberGenerator extends ChangeNotifier {
         ),
       ),
     );
-    notifyListeners();
   }
 }

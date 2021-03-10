@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,7 +18,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   void platforms() {
     Platform.isAndroid || Platform.isIOS
-        ? Navigator.pushReplacementNamed(context, '/mobile')
+        ? Navigator.pushReplacementNamed(context, '/state')
         : (Platform.isWindows ||
                 Platform.isMacOS ||
                 Platform.isLinux ||
@@ -29,6 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    Firebase.initializeApp();
     Timer(
       const Duration(seconds: 3),
       () => platforms(),
