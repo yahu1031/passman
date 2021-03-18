@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/Components/theme_color.dart';
@@ -14,6 +15,7 @@ import 'package:passman/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     MyApp(),
   );
@@ -21,10 +23,9 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        return OrientationBuilder(
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) =>
+            OrientationBuilder(
           builder: (BuildContext context, Orientation orientation) {
             SizeConfig().init(constraints, orientation);
             return MaterialApp(
@@ -65,8 +66,6 @@ class MyApp extends StatelessWidget {
               },
             );
           },
-        );
-      },
+        ),
     );
-  }
 }

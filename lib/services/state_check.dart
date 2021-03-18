@@ -24,7 +24,7 @@ class _StateCheckState extends State<StateCheck> {
           child: StreamBuilder<dynamic>(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-              final GoogleSignInProvider provider =
+              GoogleSignInProvider provider =
                   Provider.of<GoogleSignInProvider>(context);
               if (provider.isSigningIn) {
                 return const Center(

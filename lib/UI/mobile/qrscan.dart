@@ -16,7 +16,7 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 class QRScan extends StatefulWidget {
-  const QRScan({Key key}) : super(key: key);
+  const QRScan({Key? key}) : super(key: key);
   static const String id = '/qrcode';
   @override
   _QRScanState createState() => _QRScanState();
@@ -24,18 +24,18 @@ class QRScan extends StatefulWidget {
 
 class _QRScanState extends State<QRScan> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  Barcode result;
-  QRViewController controller;
+  late Barcode result;
+  late QRViewController controller;
   bool flash = false;
   final Decryption decryption = Decryption();
   final RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator();
-  String generatedString;
+  late String generatedString;
   final Logger logger = Logger(
     printer: PrettyPrinter(methodCount: 0),
   );
   // ConnectivityResult _connectionStatus = ConnectivityResult.none;
   final Connectivity _connectivity = Connectivity();
-  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
   ConnectivityResult _connectionStatus = ConnectivityResult.none;
 
   Future<void> initConnectivity() async {
@@ -73,7 +73,7 @@ class _QRScanState extends State<QRScan> {
 
   @override
   void dispose() {
-    controller?.dispose();
+    controller.dispose();
     _connectivitySubscription.cancel();
     super.dispose();
   }
@@ -88,8 +88,7 @@ class _QRScanState extends State<QRScan> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       body: SafeArea(
         child: Center(
           child: _connectionStatus != ConnectivityResult.none
@@ -110,7 +109,7 @@ class _QRScanState extends State<QRScan> {
                         right: 10,
                         child: IconButton(
                           onPressed: () async {
-                            await controller?.toggleFlash();
+                            await controller.toggleFlash();
                             setState(
                               () {
                                 flash = !flash;
@@ -118,17 +117,17 @@ class _QRScanState extends State<QRScan> {
                             );
                           },
                           icon: FutureBuilder<bool>(
-                            future: controller?.getFlashStatus(),
+                            future:
+                                  controller.getFlashStatus() as Future<bool>?,
                             builder: (BuildContext context,
-                                AsyncSnapshot<bool> snapshot) {
-                              return Icon(
+                                AsyncSnapshot<bool> snapshot) =>
+                                  Icon(
                                 flash ? TablerIcons.bulb : TablerIcons.bulb_off,
                                 color: flash
                                     ? Colors.white
-                                    : Colors.grey[300].withOpacity(0.3),
+                                    : Colors.grey[300]!.withOpacity(0.3),
                                 size: 10 * SizeConfig.imageSizeMultiplier,
-                              );
-                            },
+                              ),
                           ),
                         )),
                     Positioned(
@@ -163,15 +162,13 @@ class _QRScanState extends State<QRScan> {
         ),
       ),
     );
-  }
 
   Future<void> showCode(Barcode result) async {
-    final Decryption decryption = Decryption();
-    final String code = decryption.stringDecryption(result.code);
+    Decryption decryption = Decryption();
+    String code = decryption.stringDecryption(result.code.toString());
     return showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
+      builder: (BuildContext context) => AlertDialog(
           title: Text(
             'Code',
             style: GoogleFonts.lexendDeca(
@@ -188,7 +185,7 @@ class _QRScanState extends State<QRScan> {
           actions: <Widget>[
             TextButton(
               onPressed: () async {
-                await controller?.resumeCamera();
+                await controller.resumeCamera();
                 Navigator.pop(context);
               },
               child: Text(
@@ -199,8 +196,7 @@ class _QRScanState extends State<QRScan> {
               ),
             ),
           ],
-        );
-      },
+        ),
     );
   }
 
@@ -212,7 +208,7 @@ class _QRScanState extends State<QRScan> {
       setState(() {
         result = scanData;
       });
-      await controller?.pauseCamera();
+      await controller.pauseCamera();
       showCode(result);
     });
   }

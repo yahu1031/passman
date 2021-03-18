@@ -10,8 +10,8 @@ class Encryption {
   final encrypt.IV iv = encrypt.IV.fromLength(16);
 
   encrypt.Encrypted stringEncryption(String generatedString) {
-    final encrypt.Encrypter encrypter = encrypt.Encrypter(encrypt.AES(key, iv));
-    final encrypt.Encrypted _encryptData = encrypter.encrypt(generatedString);
+    encrypt.Encrypter encrypter = encrypt.Encrypter(encrypt.AES(key));
+    encrypt.Encrypted _encryptData = encrypter.encrypt(generatedString, iv: iv);
     return _encryptData;
   }
 }

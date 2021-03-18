@@ -15,27 +15,27 @@
       "type": "dart",
       "flutterMode": "debug",
     },
-    // {
-    //   "name": "iPhone",
-    //   "program": "lib/main.dart",
-    //   "request": "launch",
-    //   "type": "dart",
-    //   "deviceId": "iphone",
-    //   "flutterMode": "debug"
-    // },
     {
-      "name": "Windows",
+      "name": "Web",
       "program": "lib/main.dart",
       "request": "launch",
       "type": "dart",
-      "deviceId": "windows",
-      "flutterMode": "debug"
-    }
+      "flutterMode": "debug",
+      "args": ["-d", "edge","--web-port", "8000"],
+    },
+    // {
+    //   "name": "Windows",
+    //   "program": "lib/main.dart",
+    //   "request": "launch",
+    //   "type": "dart",
+    //   "deviceId": "windows",
+    //   "flutterMode": "debug"
+    // }
   ],
   "compounds": [
     {
       "name": "All Devices",
-      "configurations": ["Android", "Windows"]
+      "configurations": ["Android", "Web"]
     }
   ]
 }

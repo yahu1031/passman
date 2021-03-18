@@ -1,12 +1,10 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
-//Copy this CustomPainter code to the Bottom of the File
 class GoogleIcon extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final Path path_0 = Path();
+    Path path_0 = Path();
     path_0.moveTo(size.width * 0.4279410, size.height * 0.5262506);
     path_0.arcToPoint(Offset(size.width * 0.2629061, size.height * 0.5262506),
         radius:
@@ -52,11 +50,11 @@ class GoogleIcon extends CustomPainter {
         size.height * 0.5262506);
     path_0.close();
 
-    final Paint paint0Fill = Paint()..style = PaintingStyle.fill;
+    Paint paint0Fill = Paint()..style = PaintingStyle.fill;
     paint0Fill.color = const Color(0xffea4335).withOpacity(1.0);
     canvas.drawPath(path_0, paint0Fill);
 
-    final Path path_1 = Path();
+    Path path_1 = Path();
     path_1.moveTo(size.width * 0.6059561, size.height * 0.5262506);
     path_1.arcToPoint(Offset(size.width * 0.4409212, size.height * 0.5262506),
         radius:
@@ -102,11 +100,11 @@ class GoogleIcon extends CustomPainter {
         size.height * 0.5262506);
     path_1.close();
 
-    final Paint paint1Fill = Paint()..style = PaintingStyle.fill;
+    Paint paint1Fill = Paint()..style = PaintingStyle.fill;
     paint1Fill.color = const Color(0xfffbbc05).withOpacity(1.0);
     canvas.drawPath(path_1, paint1Fill);
 
-    final Path path_2 = Path();
+    Path path_2 = Path();
     path_2.moveTo(size.width * 0.7765539, size.height * 0.2914601);
     path_2.lineTo(size.width * 0.7765539, size.height * 0.7400856);
     path_2.cubicTo(
@@ -200,22 +198,22 @@ class GoogleIcon extends CustomPainter {
         size.height * 0.5271519);
     path_2.close();
 
-    final Paint paint2Fill = Paint()..style = PaintingStyle.fill;
+    Paint paint2Fill = Paint()..style = PaintingStyle.fill;
     paint2Fill.color = const Color(0xff4285f4).withOpacity(1.0);
     canvas.drawPath(path_2, paint2Fill);
 
-    final Path path_3 = Path();
+    Path path_3 = Path();
     path_3.moveTo(size.width * 0.8331108, size.height * 0.02850383);
     path_3.lineTo(size.width * 0.8331108, size.height * 0.7608157);
     path_3.lineTo(size.width * 0.7978787, size.height * 0.7608157);
     path_3.lineTo(size.width * 0.7978787, size.height * 0.02850383);
     path_3.close();
 
-    final Paint paint3Fill = Paint()..style = PaintingStyle.fill;
+    Paint paint3Fill = Paint()..style = PaintingStyle.fill;
     paint3Fill.color = const Color(0xff34a853).withOpacity(1.0);
     canvas.drawPath(path_3, paint3Fill);
 
-    final Path path_4 = Path();
+    Path path_4 = Path();
     path_4.moveTo(size.width * 0.9704050, size.height * 0.6084948);
     path_4.lineTo(size.width * 0.9984424, size.height * 0.6652772);
     path_4.arcToPoint(Offset(size.width * 0.9299065, size.height * 0.7760252),
@@ -279,11 +277,11 @@ class GoogleIcon extends CustomPainter {
         clockwise: false);
     path_4.close();
 
-    final Paint paint4Fill = Paint()..style = PaintingStyle.fill;
+    Paint paint4Fill = Paint()..style = PaintingStyle.fill;
     paint4Fill.color = const Color(0xffea4335).withOpacity(1.0);
     canvas.drawPath(path_4, paint4Fill);
 
-    final Path path_5 = Path();
+    Path path_5 = Path();
     path_5.moveTo(size.width * 0.1295431, size.height * 0.4612438);
     path_5.lineTo(size.width * 0.1295431, size.height * 0.3552276);
     path_5.lineTo(size.width * 0.2471443, size.height * 0.3552276);
@@ -352,13 +350,11 @@ class GoogleIcon extends CustomPainter {
         size.height * 0.4611311);
     path_5.close();
 
-    final Paint paint5Fill = Paint()..style = PaintingStyle.fill;
+    Paint paint5Fill = Paint()..style = PaintingStyle.fill;
     paint5Fill.color = const Color(0xff4285f4).withOpacity(1.0);
     canvas.drawPath(path_5, paint5Fill);
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
-  }
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

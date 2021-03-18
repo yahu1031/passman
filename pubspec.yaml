@@ -4,31 +4,29 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.10.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
-  cloud_firestore:
-  connectivity_plus:
-  cupertino_icons:
-  encrypt:
-  firebase_auth:
-  firebase_core: ^1.0.0
-  firebase_storage:
+  cloud_firestore: ^1.0.1
+  connectivity_plus: ^1.0.0
+  cupertino_icons: ^1.0.2
+  encrypt: ^5.0.0-beta.1
+  firebase_auth: ^1.0.1
+  firebase_core: ^1.0.1
+  firebase_storage: ^8.0.0
   flutter:
     sdk: flutter
-  flutter_tabler_icons:
-  google_fonts:
-  google_sign_in:
-  image_picker:
-  lint:
-  logger:
-  lottie:
-  permission_handler:
-  pinput:
-  provider:
-  qr_code_scanner:
-  qr_flutter:
-  responsive_framework:
+  flutter_tabler_icons: ^1.0.3-rc.1
+  google_fonts: ^2.0.0
+  google_sign_in: ^5.0.1
+  image_picker: ^0.7.3
+  logger: ^1.0.0
+  lottie: ^1.0.1
+  permission_handler: ^6.1.1
+  pinput: ^1.2.0
+  provider: ^5.0.0
+  qr_code_scanner: ^0.4.0-nullsafety.0
+  qr_flutter: ^4.0.0
 
 dev_dependencies:
   flutter_test:

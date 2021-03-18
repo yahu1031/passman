@@ -11,7 +11,7 @@ import 'package:pinput/pin_put/pin_put.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class Desktop extends StatefulWidget {
-  const Desktop({Key key}) : super(key: key);
+  const Desktop({Key? key}) : super(key: key);
   @override
   _DesktopState createState() => _DesktopState();
 }
@@ -28,10 +28,10 @@ class _DesktopState extends State<Desktop> with TickerProviderStateMixin {
   final Logger logger = Logger(
     printer: PrettyPrinter(methodCount: 0),
   );
-  AnimationController _controller;
-  String generatedString, encryptedString;
+  late AnimationController _controller;
+  late String generatedString, encryptedString;
   bool isPin = false, stringMatched = false;
-  Timer timer;
+  late Timer timer;
   void timerFunc() {
     timer = Timer.periodic(const Duration(seconds: 100), (Timer timer) {
       setState(() {
@@ -59,8 +59,14 @@ class _DesktopState extends State<Desktop> with TickerProviderStateMixin {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          elevation: 0,
+        ),
       body: Center(
         child: Container(
           height: 500,
@@ -154,5 +160,4 @@ class _DesktopState extends State<Desktop> with TickerProviderStateMixin {
         ),
       ),
     );
-  }
 }

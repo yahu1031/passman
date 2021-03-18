@@ -3,21 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:passman/Components/size_config.dart';
 
 class Marker extends StatelessWidget {
-  const Marker({this.dx, this.dy});
+  const Marker({
+    required this.dx,
+    required this.dy,
+  });
   final double dx;
   final double dy;
 
   @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      top: dy - 5 * SizeConfig.widthMultiplier,
+  Widget build(BuildContext context) => Positioned(
+        top: dy - 5 * SizeConfig.widthMultiplier,
       left: dx - 5 * SizeConfig.widthMultiplier,
       child: CustomPaint(
         size: const Size(50.0, 50.0),
         painter: DotMarker(),
       ),
     );
-  }
 }
 
 class DotMarker extends CustomPainter {
@@ -37,7 +38,5 @@ class DotMarker extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
-  }
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

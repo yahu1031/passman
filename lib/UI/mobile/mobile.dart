@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:logger/logger.dart';
 
 class Mobile extends StatefulWidget {
-  const Mobile({Key key}) : super(key: key);
+  const Mobile({Key? key}) : super(key: key);
   @override
   _MobileState createState() => _MobileState();
 }
@@ -22,6 +22,8 @@ class _MobileState extends State<Mobile> {
   );
   @override
   Widget build(BuildContext context) {
+    GoogleSignInProvider provider =
+        Provider.of<GoogleSignInProvider>(context, listen: false);
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -32,9 +34,6 @@ class _MobileState extends State<Mobile> {
                 children: <Widget>[
                   ElevatedButton(
                     onPressed: () {
-                      final GoogleSignInProvider provider =
-                          Provider.of<GoogleSignInProvider>(context,
-                              listen: false);
                       provider.login();
                     },
                     child: Row(

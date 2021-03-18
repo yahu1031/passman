@@ -11,7 +11,7 @@ import 'package:passman/Components/size_config.dart';
 import 'package:passman/models/points.dart';
 
 class PassmanSignup extends StatefulWidget {
-  const PassmanSignup({Key key}) : super(key: key);
+  const PassmanSignup({Key? key}) : super(key: key);
   @override
   _PassmanSignupState createState() => _PassmanSignupState();
 }
@@ -20,14 +20,20 @@ class _PassmanSignupState extends State<PassmanSignup> {
   Logger loggerNoStack = Logger(
     printer: PrettyPrinter(methodCount: 0),
   );
-  File _image;
+  late File _image;
   final ImagePicker picker = ImagePicker();
   List<Points> password = <Points>[];
-  PickedFile pickedFile;
+  late PickedFile _pickedFile;
+
+  PickedFile get pickedFile => _pickedFile;
+
+  set pickedFile(PickedFile pickedFile) {
+    _pickedFile = pickedFile;
+  }
 
   Future<void> _pickImage() async {
-    await password.removeRange(0, password.length);
-    pickedFile = await picker.getImage(source: ImageSource.gallery);
+    password.removeRange(0, password.length);
+    pickedFile = (await picker.getImage(source: ImageSource.gallery))!;
 
     setState(() {
       password.length;
@@ -40,8 +46,7 @@ class _PassmanSignupState extends State<PassmanSignup> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       body: SafeArea(
         child: Stack(
           children: <Widget>[
@@ -52,9 +57,9 @@ class _PassmanSignupState extends State<PassmanSignup> {
                     ? <Widget>[
                         GestureDetector(
                           onPanDown: (DragDownDetails details) {
-                            final double clickX =
+                            double clickX =
                                 details.localPosition.dx.toDouble();
-                            final double clickY =
+                            double clickY =
                                 details.localPosition.dy.toDouble();
                             password.add(
                               Points(
@@ -77,7 +82,7 @@ class _PassmanSignupState extends State<PassmanSignup> {
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                     width: 3,
-                                    color: Colors.blue[400],
+                                    color: Colors.blue[400]!,
                                   ),
                                   borderRadius: BorderRadius.circular(7),
                                   image: DecorationImage(
@@ -186,5 +191,4 @@ class _PassmanSignupState extends State<PassmanSignup> {
         ),
       ),
     );
-  }
 }

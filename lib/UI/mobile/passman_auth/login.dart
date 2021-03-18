@@ -7,7 +7,7 @@ import 'package:passman/Components/size_config.dart';
 import 'package:passman/models/points.dart';
 
 class PassmanLogin extends StatefulWidget {
-  const PassmanLogin({Key key}) : super(key: key);
+  const PassmanLogin({Key? key}) : super(key: key);
   @override
   _PassmanLoginState createState() => _PassmanLoginState();
 }
@@ -17,9 +17,9 @@ class _PassmanLoginState extends State<PassmanLogin> {
     printer: PrettyPrinter(methodCount: 0),
   );
   List<Points> password = <Points>[];
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       body: SafeArea(
         child: Stack(
           children: <Widget>[
@@ -29,8 +29,8 @@ class _PassmanLoginState extends State<PassmanLogin> {
                 children: <Widget>[
                   GestureDetector(
                     onPanDown: (DragDownDetails details) {
-                      final double clickX = details.localPosition.dx.toDouble();
-                      final double clickY = details.localPosition.dy.toDouble();
+                      double clickX = details.localPosition.dx.toDouble();
+                        double clickY = details.localPosition.dy.toDouble();
                       password.add(
                         Points(
                           clickX.toDouble(),
@@ -53,7 +53,7 @@ class _PassmanLoginState extends State<PassmanLogin> {
                           decoration: BoxDecoration(
                             border: Border.all(
                               width: 3,
-                              color: Colors.blue[400],
+                              color: Colors.blue[400]!,
                             ),
                             borderRadius: BorderRadius.circular(7),
                             image: DecorationImage(
@@ -137,5 +137,4 @@ class _PassmanLoginState extends State<PassmanLogin> {
         ),
       ),
     );
-  }
 }

@@ -1,36 +1,41 @@
 import 'dart:async';
-import 'dart:io' show Platform;
-
-import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
-import 'package:passman/Components/assets.dart';
+import 'package:logger/logger.dart';
 import 'package:passman/Components/size_config.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key key}) : super(key: key);
+  const SplashScreen({Key? key}) : super(key: key);
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final Logger logger = Logger(
+    printer: PrettyPrinter(methodCount: 0),
+  );
   void platforms() {
-    Platform.isAndroid || Platform.isIOS
-        ? Navigator.pushReplacementNamed(context, '/state')
-        : (Platform.isWindows ||
-                Platform.isMacOS ||
-                Platform.isLinux ||
-                Platform.isFuchsia)
-            ? Navigator.pushReplacementNamed(context, '/desktop')
-            : Navigator.pushReplacementNamed(context, '/web');
+    try {
+      if (defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS)
+        Navigator.pushReplacementNamed(context, '/state');
+      else if (kIsWeb)
+        Navigator.pushReplacementNamed(context, '/web');
+      else if (defaultTargetPlatform == TargetPlatform.windows ||
+          defaultTargetPlatform == TargetPlatform.macOS ||
+          defaultTargetPlatform == TargetPlatform.linux ||
+          defaultTargetPlatform == TargetPlatform.fuchsia)
+        Navigator.pushReplacementNamed(context, '/desktop');
+    } catch (e) {
+      logger.e(e.toString());
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    Firebase.initializeApp();
     Timer(
       const Duration(seconds: 3),
       () => platforms(),
@@ -38,29 +43,13 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Lottie.asset(
-              LottieFiles.fingerprint,
-              repeat: false,
-              animate: true,
-              height: 50 * SizeConfig.imageSizeMultiplier,
-            ),
-            Text(
-              'Password Manager',
-              style: GoogleFonts.poppins(
-                fontSize: 5.0 * SizeConfig.textMultiplier,
-                color: Colors.black,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
+  Widget build(BuildContext context) => Scaffold(
+        body: Center(
+          child: Image.asset(
+            'assets/images/logo.png',
+            height: 7 * SizeConfig.imageSizeMultiplier,
+            filterQuality: FilterQuality.none,
+          ),
         ),
-      ),
-    );
-  }
+      );
 }

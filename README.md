@@ -1,5 +1,9 @@
-# installer
+<span style="font-family: Quicksand;">
 
-A new Flutter project for [Flutter](https://flutter.dev). 
+<h1 align="center">Password Manager</h1>
 
-## Still in development
+A new Flutter project for storing passwords safely.
+
+<h2 align="center">Still in development</h2>
+
+</span>

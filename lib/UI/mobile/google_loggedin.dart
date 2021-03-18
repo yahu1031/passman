@@ -8,13 +8,13 @@ import 'package:passman/services/authentication.dart';
 import 'package:provider/provider.dart';
 
 class GoogleLoggedInScreen extends StatefulWidget {
-  const GoogleLoggedInScreen({Key key}) : super(key: key);
+  const GoogleLoggedInScreen({Key? key}) : super(key: key);
   @override
   _GoogleLoggedInScreenState createState() => _GoogleLoggedInScreenState();
 }
 
 class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
-  TapGestureRecognizer _loginTapGesture, _signupTapGesture;
+  late TapGestureRecognizer _loginTapGesture, _signupTapGesture;
   Logger loggerNoStack = Logger(
     printer: PrettyPrinter(methodCount: 0),
   );
@@ -37,7 +37,8 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final GoogleSignInProvider provider =
+    String token;
+    GoogleSignInProvider provider =
         Provider.of<GoogleSignInProvider>(context, listen: false);
     return Scaffold(
       body: SafeArea(
@@ -79,14 +80,17 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
             Positioned(
               top: 10,
               left: 10,
-              child: Tooltip(
-                message: provider.getCurrentUser().toUpperCase(),
-                child: CircleAvatar(
-                  backgroundImage: provider.getUserImage(),
-                  foregroundColor: Colors.transparent,
-                  backgroundColor: Colors.transparent,
-                  foregroundImage: provider.getUserImage(),
-                  minRadius: 6 * SizeConfig.imageSizeMultiplier,
+              child: GestureDetector(
+                onDoubleTap: () => provider.logout(),
+                child: Tooltip(
+                  message: provider.getCurrentUser().toUpperCase(),
+                  child: CircleAvatar(
+                    backgroundImage: provider.getUserImage() as ImageProvider,
+                    foregroundColor: Colors.transparent,
+                    backgroundColor: Colors.transparent,
+                    foregroundImage: provider.getUserImage() as ImageProvider,
+                    minRadius: 6 * SizeConfig.imageSizeMultiplier,
+                  ),
                 ),
               ),
             ),
