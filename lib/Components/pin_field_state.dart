@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pinput/pin_put/pin_put.dart';
+import 'package:passman/Components/pin_field.dart';
 
-class PinPutState extends State<PinPut>
+class PinFieldState extends State<PinField>
     with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   TextEditingController? _controller;
   FocusNode? _focusNode;

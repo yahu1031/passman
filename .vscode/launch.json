@@ -21,7 +21,7 @@
       "request": "launch",
       "type": "dart",
       "flutterMode": "debug",
-      "args": ["-d", "edge","--web-port", "8000"],
+      "args": ["-d", "edge","--web-port", "1031"],
     },
     // {
     //   "name": "Windows",

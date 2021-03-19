@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/Components/theme_color.dart';
 import 'package:passman/UI/desktop/desktop.dart';
-import 'package:passman/UI/mobile/google_loggedin.dart';
+import 'package:passman/UI/google_loggedin.dart';
 import 'package:passman/UI/mobile/mobile.dart';
 import 'package:passman/UI/mobile/passman_auth/login.dart';
 import 'package:passman/UI/mobile/passman_auth/signup.dart';
@@ -14,7 +14,7 @@ import 'package:passman/services/state_check.dart';
 import 'package:passman/splash_screen.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  await WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(
     MyApp(),

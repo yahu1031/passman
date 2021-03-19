@@ -20,30 +20,25 @@ class _PassmanSignupState extends State<PassmanSignup> {
   Logger loggerNoStack = Logger(
     printer: PrettyPrinter(methodCount: 0),
   );
-  late File _image;
+  File? _image;
   final ImagePicker picker = ImagePicker();
   List<Points> password = <Points>[];
-  late PickedFile _pickedFile;
+  PickedFile? pickedFile;
 
-  PickedFile get pickedFile => _pickedFile;
 
-  set pickedFile(PickedFile pickedFile) {
-    _pickedFile = pickedFile;
-  }
+Future<void> _pickImage() async {
+  password.removeRange(0, password.length);
+  pickedFile = (await picker.getImage(source: ImageSource.gallery))!;
 
-  Future<void> _pickImage() async {
-    password.removeRange(0, password.length);
-    pickedFile = (await picker.getImage(source: ImageSource.gallery))!;
-
-    setState(() {
-      password.length;
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        loggerNoStack.e('No image selected.');
-      }
-    });
-  }
+  setState(() {
+    password.length;
+    if (pickedFile != null) {
+      _image = File(pickedFile!.path);
+    } else {
+      loggerNoStack.e('No image selected.');
+    }
+  });
+}
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -88,7 +83,7 @@ class _PassmanSignupState extends State<PassmanSignup> {
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
                                     image: Image(
-                                      image: FileImage(_image),
+                                      image: FileImage(_image!),
                                     ).image,
                                   ),
                                 ),

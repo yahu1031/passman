@@ -163,9 +163,9 @@ class _QRScanState extends State<QRScan> {
       ),
     );
 
-  Future<void> showCode(Barcode result) async {
+  Future<void> showCode(Barcode? result) async {
     Decryption decryption = Decryption();
-    String code = decryption.stringDecryption(result.code.toString());
+    String code = decryption.stringDecryption(result!.code.toString());
     return showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -177,7 +177,7 @@ class _QRScanState extends State<QRScan> {
             ),
           ),
           content: Text(
-            (result != null) ? code : 'Scan a code',
+            (result.code.toString().isEmpty) ? code : 'Scan the code',
             style: GoogleFonts.lexendDeca(
               fontSize: 3 * SizeConfig.textMultiplier,
             ),

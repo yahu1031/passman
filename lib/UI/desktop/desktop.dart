@@ -7,8 +7,9 @@ import 'package:logger/logger.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/services/encryption.dart';
 import 'package:passman/services/random.dart';
-import 'package:pinput/pin_put/pin_put.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:passman/Components/pin_field.dart';
+
 
 class Desktop extends StatefulWidget {
   const Desktop({Key? key}) : super(key: key);
@@ -91,7 +92,7 @@ class _DesktopState extends State<Desktop> with TickerProviderStateMixin {
                   ),
                 ),
                 if (!stringMatched)
-                  PinPut(
+                  PinField(
                     autofocus: true,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     fieldsAlignment: MainAxisAlignment.spaceAround,

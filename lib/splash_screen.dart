@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:lottie/lottie.dart';
 import 'package:passman/Components/size_config.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -18,16 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   );
   void platforms() {
     try {
-      if (defaultTargetPlatform == TargetPlatform.android ||
-          defaultTargetPlatform == TargetPlatform.iOS)
         Navigator.pushReplacementNamed(context, '/state');
-      else if (kIsWeb)
-        Navigator.pushReplacementNamed(context, '/web');
-      else if (defaultTargetPlatform == TargetPlatform.windows ||
-          defaultTargetPlatform == TargetPlatform.macOS ||
-          defaultTargetPlatform == TargetPlatform.linux ||
-          defaultTargetPlatform == TargetPlatform.fuchsia)
-        Navigator.pushReplacementNamed(context, '/desktop');
     } catch (e) {
       logger.e(e.toString());
     }
@@ -45,10 +36,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Center(
-          child: Image.asset(
-            'assets/images/logo.png',
-            height: 7 * SizeConfig.imageSizeMultiplier,
-            filterQuality: FilterQuality.none,
+          child: Lottie.asset(
+            'assets/lottie/fingerprint.json',
+            height: 10 * SizeConfig.imageSizeMultiplier,
           ),
         ),
       );
