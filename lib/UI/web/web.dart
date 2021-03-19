@@ -6,8 +6,8 @@ import 'package:logger/logger.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/services/authentication.dart';
 import 'package:passman/services/encryption.dart';
+import 'package:passman/Components/pin_field.dart';
 import 'package:passman/services/random.dart';
-import 'package:pinput/pin_put/pin_put.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -91,7 +91,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                       ),
                     ),
                     if (!stringMatched)
-                      PinPut(
+                      PinField(
                         autofocus: true,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         fieldsAlignment: MainAxisAlignment.spaceAround,
