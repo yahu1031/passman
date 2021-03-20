@@ -1,11 +1,12 @@
 {
-    "name": "passman",
+    "name": "Password Manager",
     "short_name": "passman",
+    "title": "Password Manager",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Password Manager, Stores your all passwords. No one knows your passwords 😎. Hide from everyone, sometimes from us and you.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:logger/logger.dart';
-import 'package:lottie/lottie.dart';
 import 'package:passman/Components/size_config.dart';
+import 'package:passman/UI/web/web_google_logged_in.dart';
 import 'package:passman/services/authentication.dart';
 import 'package:provider/provider.dart';
 
@@ -167,22 +167,9 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
                       ],
                     ),
                   ),
-                  // Positioned(
-                  //   bottom: 20,
-                  //   child: IconButton(
-                  //     icon: const Icon(TablerIcons.logout),
-                  //     onPressed: () {
-                  //       provider.logout();
-                  //     },
-                  //   ),
-                  // ),
                 ],
               )
-            : Center(
-                child: Lottie.asset(
-                  'assets/lottie/google.json',
-                ),
-              ),
+            : WebGoogleLoggedin(),
       ),
     );
   }

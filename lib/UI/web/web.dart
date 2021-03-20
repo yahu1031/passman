@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:logger/logger.dart';
+import 'package:lottie/lottie.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/services/authentication.dart';
 import 'package:passman/services/encryption.dart';
@@ -163,10 +164,10 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
           Positioned(
             top: 20,
             left: 20,
-            child: Image.asset(
-              'assets/images/logo.png',
-              height: 9 * SizeConfig.imageSizeMultiplier,
-              filterQuality: FilterQuality.none,
+            child: Lottie.asset(
+              'assets/lottie/fingerprint.json',
+              height: 10 * SizeConfig.imageSizeMultiplier,
+              reverse: true,
             ),
           ),
         ],

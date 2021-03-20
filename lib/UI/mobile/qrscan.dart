@@ -25,7 +25,6 @@ class QRScan extends StatefulWidget {
 class _QRScanState extends State<QRScan> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   late Barcode result;
-  late QRViewController controller;
   bool flash = false;
   final Decryption decryption = Decryption();
   final RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator();
@@ -37,6 +36,7 @@ class _QRScanState extends State<QRScan> {
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
   ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  QRViewController? controller;
 
   Future<void> initConnectivity() async {
     ConnectivityResult result;
@@ -65,15 +65,15 @@ class _QRScanState extends State<QRScan> {
   @override
   void initState() {
     super.initState();
+  // controller = QRViewController;
     initConnectivity();
-
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    controller!.dispose();
     _connectivitySubscription.cancel();
     super.dispose();
   }
@@ -82,34 +82,33 @@ class _QRScanState extends State<QRScan> {
   void reassemble() {
     super.reassemble();
     if (Platform.isAndroid) {
-      controller.pauseCamera();
-    }
-    controller.resumeCamera();
+      controller!.pauseCamera();
+    } else if (Platform.isIOS) controller!.resumeCamera();
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: _connectionStatus != ConnectivityResult.none
-              ? Stack(
-                  children: <Widget>[
-                    QRView(
-                      key: qrKey,
-                      onQRViewCreated: _onQRViewCreated,
-                      overlay: QrScannerOverlayShape(
-                        borderRadius: 10,
-                        borderLength: 30,
-                        borderWidth: 10,
-                        cutOutSize: scanArea,
+        body: SafeArea(
+          child: Center(
+            child: _connectionStatus != ConnectivityResult.none
+                ? Stack(
+                    children: <Widget>[
+                      QRView(
+                        key: qrKey,
+                        onQRViewCreated: _onQRViewCreated,
+                        overlay: QrScannerOverlayShape(
+                          borderRadius: 10,
+                          borderLength: 30,
+                          borderWidth: 10,
+                          cutOutSize: scanArea,
+                        ),
                       ),
-                    ),
-                    Positioned(
+                      Positioned(
                         top: 10,
                         right: 10,
                         child: IconButton(
                           onPressed: () async {
-                            await controller.toggleFlash();
+                            await controller!.toggleFlash();
                             setState(
                               () {
                                 flash = !flash;
@@ -118,50 +117,51 @@ class _QRScanState extends State<QRScan> {
                           },
                           icon: FutureBuilder<bool>(
                             future:
-                                  controller.getFlashStatus() as Future<bool>?,
+                                controller!.getFlashStatus() as Future<bool>?,
                             builder: (BuildContext context,
-                                AsyncSnapshot<bool> snapshot) =>
-                                  Icon(
-                                flash ? TablerIcons.bulb : TablerIcons.bulb_off,
-                                color: flash
-                                    ? Colors.white
-                                    : Colors.grey[300]!.withOpacity(0.3),
-                                size: 10 * SizeConfig.imageSizeMultiplier,
-                              ),
+                                    AsyncSnapshot<bool> snapshot) =>
+                                Icon(
+                              flash ? TablerIcons.bulb : TablerIcons.bulb_off,
+                              color: flash
+                                  ? Colors.white
+                                  : Colors.grey[300]!.withOpacity(0.3),
+                              size: 10 * SizeConfig.imageSizeMultiplier,
+                            ),
                           ),
-                        )),
-                    Positioned(
-                      top: 10,
-                      left: 10,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(
-                          TablerIcons.x,
-                          color: Colors.white,
-                          size: 5 * SizeConfig.imageSizeMultiplier,
                         ),
                       ),
-                    ),
-                  ],
-                )
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Lottie.asset('assets/lottie/network.json'),
-                    Text(
-                      'Sorry, check internet connection',
-                      style: GoogleFonts.lexendDeca(
-                        fontSize: 2 * SizeConfig.textMultiplier,
-                        fontWeight: FontWeight.bold,
+                      Positioned(
+                        top: 10,
+                        left: 10,
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            TablerIcons.x,
+                            color: Colors.white,
+                            size: 5 * SizeConfig.imageSizeMultiplier,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Lottie.asset('assets/lottie/network.json'),
+                      Text(
+                        'Sorry, check internet connection',
+                        style: GoogleFonts.lexendDeca(
+                          fontSize: 2 * SizeConfig.textMultiplier,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
         ),
-      ),
-    );
+      );
 
   Future<void> showCode(Barcode? result) async {
     Decryption decryption = Decryption();
@@ -169,42 +169,42 @@ class _QRScanState extends State<QRScan> {
     return showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-          title: Text(
-            'Code',
-            style: GoogleFonts.lexendDeca(
-              fontSize: 5 * SizeConfig.textMultiplier,
-              fontWeight: FontWeight.bold,
-            ),
+        title: Text(
+          'Code',
+          style: GoogleFonts.lexendDeca(
+            fontSize: 5 * SizeConfig.textMultiplier,
+            fontWeight: FontWeight.bold,
           ),
-          content: Text(
-            (result.code.toString().isEmpty) ? code : 'Scan the code',
-            style: GoogleFonts.lexendDeca(
-              fontSize: 3 * SizeConfig.textMultiplier,
-            ),
+        ),
+        content: Text(
+          (result.code.toString().isEmpty) ? code : 'Scan the code',
+          style: GoogleFonts.lexendDeca(
+            fontSize: 3 * SizeConfig.textMultiplier,
           ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () async {
-                await controller.resumeCamera();
-                Navigator.pop(context);
-              },
-              child: Text(
-                'OK',
-                style: GoogleFonts.lexendDeca(
-                  fontSize: 2 * SizeConfig.textMultiplier,
-                ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () async {
+              await controller!.resumeCamera();
+              Navigator.pop(context);
+            },
+            child: Text(
+              'OK',
+              style: GoogleFonts.lexendDeca(
+                fontSize: 2 * SizeConfig.textMultiplier,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
     );
   }
 
-  void _onQRViewCreated(QRViewController controller) {
+  void _onQRViewCreated(QRViewController? controller) {
     setState(() {
       this.controller = controller;
     });
-    controller.scannedDataStream.listen((Barcode scanData) async {
+    controller!.scannedDataStream.listen((Barcode scanData) async {
       setState(() {
         result = scanData;
       });
