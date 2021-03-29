@@ -172,9 +172,7 @@ class _PassmanLoginState extends State<PassmanLogin> {
                   icon: const Icon(
                     Icons.arrow_back_ios_outlined,
                   ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+                  onPressed: () => Navigator.pop(context),
                 ),
               ),
             ],

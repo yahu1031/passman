@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
           builder: (BuildContext context, Orientation orientation) {
             SizeConfig().init(constraints, orientation);
             return MaterialApp(
+              title:'Password Manager',
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
                 primaryColor: Colors.black,

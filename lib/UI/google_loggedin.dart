@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +19,11 @@ class GoogleLoggedInScreen extends StatefulWidget {
 
 class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
   late TapGestureRecognizer _loginTapGesture, _signupTapGesture;
+
   Logger loggerNoStack = Logger(
     printer: PrettyPrinter(methodCount: 0),
   );
+  FirebaseAuth mAuth = FirebaseAuth.instance;
   Future<void> _loginWithImage() async {
     Navigator.pushNamed(context, '/passmanlogin');
     loggerNoStack.i('Login');
@@ -30,6 +34,12 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
     loggerNoStack.i('Signup');
   }
 
+  Future<String> getCustomToken(GoogleSignInProvider googleProvider) async {
+    String token = await googleProvider.getUserToken();
+    return token.toString();
+  }
+
+  
   @override
   void initState() {
     super.initState();
@@ -39,7 +49,6 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String token;
     GoogleSignInProvider provider =
         Provider.of<GoogleSignInProvider>(context, listen: false);
     return Scaffold(

@@ -31,7 +31,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
     printer: PrettyPrinter(methodCount: 0),
   );
   late AnimationController _controller;
-  late String generatedString, encryptedString;
+  late String generatedString, encryptedString, encryptedString1;
   bool isPin = false, stringMatched = false;
   late Timer timer;
   void timerFunc() {
@@ -47,9 +47,11 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    generatedString = RandomNumberGenerator().randomStringGenerator(6);
-    encryptedString = encryption.stringEncryption(generatedString).base64;
     _controller = AnimationController(vsync: this);
+      generatedString = RandomNumberGenerator().randomStringGenerator(6);
+      encryptedString = encryption.stringEncryption(generatedString).base64;
+    logger.i(generatedString);
+    logger.i(encryptedString);
     timerFunc();
     super.initState();
   }
@@ -111,7 +113,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                               stringMatched = true;
                             });
                             timer.cancel();
-                            provider.login();
+                            provider.signinWithToken();
                           } else {
                             setState(() {
                               isPin = false;

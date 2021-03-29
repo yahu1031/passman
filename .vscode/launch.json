@@ -2,11 +2,12 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Current Device",
+      "name": "Web",
       "program": "lib/main.dart",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "debug"
+      "flutterMode": "debug",
+      "args": ["-d", "edge","--web-port", "1031", "-v"],
     },
     {
       "name": "Android",
@@ -14,14 +15,7 @@
       "request": "launch",
       "type": "dart",
       "flutterMode": "debug",
-    },
-    {
-      "name": "Web",
-      "program": "lib/main.dart",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "debug",
-      "args": ["-d", "edge","--web-port", "1031"],
+      "args": ["-v"],
     },
     // {
     //   "name": "Windows",

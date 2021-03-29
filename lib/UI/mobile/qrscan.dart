@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io' show Platform;
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:logger/logger.dart';
 import 'package:lottie/lottie.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/services/decryption.dart';
+import 'package:passman/services/encryption.dart';
 import 'package:passman/services/random.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
@@ -65,7 +67,6 @@ class _QRScanState extends State<QRScan> {
   @override
   void initState() {
     super.initState();
-  // controller = QRViewController;
     initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
@@ -73,17 +74,19 @@ class _QRScanState extends State<QRScan> {
 
   @override
   void dispose() {
-    controller!.dispose();
+    controller?.dispose();
     _connectivitySubscription.cancel();
     super.dispose();
   }
+
+  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
   void reassemble() {
     super.reassemble();
     if (Platform.isAndroid) {
-      controller!.pauseCamera();
-    } else if (Platform.isIOS) controller!.resumeCamera();
+      controller?.pauseCamera();
+    } else if (Platform.isIOS) controller?.resumeCamera();
   }
 
   @override
@@ -108,18 +111,17 @@ class _QRScanState extends State<QRScan> {
                         right: 10,
                         child: IconButton(
                           onPressed: () async {
-                            await controller!.toggleFlash();
+                            await controller?.toggleFlash();
                             setState(
                               () {
                                 flash = !flash;
                               },
                             );
                           },
-                          icon: FutureBuilder<bool>(
-                            future:
-                                controller!.getFlashStatus() as Future<bool>?,
+                          icon: FutureBuilder<bool?>(
+                            future: controller?.getFlashStatus(),
                             builder: (BuildContext context,
-                                    AsyncSnapshot<bool> snapshot) =>
+                                    AsyncSnapshot<bool?> snapshot) =>
                                 Icon(
                               flash ? TablerIcons.bulb : TablerIcons.bulb_off,
                               color: flash
@@ -163,8 +165,16 @@ class _QRScanState extends State<QRScan> {
         ),
       );
 
+  Future<String> getID() async {
+    User? tokenResult = await _firebaseAuth.currentUser;
+    String? idToken = await tokenResult!.getIdToken();
+    return idToken;
+  }
+
   Future<void> showCode(Barcode? result) async {
     Decryption decryption = Decryption();
+    Encryption encryption = Encryption();
+    String getCode = await getID();
     String code = decryption.stringDecryption(result!.code.toString());
     return showDialog(
       context: context,
@@ -177,7 +187,7 @@ class _QRScanState extends State<QRScan> {
           ),
         ),
         content: Text(
-          (result.code.toString().isEmpty) ? code : 'Scan the code',
+          (result.code.toString().isNotEmpty) ? code : 'Scan the code',
           style: GoogleFonts.lexendDeca(
             fontSize: 3 * SizeConfig.textMultiplier,
           ),
@@ -185,7 +195,7 @@ class _QRScanState extends State<QRScan> {
         actions: <Widget>[
           TextButton(
             onPressed: () async {
-              await controller!.resumeCamera();
+              await controller?.resumeCamera();
               Navigator.pop(context);
             },
             child: Text(
@@ -204,7 +214,7 @@ class _QRScanState extends State<QRScan> {
     setState(() {
       this.controller = controller;
     });
-    controller!.scannedDataStream.listen((Barcode scanData) async {
+    controller?.scannedDataStream.listen((Barcode scanData) async {
       setState(() {
         result = scanData;
       });

@@ -19,6 +19,7 @@ dependencies:
   flutter_tabler_icons: ^1.0.3-rc.1
   google_fonts: ^2.0.0
   google_sign_in: ^5.0.1
+  hashids2: ^2.0.0
   image_picker: ^0.7.3
   logger: ^1.0.0
   lottie: ^1.0.1
