@@ -113,7 +113,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                               stringMatched = true;
                             });
                             timer.cancel();
-                            provider.signinWithToken();
+                            provider.login();
                           } else {
                             setState(() {
                               isPin = false;
