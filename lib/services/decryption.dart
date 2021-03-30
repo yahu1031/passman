@@ -1,6 +1,6 @@
 import 'package:encrypt/encrypt.dart' as decrypt;
 import 'package:logger/logger.dart';
-import 'package:passman/secret.dart';
+import 'package:passman/.dart';
 
 class Decryption {
   final Logger logger = Logger(
