@@ -87,8 +87,11 @@ class GoogleSignInProvider extends ChangeNotifier {
       );
 
       await FirebaseAuth.instance
-          .signInWithCredential(credential)
-          .catchError((dynamic onSigninCredsError) {
+          .signInWithCredential(credential).then(
+        (UserCredential value) {
+          loggerNoStack.i(value);
+        },
+      ).catchError((dynamic onSigninCredsError) {
         loggerNoStack.e(onSigninCredsError.toString());
       });
       isSigningIn = false;

@@ -19,7 +19,9 @@ class StateCheck extends StatefulWidget {
 class _StateCheckState extends State<StateCheck> {
   final FirebaseAuth mAuth = FirebaseAuth.instance;
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) {
+    print('State Check');
+    return Scaffold(
         body: ChangeNotifierProvider<GoogleSignInProvider>(
           create: (BuildContext context) => GoogleSignInProvider(),
           child: StreamBuilder<dynamic>(
@@ -49,4 +51,5 @@ class _StateCheckState extends State<StateCheck> {
           ),
         ),
       );
+  }
 }

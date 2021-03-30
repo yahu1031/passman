@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:logger/logger.dart';
 import 'package:lottie/lottie.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/services/authentication.dart';
@@ -18,6 +19,9 @@ class Web extends StatefulWidget {
 }
 
 class _WebState extends State<Web> with TickerProviderStateMixin {
+  Logger loggerNoStack = Logger(
+    printer: PrettyPrinter(methodCount: 0),
+  );
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _pinPutController = TextEditingController();
   final FocusNode _pinPutFocusNode = FocusNode();
@@ -27,10 +31,12 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
   );
   final Encryption encryption = Encryption();
   late AnimationController _controller;
-  late String generatedString, encryptedString, encryptedString1;
-  bool isPin = false, stringMatched = false;
+  late String generatedString, encryptedString;
+  bool isPin = false, stringMatched = false, isStarted = true;
   late Timer timer;
   void timerFunc() {
+    generatedString = RandomNumberGenerator().randomStringGenerator(6);
+    encryptedString = encryption.stringEncryption(generatedString).base64;
     timer = Timer.periodic(const Duration(seconds: 100), (Timer timer) {
       setState(() {
         generatedString = RandomNumberGenerator().randomStringGenerator(6);
@@ -41,11 +47,9 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    _controller = AnimationController(vsync: this);
-      generatedString = RandomNumberGenerator().randomStringGenerator(6);
-      encryptedString = encryption.stringEncryption(generatedString).base64;
-    timerFunc();
     super.initState();
+    _controller = AnimationController(vsync: this);
+    timerFunc();
   }
 
   @override
@@ -132,8 +136,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                             horizontal: 10,
                           ),
                         ),
-                        onPressed: () {
-                        },
+                        onPressed: () {},
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 5),
