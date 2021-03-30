@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logger/logger.dart';
 import 'package:lottie/lottie.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/services/authentication.dart';
@@ -27,9 +26,6 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
     borderRadius: BorderRadius.circular(5.0),
   );
   final Encryption encryption = Encryption();
-  final Logger logger = Logger(
-    printer: PrettyPrinter(methodCount: 0),
-  );
   late AnimationController _controller;
   late String generatedString, encryptedString, encryptedString1;
   bool isPin = false, stringMatched = false;
@@ -40,8 +36,6 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
         generatedString = RandomNumberGenerator().randomStringGenerator(6);
         encryptedString = encryption.stringEncryption(generatedString).base64;
       });
-      logger.i(generatedString);
-      logger.i(encryptedString);
     });
   }
 
@@ -50,8 +44,6 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
     _controller = AnimationController(vsync: this);
       generatedString = RandomNumberGenerator().randomStringGenerator(6);
       encryptedString = encryption.stringEncryption(generatedString).base64;
-    logger.i(generatedString);
-    logger.i(encryptedString);
     timerFunc();
     super.initState();
   }
@@ -107,7 +99,6 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                         eachFieldMargin: EdgeInsets.zero,
                         onSubmit: (String pin) {
                           if (_pinPutController.text == generatedString) {
-                            logger.i('matched');
                             setState(() {
                               isPin = true;
                               stringMatched = true;
@@ -119,7 +110,6 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                               isPin = false;
                               stringMatched = false;
                             });
-                            logger.i('Not matched');
                           }
                         },
                         submittedFieldDecoration: pinPutDecoration,
@@ -143,7 +133,6 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                           ),
                         ),
                         onPressed: () {
-                          logger.i('Submitted');
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(

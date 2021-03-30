@@ -71,10 +71,10 @@ class GoogleSignInProvider extends ChangeNotifier {
     isSigningIn = true;
     GoogleSignInAccount? user = await googleSignIn
         .signIn()
-        .onError((dynamic error, StackTrace stackTrace) {
-      loggerNoStack.e(error.toString());
-    }).catchError((dynamic onError) {
-      loggerNoStack.e(onError.toString());
+        .onError((dynamic signinError, StackTrace stackTrace) {
+      loggerNoStack.e(signinError.toString());
+    }).catchError((dynamic onSigninError) {
+      loggerNoStack.e(onSigninError.toString());
     });
     if (user == null) {
       isSigningIn = false;
@@ -86,29 +86,13 @@ class GoogleSignInProvider extends ChangeNotifier {
         idToken: googleAuth.idToken,
       );
 
-      await FirebaseAuth.instance.signInWithCredential(credential).then(
-        (UserCredential value) {
-          loggerNoStack.i(value);
-        },
-      ).onError((dynamic error, StackTrace stackTrace) {
-        loggerNoStack.e(error.toString());
-      }).catchError((dynamic onError) {
-        loggerNoStack.e(onError.toString());
+      await FirebaseAuth.instance
+          .signInWithCredential(credential)
+          .catchError((dynamic onSigninCredsError) {
+        loggerNoStack.e(onSigninCredsError.toString());
       });
-
       isSigningIn = false;
     }
-  }
-
-  Future<void> signinWithToken() async {
-    await FirebaseAuth.instance.signInWithCustomToken('''
-eyJhbGciOiJSUzI1NiIsImtpZCI6IjRlMDBlOGZlNWYyYzg4Y2YwYzcwNDRmMzA3ZjdlNzM5Nzg4ZTRmMWUiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoic2lhIHN1bm50IiwicGljdHVyZSI6Imh0dHBzOi8vbGg1Lmdvb2dsZXVzZXJjb250ZW50LmNvbS8tY0gwUWg5Wi11eFUvQUFBQUFBQUFBQUkvQUFBQUFBQUFBQUEvQU1adXVjbVZmNmE0OVpYUVVhRlNoaG9tZndTbFZBWUtLdy9zOTYtYy9waG90by5qcGciLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vcGFzc3dvcmQtbWFnbmFnZXIiLCJhdWQiOiJwYXNzd29yZC1tYWduYWdlciIsImF1dGhfdGltZSI6MTYxNjQ4ODQ0MiwidXNlcl9pZCI6IjVxNU1XblpqMGdQQjZHQ2QwTWJSS1dmdmhrdTIiLCJzdWIiOiI1cTVNV25aajBnUEI2R0NkME1iUktXZnZoa3UyIiwiaWF0IjoxNjE2NTA0NTA5LCJleHAiOjE2MTY1MDgxMDksImVtYWlsIjoic2lhc3VubnQzMjRAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZ29vZ2xlLmNvbSI6WyIxMTU0OTc4Mjg3MjI4Nzk4MTk1NjciXSwiZW1haWwiOlsic2lhc3VubnQzMjRAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.li7L1u72gVub767A3Z9k-iccAxHrTjQ8R2ADbEeWkX67uEgkr-vKRzSJmoEzxPjnLRenPREPmtM29LbFiY2XWbpfM8BrbVliE9MLDAtYrowi9RfLI8Z6Q6nPnVxA1PSIpP_MApGKnuPgiwY9wjG1In9heMNcPqJ9oFGbO0uMsyQGdmfcp_dv2d_NHEpcilfIAxBwRu8wF2L0DAdz01uxbaahTUbP8yszom5bTYIjgCkBqsioLnnYmIVUlEkV-3ibA23lx3ePD9fp6F4N9L9Q8v_KYw5y9isKioqfS_-2o1ptsGxh9SqpdMn8NAk8TKw5PBdYTYxoWkMKyAKZloctFg''').then(
-      (UserCredential value) {
-        loggerNoStack.i(value);
-      },
-    ).onError((dynamic error, StackTrace stackTrace) {
-      loggerNoStack.i(error.toString());
-    });
   }
 
   Future<void> logout() async {

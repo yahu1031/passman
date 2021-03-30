@@ -5,11 +5,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logger/logger.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/UI/web/web_google_logged_in.dart';
 import 'package:passman/services/authentication.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class GoogleLoggedInScreen extends StatefulWidget {
   const GoogleLoggedInScreen({Key? key}) : super(key: key);
@@ -20,18 +20,13 @@ class GoogleLoggedInScreen extends StatefulWidget {
 class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
   late TapGestureRecognizer _loginTapGesture, _signupTapGesture;
 
-  Logger loggerNoStack = Logger(
-    printer: PrettyPrinter(methodCount: 0),
-  );
   FirebaseAuth mAuth = FirebaseAuth.instance;
   Future<void> _loginWithImage() async {
     Navigator.pushNamed(context, '/passmanlogin');
-    loggerNoStack.i('Login');
   }
 
   Future<void> _signupWithImage() async {
     Navigator.pushNamed(context, '/passmansignup');
-    loggerNoStack.i('Signup');
   }
 
   Future<String> getCustomToken(GoogleSignInProvider googleProvider) async {
@@ -53,9 +48,9 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
         Provider.of<GoogleSignInProvider>(context, listen: false);
     return Scaffold(
       body: SafeArea(
-        child: (defaultTargetPlatform == TargetPlatform.android ||
-                defaultTargetPlatform == TargetPlatform.iOS)
-            ? Stack(
+        child: kIsWeb
+            ? WebGoogleLoggedin()
+            : Stack(
                 alignment: AlignmentDirectional.center,
                 children: <Widget>[
                   Center(
@@ -177,8 +172,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
                     ),
                   ),
                 ],
-              )
-            : WebGoogleLoggedin(),
+              ),
       ),
     );
   }

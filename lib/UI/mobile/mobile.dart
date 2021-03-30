@@ -6,7 +6,6 @@ import 'package:passman/Components/icons/google.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/services/authentication.dart';
 import 'package:provider/provider.dart';
-import 'package:logger/logger.dart';
 
 class Mobile extends StatefulWidget {
   const Mobile({Key? key}) : super(key: key);
@@ -17,9 +16,6 @@ class Mobile extends StatefulWidget {
 class _MobileState extends State<Mobile> {
   final GoogleSignInProvider auth = GoogleSignInProvider();
 
-  Logger loggerNoStack = Logger(
-    printer: PrettyPrinter(methodCount: 0),
-  );
   @override
   Widget build(BuildContext context) {
     GoogleSignInProvider provider =

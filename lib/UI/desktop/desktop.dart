@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logger/logger.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/services/encryption.dart';
 import 'package:passman/services/random.dart';
@@ -26,9 +25,6 @@ class _DesktopState extends State<Desktop> with TickerProviderStateMixin {
     borderRadius: BorderRadius.circular(5.0),
   );
   final Encryption encryption = Encryption();
-  final Logger logger = Logger(
-    printer: PrettyPrinter(methodCount: 0),
-  );
   late AnimationController _controller;
   late String generatedString, encryptedString;
   bool isPin = false, stringMatched = false;
@@ -39,8 +35,6 @@ class _DesktopState extends State<Desktop> with TickerProviderStateMixin {
         generatedString = RandomNumberGenerator().randomStringGenerator(6);
         encryptedString = encryption.stringEncryption(generatedString).base64;
       });
-      logger.i(generatedString);
-      logger.i(encryptedString);
     });
   }
 
@@ -105,7 +99,6 @@ class _DesktopState extends State<Desktop> with TickerProviderStateMixin {
                     eachFieldMargin: EdgeInsets.zero,
                     onSubmit: (String pin) {
                       if (_pinPutController.text == generatedString) {
-                        logger.i('matched');
                         setState(() {
                           isPin = true;
                           stringMatched = true;
@@ -116,7 +109,6 @@ class _DesktopState extends State<Desktop> with TickerProviderStateMixin {
                           isPin = false;
                           stringMatched = false;
                         });
-                        logger.i('Not matched');
                       }
                     },
                     submittedFieldDecoration: pinPutDecoration,
@@ -140,7 +132,6 @@ class _DesktopState extends State<Desktop> with TickerProviderStateMixin {
                       ),
                     ),
                     onPressed: () {
-                      logger.i('Submitted');
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(

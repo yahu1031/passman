@@ -17,11 +17,7 @@ class StateCheck extends StatefulWidget {
 }
 
 class _StateCheckState extends State<StateCheck> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
+  final FirebaseAuth mAuth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) => Scaffold(
         body: ChangeNotifierProvider<GoogleSignInProvider>(
@@ -37,7 +33,7 @@ class _StateCheckState extends State<StateCheck> {
                 );
               } else {
                 if (snapshot.hasData) {
-                  return const GoogleLoggedInScreen();
+                    return const GoogleLoggedInScreen();
                 } else {
                   if (defaultTargetPlatform == TargetPlatform.android ||
                       defaultTargetPlatform == TargetPlatform.iOS) {

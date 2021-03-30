@@ -44,8 +44,8 @@ class _QRScanState extends State<QRScan> {
     ConnectivityResult result;
     try {
       result = await _connectivity.checkConnectivity();
-    } on PlatformException catch (e) {
-      logger.e(e.message.toString());
+    } on PlatformException catch (platformExceptionError) {
+      logger.e(platformExceptionError.message.toString());
       return;
     }
 
