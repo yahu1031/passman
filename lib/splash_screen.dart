@@ -1,45 +1,31 @@
-import 'dart:async';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:lottie/lottie.dart';
 import 'package:passman/Components/size_config.dart';
+import 'package:passman/services/state_check.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
-  @override
-  _SplashScreenState createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  final Logger logger = Logger(
-    printer: PrettyPrinter(methodCount: 0),
-  );
-  void platforms() {
-    try {
-        Navigator.pushReplacementNamed(context, '/state');
-    } catch (e) {
-      logger.e(e.toString());
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    Timer(
-      const Duration(seconds: 3),
-      () => platforms(),
-    );
+  Future<bool> future() async {
+    await Future<void>.delayed(const Duration(seconds: 3));
+    return true;
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: Center(
-          child: Lottie.asset(
-            'assets/lottie/fingerprint.json',
-            height: 10 * SizeConfig.imageSizeMultiplier,
-          ),
+    body: FutureBuilder<bool>(
+          future: future.call(),
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            if (snapshot.hasData) return const StateCheck();
+            return Center(
+              child: Hero(
+                tag: 'logo',
+                child: Lottie.asset(
+                  'assets/lottie/fingerprint.json',
+                  height: 30 * SizeConfig.imageSizeMultiplier,
+                ),
+              ),
+            );
+          },
         ),
-      );
+  );
 }

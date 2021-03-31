@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -219,6 +220,19 @@ class _QRScanState extends State<QRScan> {
         result = scanData;
       });
       await controller.pauseCamera();
+      try {
+        FirebaseFirestore.instance
+            .collection('TempUserID')
+            .doc(result.code)
+            .set(<String, dynamic>{'token': 'null', 'flag': false}).onError(
+                (dynamic signinError, StackTrace stackTrace) {
+          print(signinError.toString());
+        }).catchError((dynamic onSigninError) {
+          print(onSigninError.toString());
+        });
+      } catch (e) {
+        print(e.toString);
+      }
       showCode(result);
     });
   }

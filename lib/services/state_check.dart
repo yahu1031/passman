@@ -12,6 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class StateCheck extends StatefulWidget {
+  const StateCheck({Key? key}) : super(key: key);
   @override
   _StateCheckState createState() => _StateCheckState();
 }
@@ -19,9 +20,7 @@ class StateCheck extends StatefulWidget {
 class _StateCheckState extends State<StateCheck> {
   final FirebaseAuth mAuth = FirebaseAuth.instance;
   @override
-  Widget build(BuildContext context) {
-    print('State Check');
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
         body: ChangeNotifierProvider<GoogleSignInProvider>(
           create: (BuildContext context) => GoogleSignInProvider(),
           child: StreamBuilder<dynamic>(
@@ -51,5 +50,4 @@ class _StateCheckState extends State<StateCheck> {
           ),
         ),
       );
-  }
 }

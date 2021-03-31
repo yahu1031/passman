@@ -19,22 +19,23 @@ class GoogleLoggedInScreen extends StatefulWidget {
 
 class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
   late TapGestureRecognizer _loginTapGesture, _signupTapGesture;
-
   FirebaseAuth mAuth = FirebaseAuth.instance;
   Future<void> _loginWithImage() async {
     Navigator.pushNamed(context, '/passmanlogin');
   }
 
   Future<void> _signupWithImage() async {
-    Navigator.pushNamed(context, '/passmansignup');
+    Navigator.pushNamed(
+      context,
+      '/passmansignup',
+    );
   }
 
-  Future<String> getCustomToken(GoogleSignInProvider googleProvider) async {
-    String token = await googleProvider.getUserToken();
-    return token.toString();
-  }
+  // Future<String> getCustomToken(GoogleSignInProvider googleProvider) async {
+  //   String token = await googleProvider.getUserToken();
+  //   return token.toString();
+  // }
 
-  
   @override
   void initState() {
     super.initState();
@@ -46,6 +47,10 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
   Widget build(BuildContext context) {
     GoogleSignInProvider provider =
         Provider.of<GoogleSignInProvider>(context, listen: false);
+    // mAuth.currentUser!.getIdToken().then((String value) {
+    //   print(value);
+    //   return value;
+    // });
     return Scaffold(
       body: SafeArea(
         child: kIsWeb

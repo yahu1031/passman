@@ -16,17 +16,21 @@ class GoogleSignInProvider extends ChangeNotifier {
   late String mUsertoken;
 
   // Get uid
-  Future<String> getCurrentUid() async => _firebaseAuth.currentUser!.uid;
+  String getCurrentUid() => _firebaseAuth.currentUser!.uid;
 
   // Get current Users
   String getCurrentUser() => _firebaseAuth.currentUser!.displayName.toString();
 
   // Get current User id Token
-  Future<String> getUserToken() async {
-    User? tokenResult = await _firebaseAuth.currentUser;
-    String idToken = await tokenResult!.getIdToken();
-    return await idToken.toString();
-  }
+  void getUserToken() =>
+      _firebaseAuth.currentUser!.getIdToken().then((String value) {
+        print(value.toString());
+        return value;
+      });
+  // User? tokenResult = await _firebaseAuth.currentUser;
+  // String idToken = await tokenResult!.getIdToken();
+  // return await idToken.toString();
+  // }
 
 // Get current Users
   String getCurrentUserEmail() => _firebaseAuth.currentUser!.email.toString();
@@ -86,8 +90,7 @@ class GoogleSignInProvider extends ChangeNotifier {
         idToken: googleAuth.idToken,
       );
 
-      await FirebaseAuth.instance
-          .signInWithCredential(credential).then(
+      await FirebaseAuth.instance.signInWithCredential(credential).then(
         (UserCredential value) {
           loggerNoStack.i(value);
         },

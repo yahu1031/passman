@@ -41,10 +41,12 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
             child: Tooltip(
               message: provider.getCurrentUser().toUpperCase(),
               child: CircleAvatar(
-                backgroundImage: provider.getUserImage() as ImageProvider,
+                backgroundImage:
+                    provider.getUserImage() as ImageProvider,
                 foregroundColor: Colors.transparent,
                 backgroundColor: Colors.transparent,
-                foregroundImage: provider.getUserImage() as ImageProvider,
+                foregroundImage:
+                    provider.getUserImage() as ImageProvider,
                 minRadius: 4 * SizeConfig.imageSizeMultiplier,
               ),
             ),

@@ -21,12 +21,7 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) =>
@@ -59,7 +54,7 @@ class _MyAppState extends State<MyApp> {
               initialRoute: '/',
               routes: <String, WidgetBuilder>{
                 '/': (BuildContext context) => const SplashScreen(),
-                '/state': (BuildContext context) => StateCheck(),
+                '/state': (BuildContext context) => const StateCheck(),
                 '/mobile': (BuildContext context) => const Mobile(),
                 '/googleloggedin': (BuildContext context) =>
                     const GoogleLoggedInScreen(),

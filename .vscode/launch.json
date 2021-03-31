@@ -7,7 +7,7 @@
       "request": "launch",
       "type": "dart",
       "flutterMode": "debug",
-      "args": ["-d", "edge","--web-port", "1031"]
+      "args": ["-d", "edge","--web-port", "1031", "-v"]
     },
     {
       "name": "Android",

@@ -158,10 +158,13 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
           Positioned(
             top: 20,
             left: 20,
-            child: Lottie.asset(
-              'assets/lottie/fingerprint.json',
-              height: 10 * SizeConfig.imageSizeMultiplier,
-              reverse: true,
+            child: Hero(
+              tag: 'logo', 
+              child: Lottie.asset(
+                'assets/lottie/fingerprint.json',
+                height: 10 * SizeConfig.imageSizeMultiplier,
+                reverse: true,
+              ),
             ),
           ),
         ],
