@@ -21,19 +21,23 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
       body: Stack(
         children: <Widget>[
           Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Lottie.asset(
-                  'assets/lottie/google.json',
-                ),
-                Text(
-                  'Version : 2.1.7 - Alpha 🧪',
-                  style: GoogleFonts.quicksand(
-                    fontSize: 2 * SizeConfig.textMultiplier,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Lottie.asset(
+                    'assets/lottie/google.json',
+                    height: 30 * SizeConfig.heightMultiplier,
                   ),
-                ),
-              ],
+                  Text(
+                    'Version : 2.1.8 - Alpha 🧪',
+                    style: GoogleFonts.quicksand(
+                      fontSize: 1 * SizeConfig.textMultiplier,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           Positioned(

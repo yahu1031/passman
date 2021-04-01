@@ -142,7 +142,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                 right: 20,
                 child: Text.rich(
                   TextSpan(
-                    text: 'Version : 2.1.7 - Alpha ',
+                    text: 'Version : 2.1.8 - Alpha ',
                     style: GoogleFonts.quicksand(
                       fontSize: 1 * SizeConfig.textMultiplier,
                       fontWeight: FontWeight.w900,
