@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:logger/logger.dart';
 import 'package:lottie/lottie.dart';
 import 'package:passman/Components/size_config.dart';
@@ -108,26 +109,19 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
             children: <Widget>[
               Center(
                 child: Container(
-                  height: 500,
-                  width: 350,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                  ),
+                  height: 35 * SizeConfig.imageSizeMultiplier,
+                  width: 35 * SizeConfig.imageSizeMultiplier,
+                  padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(7),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      FittedBox(
-                        child: QrImage(
-                          data: encryptedString,
-                          version: 7,
-                          size: 40 * SizeConfig.widthMultiplier,
-                        ),
-                      ),
-                    ],
+                  child: FittedBox(
+                    child: QrImage(
+                      data: encryptedString,
+                      version: 7,
+                      size: 40 * SizeConfig.widthMultiplier,
+                    ),
                   ),
                 ),
               ),
@@ -140,6 +134,30 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                     'assets/lottie/fingerprint.json',
                     height: 10 * SizeConfig.imageSizeMultiplier,
                     reverse: true,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 20,
+                right: 20,
+                child: Text.rich(
+                  TextSpan(
+                    text: 'Version : 2.1.7 - Alpha ',
+                    style: GoogleFonts.quicksand(
+                      fontSize: 1 * SizeConfig.textMultiplier,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.black,
+                    ),
+                    children: <InlineSpan>[
+                      TextSpan(
+                        text: '🧪',
+                        style: GoogleFonts.notoSans(
+                          fontSize: 1 * SizeConfig.textMultiplier,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

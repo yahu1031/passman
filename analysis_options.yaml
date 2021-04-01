@@ -31,3 +31,5 @@ linter:
     prefer_expression_function_bodies: true
     unnecessary_await_in_return: true
     unnecessary_final: true
+    sort_pub_dependencies: true
+    package_names: true

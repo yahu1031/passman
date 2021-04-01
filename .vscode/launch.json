@@ -7,7 +7,15 @@
       "request": "launch",
       "type": "dart",
       "flutterMode": "debug",
-      "args": ["-d", "edge","--web-port", "1031", "-v"]
+      "args": [
+        "-d",
+        "edge",
+        "--web-port",
+        "1031",
+        "--web-renderer",
+        "html",
+        "-v"
+      ]
     },
     {
       "name": "Android",
@@ -15,7 +23,7 @@
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile"
-    },
+    }
     // {
     //   "name": "Windows",
     //   "program": "lib/main.dart",
