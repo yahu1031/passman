@@ -14,7 +14,7 @@
       "program": "lib/main.dart",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "debug"
+      "flutterMode": "profile"
     },
     // {
     //   "name": "Windows",

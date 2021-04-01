@@ -51,7 +51,6 @@ class _PassmanSignupState extends State<PassmanSignup> {
     UploadTask uploadTask = storageRef.putFile(_image!);
     uploadTask.whenComplete(() async {
       String downImg = await uploadTask.snapshot.ref.getDownloadURL();
-      print(downImg);
     });
   }
 

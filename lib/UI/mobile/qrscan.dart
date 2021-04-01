@@ -40,7 +40,7 @@ class _QRScanState extends State<QRScan> {
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
   ConnectivityResult _connectionStatus = ConnectivityResult.none;
   QRViewController? controller;
-
+  FirebaseAuth mAuth = FirebaseAuth.instance;
   Future<void> initConnectivity() async {
     ConnectivityResult result;
     try {
@@ -79,8 +79,6 @@ class _QRScanState extends State<QRScan> {
     _connectivitySubscription.cancel();
     super.dispose();
   }
-
-  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
   void reassemble() {
@@ -166,17 +164,34 @@ class _QRScanState extends State<QRScan> {
         ),
       );
 
-  Future<String> getID() async {
-    User? tokenResult = await _firebaseAuth.currentUser;
-    String? idToken = await tokenResult!.getIdToken();
-    return idToken;
-  }
+  // Future<String> getID() async {
+  //   User? tokenResult = await _firebaseAuth.currentUser;
+  //   String? idToken = await tokenResult!.getIdToken();
+  //   return idToken;
+  // }
 
   Future<void> showCode(Barcode? result) async {
     Decryption decryption = Decryption();
     Encryption encryption = Encryption();
-    String getCode = await getID();
     String code = decryption.stringDecryption(result!.code.toString());
+    String uToken = await mAuth.currentUser!.getIdToken();
+    
+    try {
+      FirebaseFirestore.instance
+          .collection('TempUserID')
+          .doc(code)
+          .set(<String, dynamic>{
+        'token': uToken,
+        'flag': false,
+        'time': Timestamp.now()
+      }).onError((dynamic signinError, StackTrace stackTrace) {
+        logger.e(signinError.toString());
+      }).catchError((dynamic onSigninError) {
+        logger.e(onSigninError.toString());
+      });
+    } catch (e) {
+      logger.e(e.toString);
+    }
     return showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -220,19 +235,6 @@ class _QRScanState extends State<QRScan> {
         result = scanData;
       });
       await controller.pauseCamera();
-      try {
-        FirebaseFirestore.instance
-            .collection('TempUserID')
-            .doc(result.code)
-            .set(<String, dynamic>{'token': 'null', 'flag': false}).onError(
-                (dynamic signinError, StackTrace stackTrace) {
-          print(signinError.toString());
-        }).catchError((dynamic onSigninError) {
-          print(onSigninError.toString());
-        });
-      } catch (e) {
-        print(e.toString);
-      }
       showCode(result);
     });
   }

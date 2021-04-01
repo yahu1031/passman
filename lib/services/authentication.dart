@@ -23,10 +23,7 @@ class GoogleSignInProvider extends ChangeNotifier {
 
   // Get current User id Token
   void getUserToken() =>
-      _firebaseAuth.currentUser!.getIdToken().then((String value) {
-        print(value.toString());
-        return value;
-      });
+      _firebaseAuth.currentUser!.getIdToken().then((String value) => value);
   // User? tokenResult = await _firebaseAuth.currentUser;
   // String idToken = await tokenResult!.getIdToken();
   // return await idToken.toString();
@@ -53,13 +50,10 @@ class GoogleSignInProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> tokenLogin() async {
+  Future<void> tokenLogin(String idToken) async {
     try {
-      User? tokenResult = await _firebaseAuth.currentUser;
-      String? idToken = await tokenResult?.getIdToken();
-      String mToken = await idToken.toString();
       loggerNoStack.i(idToken);
-      await _firebaseAuth.signInWithCustomToken(mToken).then(
+      await _firebaseAuth.signInWithCustomToken(idToken).then(
         (UserCredential value) {
           loggerNoStack.i(value);
         },
