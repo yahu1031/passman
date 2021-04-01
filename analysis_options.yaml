@@ -1,13 +1,12 @@
 analyzer:
   errors:
     unused_local_variable: ignore
-    invalid_assignment: ignore
+    invalid_assignment: warning
     missing_return: error
     dead_code: warning
 
 linter:
   rules:
-    avoid_print: true
     avoid_type_to_string: true
     avoid_slow_async_io: true
     camel_case_types: true

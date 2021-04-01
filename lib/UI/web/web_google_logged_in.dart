@@ -1,3 +1,4 @@
+import 'dart:js' as js;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
@@ -29,12 +30,49 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                     'assets/lottie/google.json',
                     height: 30 * SizeConfig.heightMultiplier,
                   ),
-                  Text(
-                    'Version : 2.1.8 - Alpha 🧪',
-                    style: GoogleFonts.quicksand(
-                      fontSize: 1 * SizeConfig.textMultiplier,
-                      fontWeight: FontWeight.w900,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text.rich(
+                        TextSpan(
+                          text: 'Version : 2.1.9 - Alpha ',
+                          style: GoogleFonts.quicksand(
+                            fontSize: 1 * SizeConfig.textMultiplier,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.black,
+                          ),
+                          children: <InlineSpan>[
+                            TextSpan(
+                              text: '🧪',
+                              style: GoogleFonts.notoSans(
+                                fontSize: 1 * SizeConfig.textMultiplier,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        splashRadius: 0.001,
+                        hoverColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        icon: Icon(
+                          const IconData(
+                            0xec1c,
+                            fontFamily: 'IconsFont',
+                          ),
+                          size: 1.5 * SizeConfig.textMultiplier,
+                        ),
+                        onPressed: () {
+                          js.context.callMethod(
+                            'open',
+                            <String>['https://github.com/yahu1031/passman'],
+                          );
+                        },
+                      )
+                    ],
                   ),
                 ],
               ),

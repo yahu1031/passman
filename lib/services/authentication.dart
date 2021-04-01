@@ -55,7 +55,7 @@ class GoogleSignInProvider extends ChangeNotifier {
       loggerNoStack.i(idToken);
       await _firebaseAuth.signInWithCustomToken(idToken).then(
         (UserCredential value) {
-          loggerNoStack.i(value);
+          loggerNoStack.i(getCurrentUser);
         },
       ).onError((dynamic error, StackTrace stackTrace) {
         loggerNoStack.i(error.toString());
@@ -86,7 +86,8 @@ class GoogleSignInProvider extends ChangeNotifier {
 
       await FirebaseAuth.instance.signInWithCredential(credential).then(
         (UserCredential value) {
-          loggerNoStack.i(value);
+          print(
+              '${_firebaseAuth.currentUser!.displayName.toString()} has logged in.');
         },
       ).catchError((dynamic onSigninCredsError) {
         loggerNoStack.e(onSigninCredsError.toString());

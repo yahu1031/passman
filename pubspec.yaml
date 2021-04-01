@@ -46,6 +46,9 @@ flutter:
     - family: NotoSnasEmoji
       fonts:
         - asset: assets/fonts/NotoColorEmoji.ttf
+    - family: IconsFont
+      fonts:
+        - asset: assets/fonts/icons.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:

@@ -1,3 +1,4 @@
+import 'dart:js' as js;
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -140,25 +141,48 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
               Positioned(
                 top: 20,
                 right: 20,
-                child: Text.rich(
-                  TextSpan(
-                    text: 'Version : 2.1.8 - Alpha ',
-                    style: GoogleFonts.quicksand(
-                      fontSize: 1 * SizeConfig.textMultiplier,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.black,
-                    ),
-                    children: <InlineSpan>[
+                child: Row(
+                  children: <Widget>[
+                    Text.rich(
                       TextSpan(
-                        text: '🧪',
-                        style: GoogleFonts.notoSans(
+                        text: 'Version : 2.1.9 - Alpha ',
+                        style: GoogleFonts.quicksand(
                           fontSize: 1 * SizeConfig.textMultiplier,
                           fontWeight: FontWeight.w900,
                           color: Colors.black,
                         ),
+                        children: <InlineSpan>[
+                          TextSpan(
+                            text: '🧪',
+                            style: GoogleFonts.notoSans(
+                              fontSize: 1 * SizeConfig.textMultiplier,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    IconButton(
+                      splashRadius: 0.001,
+                      hoverColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      icon: Icon(
+                        const IconData(
+                          0xec1c,
+                          fontFamily: 'IconsFont',
+                        ),
+                        size: 1.5 * SizeConfig.textMultiplier,
+                      ),
+                      onPressed: () {
+                        js.context.callMethod(
+                          'open',
+                          <String>['https://github.com/yahu1031/passman'],
+                        );
+                      },
+                    )
+                  ],
                 ),
               ),
             ],
