@@ -86,8 +86,9 @@ class GoogleSignInProvider extends ChangeNotifier {
 
       await FirebaseAuth.instance.signInWithCredential(credential).then(
         (UserCredential value) {
+          // ignore: avoid_print
           print(
-              '${_firebaseAuth.currentUser!.displayName.toString()} has logged in.');
+              '''${_firebaseAuth.currentUser!.displayName.toString()} has logged in.''');
         },
       ).catchError((dynamic onSigninCredsError) {
         loggerNoStack.e(onSigninCredsError.toString());
@@ -98,6 +99,6 @@ class GoogleSignInProvider extends ChangeNotifier {
 
   Future<void> logout() async {
     await googleSignIn.disconnect();
-    FirebaseAuth.instance.signOut();
+    await FirebaseAuth.instance.signOut();
   }
 }

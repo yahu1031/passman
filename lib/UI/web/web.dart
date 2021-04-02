@@ -1,4 +1,4 @@
-import 'dart:js' as js;
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,6 +24,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
   Logger loggerNoStack = Logger(
     printer: PrettyPrinter(methodCount: 0),
   );
+  final String _url = 'https://github.com/yahu1031/passman';
   FirebaseAuth mAuth = FirebaseAuth.instance;
   final BoxDecoration pinPutDecoration = BoxDecoration(
     color: Colors.grey[300],
@@ -34,6 +35,9 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
   late String generatedString, encryptedString;
   bool isPin = false, stringMatched = false, isStarted = true;
   late Timer timer;
+  Future<void> _openGitLink() async => await canLaunch(_url)
+      ? await launch(_url)
+      : throw 'Could not launch $_url';
   void timerFunc() {
     generatedString = RandomNumberGenerator().randomStringGenerator(6);
     encryptedString = encryption.stringEncryption(generatedString).base64;
@@ -72,16 +76,51 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
         .collection('TempUserID')
         .doc(generatedString)
         .snapshots()
-        .listen((DocumentSnapshot event) async {
-      if (event.exists) {
-        if (generatedString == docRef.id.toString()) {
-          // await tokenLogin(event.data()!['token']);
-          GoogleSignInProvider googleProvider =
-              Provider.of<GoogleSignInProvider>(context, listen: false);
-          googleProvider.login();
+        .listen(
+      (DocumentSnapshot event) async {
+        if (event.exists) {
+          if (generatedString == docRef.id.toString()) {
+            // await tokenLogin(event.data()!['token']);
+            GoogleSignInProvider googleProvider =
+                Provider.of<GoogleSignInProvider>(context, listen: false);
+            await googleProvider
+                .login()
+                .whenComplete(
+                  () async {
+                    if (event.data()!['uid'] != mAuth.currentUser!.uid) {
+                      await googleProvider.logout();
+                      await FirebaseFirestore.instance
+                          .collection('TempUserID')
+                          .doc(generatedString)
+                          .delete();
+                    } else {
+                      await FirebaseFirestore.instance
+                          .collection('TempUserID')
+                          .doc(generatedString)
+                          .delete();
+                    }
+                  },
+                )
+                .onError(
+                  (Object? error, StackTrace stackTrace) => const Scaffold(
+                    body: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                )
+                .catchError(
+                  (dynamic onError) {
+                    const Scaffold(
+                      body: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  },
+                );
+          }
         }
-      }
-    });
+      },
+    );
   }
 
   @override
@@ -102,10 +141,11 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
             .doc(generatedString)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<Object?> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting)
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
             );
+          }
           return Stack(
             children: <Widget>[
               Center(
@@ -145,7 +185,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                   children: <Widget>[
                     Text.rich(
                       TextSpan(
-                        text: 'Version : 2.1.9 - Alpha ',
+                        text: 'Version : 2.2.0 - Alpha ',
                         style: GoogleFonts.quicksand(
                           fontSize: 1 * SizeConfig.textMultiplier,
                           fontWeight: FontWeight.w900,
@@ -168,6 +208,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                       hoverColor: Colors.transparent,
                       focusColor: Colors.transparent,
                       splashColor: Colors.transparent,
+                      tooltip: 'Github repository',
                       icon: Icon(
                         const IconData(
                           0xec1c,
@@ -175,12 +216,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                         ),
                         size: 1.5 * SizeConfig.textMultiplier,
                       ),
-                      onPressed: () {
-                        js.context.callMethod(
-                          'open',
-                          <String>['https://github.com/yahu1031/passman'],
-                        );
-                      },
+                      onPressed: _openGitLink,
                     )
                   ],
                 ),

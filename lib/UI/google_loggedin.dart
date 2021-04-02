@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:logger/logger.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/UI/web/web_google_logged_in.dart';
 import 'package:passman/services/authentication.dart';
@@ -19,12 +21,15 @@ class GoogleLoggedInScreen extends StatefulWidget {
 
 class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
   late TapGestureRecognizer _loginTapGesture, _signupTapGesture;
+  final Logger logger = Logger(
+    printer: PrettyPrinter(methodCount: 0),
+  );
   FirebaseAuth mAuth = FirebaseAuth.instance;
-  Future<void> _loginWithImage() async {
+  void _loginWithImage() {
     Navigator.pushNamed(context, '/passmanlogin');
   }
 
-  Future<void> _signupWithImage() async {
+  void _signupWithImage() {
     Navigator.pushNamed(
       context,
       '/passmansignup',
@@ -39,6 +44,21 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
   @override
   void initState() {
     super.initState();
+    if (!kIsWeb) {
+      String uuid = mAuth.currentUser!.uid;
+      String? name = mAuth.currentUser!.displayName;
+      FirebaseFirestore.instance
+          .collection('UserData')
+          .doc(uuid)
+          .set(<String, dynamic>{
+        'name': name,
+        'web_login': false,
+      }).onError((dynamic firestoreError, StackTrace stackTrace) {
+        logger.e(firestoreError.toString());
+      }).catchError((dynamic onFirestoreError) {
+        logger.e(onFirestoreError.toString());
+      });
+    }
     _loginTapGesture = TapGestureRecognizer()..onTap = _loginWithImage;
     _signupTapGesture = TapGestureRecognizer()..onTap = _signupWithImage;
   }
@@ -47,10 +67,6 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
   Widget build(BuildContext context) {
     GoogleSignInProvider provider =
         Provider.of<GoogleSignInProvider>(context, listen: false);
-    // mAuth.currentUser!.getIdToken().then((String value) {
-    //   print(value);
-    //   return value;
-    // });
     return Scaffold(
       body: SafeArea(
         child: kIsWeb

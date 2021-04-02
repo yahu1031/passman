@@ -15,7 +15,7 @@ import 'package:passman/services/state_check.dart';
 import 'package:passman/splash_screen.dart';
 
 Future<void> main() async {
-  await WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(
     MyApp(),

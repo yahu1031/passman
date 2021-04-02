@@ -100,7 +100,7 @@ class _PassmanLoginState extends State<PassmanLogin> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              password.length >= 1
+                              password.isNotEmpty
                                   ? IconButton(
                                       tooltip: 'Undo',
                                       icon: Icon(

@@ -1,4 +1,6 @@
-import 'dart:js' as js;
+import 'package:url_launcher/url_launcher.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
@@ -14,6 +16,31 @@ class WebGoogleLoggedin extends StatefulWidget {
 }
 
 class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
+  String? uuid = FirebaseAuth.instance.currentUser!.uid;
+  bool isLoggedinal = false;
+  final String _url = 'https://github.com/yahu1031/passman';
+  Future<void> _openGitLink() async => await canLaunch(_url)
+      ? await launch(_url)
+      : throw 'Could not launch $_url';
+  @override
+  void initState() {
+    super.initState();
+    DocumentReference docRef =
+        FirebaseFirestore.instance.collection('UserData').doc(uuid);
+    docRef.snapshots().listen((DocumentSnapshot event) async {
+      if (event.exists) {
+        if (event.data()!['web_login'] == false) {
+          await docRef.update(
+            <String, dynamic>{
+              'web_login': true,
+            },
+          );
+        }
+        ;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     GoogleSignInProvider provider =
@@ -35,7 +62,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                     children: <Widget>[
                       Text.rich(
                         TextSpan(
-                          text: 'Version : 2.1.9 - Alpha ',
+                          text: 'Version : 2.2.0 - Alpha ',
                           style: GoogleFonts.quicksand(
                             fontSize: 1 * SizeConfig.textMultiplier,
                             fontWeight: FontWeight.w900,
@@ -65,12 +92,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                           ),
                           size: 1.5 * SizeConfig.textMultiplier,
                         ),
-                        onPressed: () {
-                          js.context.callMethod(
-                            'open',
-                            <String>['https://github.com/yahu1031/passman'],
-                          );
-                        },
+                        onPressed: _openGitLink,
                       )
                     ],
                   ),
@@ -82,10 +104,23 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
             top: 20,
             right: 20,
             child: IconButton(
+              splashRadius: 0.001,
+              hoverColor: Colors.transparent,
+              focusColor: Colors.transparent,
+              splashColor: Colors.transparent,
               tooltip: 'Log out as ${provider.getCurrentUser().toUpperCase()}.',
               icon: const Icon(TablerIcons.logout),
               onPressed: () {
-                provider.logout();
+                provider.logout().whenComplete(() => <void>{
+                      FirebaseFirestore.instance
+                          .collection('UserData')
+                          .doc(uuid)
+                          .update(
+                        <String, dynamic>{
+                          'web_login': false,
+                        },
+                      )
+                    });
               },
             ),
           ),

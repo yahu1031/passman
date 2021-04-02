@@ -45,11 +45,11 @@ class _PassmanSignupState extends State<PassmanSignup> {
 
   Future<void> uploadToStorage() async {
     String filename =
-        await '${mAuth.currentUser!.uid}-${password.length.toString()}.png';
+        '${mAuth.currentUser!.uid}-${password.length.toString()}.png';
     Reference storageRef =
         FirebaseStorage.instance.ref().child('UserImgData/$filename');
     UploadTask uploadTask = storageRef.putFile(_image!);
-    uploadTask.whenComplete(() async {
+    await uploadTask.whenComplete(() async {
       String downImg = await uploadTask.snapshot.ref.getDownloadURL();
     });
   }
@@ -114,7 +114,7 @@ class _PassmanSignupState extends State<PassmanSignup> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            password.length >= 1
+                            password.isNotEmpty
                                 ? GestureDetector(
                                     onLongPress: () {
                                       password.removeRange(

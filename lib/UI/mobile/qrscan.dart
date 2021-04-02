@@ -175,15 +175,15 @@ class _QRScanState extends State<QRScan> {
     Encryption encryption = Encryption();
     String code = decryption.stringDecryption(result!.code.toString());
     String uToken = await mAuth.currentUser!.getIdToken();
-    
+    String uuid = mAuth.currentUser!.uid;
     try {
-      FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection('TempUserID')
           .doc(code)
           .set(<String, dynamic>{
-        'token': uToken,
         'flag': false,
-        'time': Timestamp.now()
+        'time': Timestamp.now(),
+        'uid': uuid
       }).onError((dynamic signinError, StackTrace stackTrace) {
         logger.e(signinError.toString());
       }).catchError((dynamic onSigninError) {
@@ -235,7 +235,7 @@ class _QRScanState extends State<QRScan> {
         result = scanData;
       });
       await controller.pauseCamera();
-      showCode(result);
+      await showCode(result);
     });
   }
 }
