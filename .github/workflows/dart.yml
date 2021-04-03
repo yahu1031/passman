@@ -18,9 +18,9 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: "12.x"
-      # - uses: subosito/flutter-action@v1.4.0
-      #   with:
-      #     channel: "stable"
+      - uses: subosito/flutter-action@v1.4.0
+        with:
+          channel: stable
       - name: Adding service files
         run: echo ${{ secrets.GOOGLE_SERVICE_JSON }} | base64 --decode > android/app/google-services.json
       - name: Adding sign key
