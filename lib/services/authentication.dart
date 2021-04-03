@@ -84,13 +84,9 @@ class GoogleSignInProvider extends ChangeNotifier {
         idToken: googleAuth.idToken,
       );
 
-      await FirebaseAuth.instance.signInWithCredential(credential).then(
-        (UserCredential value) {
-          // ignore: avoid_print
-          print(
-              '''${_firebaseAuth.currentUser!.displayName.toString()} has logged in.''');
-        },
-      ).catchError((dynamic onSigninCredsError) {
+      await FirebaseAuth.instance
+          .signInWithCredential(credential)
+          .catchError((dynamic onSigninCredsError) {
         loggerNoStack.e(onSigninCredsError.toString());
       });
       isSigningIn = false;

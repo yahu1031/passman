@@ -35,6 +35,44 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
   late String generatedString, encryptedString;
   bool isPin = false, stringMatched = false, isStarted = true;
   late Timer timer;
+  Future<void> showCode(BuildContext context) async {
+    try {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text(
+            'Sorry',
+            style: GoogleFonts.lexendDeca(
+              fontSize: 5 * SizeConfig.textMultiplier,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Text(
+            'User tried to login didn\'t match.',
+            style: GoogleFonts.lexendDeca(
+              fontSize: 3 * SizeConfig.textMultiplier,
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+              },
+              child: Text(
+                'OK',
+                style: GoogleFonts.lexendDeca(
+                  fontSize: 2 * SizeConfig.textMultiplier,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      loggerNoStack.e(e.toString());
+    }
+  }
+
   Future<void> _openGitLink() async => await canLaunch(_url)
       ? await launch(_url)
       : throw 'Could not launch $_url';
@@ -71,7 +109,6 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
     DocumentReference docRef = FirebaseFirestore.instance
         .collection('TempUserID')
         .doc(generatedString);
-
     FirebaseFirestore.instance
         .collection('TempUserID')
         .doc(generatedString)
@@ -80,24 +117,28 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
       (DocumentSnapshot event) async {
         if (event.exists) {
           if (generatedString == docRef.id.toString()) {
-            // await tokenLogin(event.data()!['token']);
             GoogleSignInProvider googleProvider =
                 Provider.of<GoogleSignInProvider>(context, listen: false);
             await googleProvider
                 .login()
                 .whenComplete(
                   () async {
-                    if (event.data()!['uid'] != mAuth.currentUser!.uid) {
-                      await googleProvider.logout();
-                      await FirebaseFirestore.instance
-                          .collection('TempUserID')
-                          .doc(generatedString)
-                          .delete();
-                    } else {
-                      await FirebaseFirestore.instance
-                          .collection('TempUserID')
-                          .doc(generatedString)
-                          .delete();
+                    if (mAuth.currentUser != null) {
+                      if (event.data()!['uid'] != mAuth.currentUser!.uid) {
+                        await googleProvider.logout();
+                        print('User tried to login didn\'t match');
+                        const CircularProgressIndicator();
+                        await FirebaseFirestore.instance
+                            .collection('TempUserID')
+                            .doc(generatedString)
+                            .delete();
+                        // await showCode(context);
+                      } else {
+                        await FirebaseFirestore.instance
+                            .collection('TempUserID')
+                            .doc(generatedString)
+                            .delete();
+                      }
                     }
                   },
                 )
@@ -185,7 +226,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                   children: <Widget>[
                     Text.rich(
                       TextSpan(
-                        text: 'Version : 2.2.0 - Alpha ',
+                        text: 'Version : 2.2.1-alpha ',
                         style: GoogleFonts.quicksand(
                           fontSize: 1 * SizeConfig.textMultiplier,
                           fontWeight: FontWeight.w900,

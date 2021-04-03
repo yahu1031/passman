@@ -26,5 +26,6 @@
     "source.fixAll": true,
     "source.fixAll.eslint": true,
     "source.fixAll.markdownlint": true
-  }
+  },
+  "gradle.debug": true
 }
