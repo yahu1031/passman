@@ -16,6 +16,12 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: "12.x"
+      - name: Checkout Android Keystore
+        uses: actions/checkout@v2
+        with:
+          repository: yahu1031/passman-keystore
+          token: ${{ secrets.SSH_KEY }}
+          path: android/keystore
       - uses: dart-lang/setup-dart@v1
       - uses: subosito/flutter-action@v1.4.0
         with:
