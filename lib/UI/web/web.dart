@@ -1,5 +1,6 @@
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -126,7 +127,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                     if (mAuth.currentUser != null) {
                       if (event.data()!['uid'] != mAuth.currentUser!.uid) {
                         await googleProvider.logout();
-                        print('User tried to login didn\'t match');
+                        log('User tried to login didn\'t match');
                         const CircularProgressIndicator();
                         await FirebaseFirestore.instance
                             .collection('TempUserID')

@@ -138,6 +138,7 @@ lib/generated_plugin_registrant.dart
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
 **/android/captures/
+**/android/keystore/
 **/android/gradlew
 **/android/gradlew.bat
 **/android/key.properties

@@ -8,7 +8,7 @@ analyzer:
 
 linter:
   rules:
-    avoid_print: false
+    avoid_print: true
     avoid_type_to_string: true
     avoid_slow_async_io: true
     camel_case_types: true
