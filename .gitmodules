@@ -1,3 +1,0 @@
-[submodule "android/keystore"]
-	path = android/keystore
-	url = git@github.com:yahu1031/passman-keystore.git
