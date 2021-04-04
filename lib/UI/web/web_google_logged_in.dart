@@ -1,3 +1,6 @@
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:passman/.dart';
+import 'package:passman/services/fetch_ip.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,27 +19,48 @@ class WebGoogleLoggedin extends StatefulWidget {
 }
 
 class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   String? uuid = FirebaseAuth.instance.currentUser!.uid;
-  bool isLoggedinal = false;
+  List<String>? webPlatform;
+  Map<String, dynamic> map = <String, dynamic>{};
   final String _url = 'https://github.com/yahu1031/passman';
   Future<void> _openGitLink() async => await canLaunch(_url)
       ? await launch(_url)
       : throw 'Could not launch $_url';
+  Future<String> platformInfo() async {
+    WebBrowserInfo webBrowserInfo = await deviceInfo.webBrowserInfo;
+    String platform =
+        webBrowserInfo.userAgent.toString().split(' ')[1].substring(1);
+    return platform;
+  }
+
   @override
   void initState() {
     super.initState();
-    DocumentReference docRef =
-        FirebaseFirestore.instance.collection('UserData').doc(uuid);
-    docRef.snapshots().listen((DocumentSnapshot event) async {
+    userDataColRef.doc(uuid).snapshots().listen((DocumentSnapshot event) async {
+      String? ipAddress = await FetchIP.getIP();
+      String? loggedInPlatform = await platformInfo();
       if (event.exists) {
-        if (event.data()!['web_login'] == false) {
-          await docRef.update(
-            <String, dynamic>{
-              'web_login': true,
-            },
-          );
+        if (event.data()!['ip'] == 'No records' ||
+            event.data()!['logged_in_time'] == 'No records' ||
+            event.data()!['platform'] == 'No records') {
+          try {
+            await userDataColRef.doc(uuid).update(
+              <String, dynamic>{
+                'web_login': true,
+                'platform': loggedInPlatform,
+                'ip': ipAddress,
+                'logged_in_time': Timestamp.now()
+              },
+            ).catchError((dynamic onError) {
+              print('Update catch error: ${onError.toString()}');
+            }).onError((Object? error, StackTrace stackTrace) {
+              print('Update on error: ${error.toString()}');
+            });
+          } catch (err) {
+            print('Update try catch error: ${err.toString()}');
+          }
         }
-        ;
       }
     });
   }
@@ -62,7 +86,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                     children: <Widget>[
                       Text.rich(
                         TextSpan(
-                          text: 'Version : 2.2.2-alpha ',
+                          text: 'Version : 2.2.3-alpha ',
                           style: GoogleFonts.quicksand(
                             fontSize: 1 * SizeConfig.textMultiplier,
                             fontWeight: FontWeight.w900,
@@ -108,19 +132,18 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
               hoverColor: Colors.transparent,
               focusColor: Colors.transparent,
               splashColor: Colors.transparent,
-              tooltip: 'Log out as ${provider.getCurrentUser().toUpperCase()}.',
+              tooltip: '''
+Log out as ${mAuth.currentUser!.displayName.toString().toUpperCase()}.''',
               icon: const Icon(TablerIcons.logout),
-              onPressed: () {
-                provider.logout().whenComplete(() => <void>{
-                      FirebaseFirestore.instance
-                          .collection('UserData')
-                          .doc(uuid)
-                          .update(
-                        <String, dynamic>{
-                          'web_login': false,
-                        },
-                      )
-                    });
+              onPressed: () async {
+                await userDataColRef.doc(uuid).update(
+                    <String, dynamic>{
+                      'web_login': false,
+                      'platform': 'No records',
+                    'logged_in_time': 'No records',
+                    'ip': 'No records'
+                    },
+                  ).then((_) async => provider.logout());
               },
             ),
           ),

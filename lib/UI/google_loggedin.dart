@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -25,6 +24,51 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
     Navigator.pushNamed(context, '/passmanlogin');
   }
 
+  Future<void> checkUserDB() async {
+    GoogleSignInProvider gProvider =
+        Provider.of<GoogleSignInProvider>(context, listen: false);
+    DocumentReference userDataDocRef = FirebaseFirestore.instance
+        .collection('UserData')
+        .doc(gProvider.getCurrentUid());
+
+    String? name = mAuth.currentUser!.displayName;
+    String? uuid = mAuth.currentUser!.uid;
+    print(uuid);
+    try {
+      DocumentSnapshot a = await userDataDocRef.get();
+      if (a.exists) {
+        await userDataDocRef.update(<String, dynamic>{
+          'name': name,
+          'web_login': false,
+          'img': 'No records',
+          'platform': 'No records',
+          'logged_in_time': 'No records',
+          'ip': 'No records'
+        }).onError((dynamic firestoreError, StackTrace stackTrace) {
+          print(firestoreError.toString());
+        }).catchError((dynamic onFirestoreError) {
+          print(onFirestoreError.toString());
+        });
+      } else {
+        await userDataDocRef.set(<String, dynamic>{
+          'name': name,
+          'web_login': false,
+          'img': 'No records',
+          'platform': 'No records',
+          'logged_in_time': 'No records',
+          'ip': 'No records'
+        }).onError((dynamic firestoreError, StackTrace stackTrace) {
+          print(firestoreError.toString());
+        }).catchError((dynamic onFirestoreError) {
+          print(onFirestoreError.toString());
+        });
+      }
+    } catch (err) {
+      print(err.toString());
+    }
+  }
+
+  String? tempPlat;
   void _signupWithImage() {
     Navigator.pushNamed(
       context,
@@ -32,28 +76,11 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
     );
   }
 
-  // Future<String> getCustomToken(GoogleSignInProvider googleProvider) async {
-  //   String token = await googleProvider.getUserToken();
-  //   return token.toString();
-  // }
-
   @override
   void initState() {
     super.initState();
     if (!kIsWeb) {
-      String uuid = mAuth.currentUser!.uid;
-      String? name = mAuth.currentUser!.displayName;
-      FirebaseFirestore.instance
-          .collection('UserData')
-          .doc(uuid)
-          .set(<String, dynamic>{
-        'name': name,
-        'web_login': false,
-      }).onError((dynamic firestoreError, StackTrace stackTrace) {
-        print(firestoreError.toString());
-      }).catchError((dynamic onFirestoreError) {
-        print(onFirestoreError.toString());
-      });
+      checkUserDB();
     }
     _loginTapGesture = TapGestureRecognizer()..onTap = _loginWithImage;
     _signupTapGesture = TapGestureRecognizer()..onTap = _signupWithImage;
@@ -175,7 +202,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
                             ),
                             children: <InlineSpan>[
                               TextSpan(
-                                text: 'SIGNUP',
+                                text: 'CHANGE IMAGE',
                                 style: GoogleFonts.quicksand(
                                   fontWeight: FontWeight.w900,
                                   color: Colors.blue[400],

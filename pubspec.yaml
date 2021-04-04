@@ -1,7 +1,7 @@
 name: passman
 description: A new Flutter project.
 
-version: 2.2.2-alpha
+version: 2.2.3-alpha
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -10,6 +10,7 @@ dependencies:
   cloud_firestore: ^1.0.1
   connectivity_plus: ^1.0.0
   cupertino_icons: ^1.0.2
+  device_info_plus: ^1.0.0
   encrypt: ^5.0.0-beta.1
   firebase_auth: ^1.0.1
   firebase_core: ^1.0.1
@@ -42,15 +43,12 @@ flutter:
     - assets/lottie/
     - assets/fonts/
   fonts:
-    - family: Handwriting
-      fonts:
-        - asset: assets/fonts/Handwriting.ttf
-    - family: NotoSnasEmoji
-      fonts:
-        - asset: assets/fonts/NotoColorEmoji.ttf
     - family: IconsFont
       fonts:
         - asset: assets/fonts/icons.ttf
+    - family: QuickSand
+      fonts:
+        - asset: assets/fonts/Quicksand.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:

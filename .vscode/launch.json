@@ -12,7 +12,6 @@
         "edge",
         "--web-port",
         "1031",
-        "-v"
       ]
     },
     {
@@ -20,7 +19,7 @@
       "program": "lib/main.dart",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "release"
+      "flutterMode": "debug"
     }
     // {
     //   "name": "Windows",

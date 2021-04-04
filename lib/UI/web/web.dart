@@ -11,6 +11,7 @@ import 'package:passman/Components/size_config.dart';
 import 'package:passman/services/authentication.dart';
 import 'package:passman/services/encryption.dart';
 import 'package:passman/services/random.dart';
+import 'package:passman/.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -26,6 +27,8 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
   );
   final String _url = 'https://github.com/yahu1031/passman';
   FirebaseAuth mAuth = FirebaseAuth.instance;
+    String? uuid = FirebaseAuth.instance.currentUser!.uid;
+
   final BoxDecoration pinPutDecoration = BoxDecoration(
     color: Colors.grey[300],
     borderRadius: BorderRadius.circular(5.0),
@@ -87,33 +90,13 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
     });
   }
 
-  Future<void> tokenLogin(String idToken) async {
-    try {
-      await mAuth.signInWithCustomToken(idToken).then(
-        (UserCredential value) {
-          loggerNoStack.i(value);
-        },
-      ).onError((dynamic error, StackTrace stackTrace) {
-        loggerNoStack.e(error.toString());
-      });
-    } catch (e) {
-      loggerNoStack.e(e.toString());
-    }
-  }
-
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
     timerFunc();
-    DocumentReference docRef = FirebaseFirestore.instance
-        .collection('TempUserID')
-        .doc(generatedString);
-    FirebaseFirestore.instance
-        .collection('TempUserID')
-        .doc(generatedString)
-        .snapshots()
-        .listen(
+    DocumentReference docRef = qrColRef.doc(generatedString);
+    docRef.snapshots().listen(
       (DocumentSnapshot event) async {
         if (event.exists) {
           if (generatedString == docRef.id.toString()) {
@@ -124,20 +107,14 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                 .whenComplete(
                   () async {
                     if (mAuth.currentUser != null) {
-                      if (event.data()!['uid'] != mAuth.currentUser!.uid) {
+                      if (event.data()!['uid'] != uuid) {
                         await googleProvider.logout();
                         print('User tried to login didn\'t match');
                         const CircularProgressIndicator();
-                        await FirebaseFirestore.instance
-                            .collection('TempUserID')
-                            .doc(generatedString)
-                            .delete();
+                        await qrColRef.doc(generatedString).delete();
                         // await showCode(context);
                       } else {
-                        await FirebaseFirestore.instance
-                            .collection('TempUserID')
-                            .doc(generatedString)
-                            .delete();
+                        await qrColRef.doc(generatedString).delete();
                       }
                     }
                   },
@@ -172,15 +149,9 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
   }
 
   @override
-  Widget build(BuildContext context) {
-    GoogleSignInProvider provider =
-        Provider.of<GoogleSignInProvider>(context, listen: false);
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       body: StreamBuilder<Object?>(
-        stream: FirebaseFirestore.instance
-            .collection('TempUserID')
-            .doc(generatedString)
-            .snapshots(),
+        stream: qrColRef.doc(generatedString).snapshots(),
         builder: (BuildContext context, AsyncSnapshot<Object?> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -226,7 +197,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                   children: <Widget>[
                     Text.rich(
                       TextSpan(
-                        text: 'Version : 2.2.2-alpha ',
+                        text: 'Version : 2.2.3-alpha ',
                         style: GoogleFonts.quicksand(
                           fontSize: 1 * SizeConfig.textMultiplier,
                           fontWeight: FontWeight.w900,
@@ -267,5 +238,4 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
         },
       ),
     );
-  }
 }

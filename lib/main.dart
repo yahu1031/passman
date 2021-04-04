@@ -8,7 +8,7 @@ import 'package:passman/UI/google_loggedin.dart';
 import 'package:passman/UI/mobile/mobile.dart';
 import 'package:passman/UI/mobile/passman_auth/login.dart';
 import 'package:passman/UI/mobile/passman_auth/signup.dart';
-import 'package:passman/UI/mobile/qrscan.dart';
+import 'package:passman/UI/mobile/passman_auth/qr_screen/qrscan.dart';
 import 'package:passman/UI/web/not_found.dart';
 import 'package:passman/UI/web/web.dart';
 import 'package:passman/services/state_check.dart';
