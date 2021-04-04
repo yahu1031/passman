@@ -20,7 +20,7 @@
       "program": "lib/main.dart",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "profile"
+      "flutterMode": "release"
     }
     // {
     //   "name": "Windows",

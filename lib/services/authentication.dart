@@ -1,15 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:logger/logger.dart';
 
 class GoogleSignInProvider extends ChangeNotifier {
   GoogleSignInProvider() {
     _isSigningIn = false;
   }
-  Logger loggerNoStack = Logger(
-    printer: PrettyPrinter(methodCount: 0),
-  );
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   bool _isSigningIn = false;
@@ -52,49 +49,61 @@ class GoogleSignInProvider extends ChangeNotifier {
 
   Future<void> tokenLogin(String idToken) async {
     try {
-      loggerNoStack.i(idToken);
-      await _firebaseAuth.signInWithCustomToken(idToken).then(
-        (UserCredential value) {
-          loggerNoStack.i(getCurrentUser);
-        },
-      ).onError((dynamic error, StackTrace stackTrace) {
-        loggerNoStack.i(error.toString());
+      await _firebaseAuth
+          .signInWithCustomToken(idToken)
+          .then(
+            (UserCredential value) {},
+          )
+          .onError((dynamic error, StackTrace stackTrace) {
+        print(error.toString());
       });
     } catch (e) {
-      loggerNoStack.e(e.toString());
+      print(e.toString());
     }
   }
 
   Future<void> login() async {
     isSigningIn = true;
-    GoogleSignInAccount? user = await googleSignIn
-        .signIn()
-        .onError((dynamic signinError, StackTrace stackTrace) {
-      loggerNoStack.e(signinError.toString());
-    }).catchError((dynamic onSigninError) {
-      loggerNoStack.e(onSigninError.toString());
-    });
-    if (user == null) {
-      isSigningIn = false;
-      return;
-    } else {
-      GoogleSignInAuthentication googleAuth = await user.authentication;
-      OAuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      await FirebaseAuth.instance
-          .signInWithCredential(credential)
-          .catchError((dynamic onSigninCredsError) {
-        loggerNoStack.e(onSigninCredsError.toString());
+    try {
+      GoogleSignInAccount? user = await googleSignIn
+          .signIn()
+          .onError((dynamic signinError, StackTrace stackTrace) {
+        print(signinError.toString());
+      }).catchError((dynamic onSigninError) {
+        print(onSigninError.toString());
       });
-      isSigningIn = false;
+      if (user == null) {
+        isSigningIn = false;
+        return;
+      } else {
+        GoogleSignInAuthentication googleAuth = await user.authentication;
+        OAuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        await FirebaseAuth.instance
+            .signInWithCredential(credential)
+            .catchError((dynamic onSigninCredsError) {
+          print(onSigninCredsError.toString());
+        });
+        isSigningIn = false;
+      }
+    } on PlatformException catch (err) {
+      print(err.toString());
+    } catch (error) {
+      print(error.toString());
     }
   }
 
   Future<void> logout() async {
-    await googleSignIn.disconnect();
-    await FirebaseAuth.instance.signOut();
+    try{
+      await googleSignIn.disconnect();
+      await FirebaseAuth.instance.signOut();
+    } on PlatformException catch (err) {
+      print(err.toString());
+    } catch (error) {
+      print(error.toString());
+    }
   }
 }
