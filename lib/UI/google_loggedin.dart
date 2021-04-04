@@ -35,8 +35,8 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
     String? uuid = mAuth.currentUser!.uid;
     print(uuid);
     try {
-      DocumentSnapshot a = await userDataDocRef.get();
-      if (a.exists) {
+      DocumentSnapshot checkData = await userDataDocRef.get();
+      if (checkData.exists) {
         await userDataDocRef.update(<String, dynamic>{
           'name': name,
           'web_login': false,
