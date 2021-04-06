@@ -200,8 +200,8 @@ class _PassmanLoginState extends State<PassmanLogin> {
                                           ),
                                           disabledColor: Colors.grey,
                                           onPressed: password!.length > 3
-                                              // ? () => sendToDecode()
-                                              ? () {}
+                                              ? () => sendToDecode()
+                                              // ? () {}
                                               : null,
                                         )
                                       : const SizedBox(
