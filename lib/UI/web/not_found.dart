@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:passman/Components/constants.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/services/state_check.dart';
 
 class NotFoundScreen extends StatefulWidget {
   NotFoundScreen({Key? key}) : super(key: key);
-  static const String id = '/you_are_lost';
   @override
   _NotFoundScreenState createState() => _NotFoundScreenState();
 }
@@ -26,7 +26,8 @@ class _NotFoundScreenState extends State<NotFoundScreen> {
                   ),
                   Text(
                     'Seems you are lost',
-                    style: GoogleFonts.quicksand(
+                    style: TextStyle(
+                      fontFamily: 'Quicksand',
                       fontSize: 2 * SizeConfig.textMultiplier,
                       fontWeight: FontWeight.w900,
                     ),
@@ -56,8 +57,9 @@ class _NotFoundScreenState extends State<NotFoundScreen> {
                           horizontal: 10, vertical: 5),
                       child: Text(
                         'Go back to home',
-                        style: GoogleFonts.quicksand(
+                        style: TextStyle(
                           color: Colors.white,
+                              fontFamily: 'Quicksand',
                           fontWeight: FontWeight.w500,
                           fontSize: 1 * SizeConfig.textMultiplier,
                         ),
@@ -73,7 +75,7 @@ class _NotFoundScreenState extends State<NotFoundScreen> {
               child: Hero(
                 tag: 'logo',
                 child: Lottie.asset(
-                  'assets/lottie/fingerprint.json',
+                  LottieFiles.fingerprint,
                   height: 10 * SizeConfig.imageSizeMultiplier,
                   reverse: true,
                 ),
@@ -84,8 +86,9 @@ class _NotFoundScreenState extends State<NotFoundScreen> {
               right: 20,
               child: Text.rich(
                 TextSpan(
-                  text: 'Version : 2.2.3-alpha ',
-                  style: GoogleFonts.quicksand(
+                  text: 'Version : 2.2.4-alpha ',
+                  style: TextStyle(
+                    fontFamily: 'Quicksand',
                     fontSize: 1 * SizeConfig.textMultiplier,
                     fontWeight: FontWeight.w900,
                     color: Colors.black,

@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:passman/Components/constants.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/UI/web/web_google_logged_in.dart';
 import 'package:passman/services/authentication.dart';
@@ -20,27 +20,22 @@ class GoogleLoggedInScreen extends StatefulWidget {
 class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
   late TapGestureRecognizer _loginTapGesture, _signupTapGesture;
   FirebaseAuth mAuth = FirebaseAuth.instance;
+  bool _userHasData = false;
   void _loginWithImage() {
-    Navigator.pushNamed(context, '/passmanlogin');
+    Navigator.pushNamed(context, PageRoutes.routePassmanLogin);
   }
 
   Future<void> checkUserDB() async {
-    GoogleSignInProvider gProvider =
-        Provider.of<GoogleSignInProvider>(context, listen: false);
-    DocumentReference userDataDocRef = FirebaseFirestore.instance
-        .collection('UserData')
-        .doc(gProvider.getCurrentUid());
-
-    String? name = mAuth.currentUser!.displayName;
     String? uuid = mAuth.currentUser!.uid;
-    print(uuid);
+    String? name = mAuth.currentUser!.displayName;
+    DocumentReference userDataDocRef =
+        FirebaseFirestore.instance.collection('UserData').doc(uuid);
     try {
       DocumentSnapshot checkData = await userDataDocRef.get();
       if (checkData.exists) {
         await userDataDocRef.update(<String, dynamic>{
           'name': name,
           'web_login': false,
-          'img': 'No records',
           'platform': 'No records',
           'logged_in_time': 'No records',
           'ip': 'No records'
@@ -72,13 +67,14 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
   void _signupWithImage() {
     Navigator.pushNamed(
       context,
-      '/passmansignup',
+      PageRoutes.routePassmanSignup,
     );
   }
 
   @override
   void initState() {
     super.initState();
+    _userHasData = false;
     if (!kIsWeb) {
       checkUserDB();
     }
@@ -90,6 +86,23 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
   Widget build(BuildContext context) {
     GoogleSignInProvider provider =
         Provider.of<GoogleSignInProvider>(context, listen: false);
+        String file = '${mAuth.currentUser!.uid}.png';
+    try {
+      storageRef
+          .child('UserImgData/$file')
+          .getDownloadURL()
+          .then((String? value) {
+        setState(() {
+          value != null ? _userHasData = true : _userHasData = false;
+        });
+      });
+    } catch (error) {
+      print('On Catching error: ${error.toString()}');
+      setState(() {
+        _userHasData = false;
+      });
+    }
+    
     return Scaffold(
       body: SafeArea(
         child: kIsWeb
@@ -106,15 +119,17 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
                           overflow: TextOverflow.visible,
                           text: TextSpan(
                             text: 'Hello ',
-                            style: GoogleFonts.quicksand(
+                            style: TextStyle(
+                              fontFamily: 'Quicksand',
                               fontSize: 2 * SizeConfig.textMultiplier,
                               color: Colors.black,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w700,
                             ),
                             children: <TextSpan>[
                               TextSpan(
                                 text: provider.getCurrentUser().toUpperCase(),
-                                style: GoogleFonts.quicksand(
+                                style: TextStyle(
+                                  fontFamily: 'Quicksand',
                                   fontWeight: FontWeight.w900,
                                   color: Colors.blue[400],
                                 ),
@@ -157,7 +172,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
                         color: Colors.black,
                       ),
                       onPressed: () {
-                        Navigator.pushNamed(context, '/qrscan');
+                        Navigator.pushNamed(context, PageRoutes.routeQRScan);
                       },
                     ),
                   ),
@@ -165,53 +180,100 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
                     bottom: 20,
                     child: Column(
                       children: <Widget>[
-                        RichText(
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.visible,
-                          text: TextSpan(
-                            text: 'New here? ',
-                            style: GoogleFonts.quicksand(
-                              fontSize: 2 * SizeConfig.textMultiplier,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            children: <InlineSpan>[
-                              TextSpan(
-                                text: 'LOGIN',
-                                style: GoogleFonts.quicksand(
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.blue[400],
+                        !_userHasData
+                            ? RichText(
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.visible,
+                                text: TextSpan(
+                                  text: 'You seems new here ',
+                                  style: TextStyle(
+                                    fontFamily: 'Quicksand',
+                                    fontSize: 1.75 * SizeConfig.textMultiplier,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                  children: <InlineSpan>[
+                                    TextSpan(
+                                      text: 'SIGNUP',
+                                      style: TextStyle(
+                                        fontFamily: 'Quicksand',
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.blue[400],
+                                      ),
+                                      recognizer: _signupTapGesture,
+                                    ),
+                                  ],
                                 ),
-                                recognizer: _loginTapGesture,
+                              )
+                            : const SizedBox(
+                                height: 0,
                               ),
-                            ],
-                          ),
-                        ),
                         SizedBox(
-                          height: 2 * SizeConfig.heightMultiplier,
+                          height: !_userHasData
+                              ? 0
+                              : 2 * SizeConfig.heightMultiplier,
                         ),
-                        RichText(
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.visible,
-                          text: TextSpan(
-                            text: 'Old user? ',
-                            style: GoogleFonts.quicksand(
-                              fontSize: 2 * SizeConfig.textMultiplier,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            children: <InlineSpan>[
-                              TextSpan(
-                                text: 'CHANGE IMAGE',
-                                style: GoogleFonts.quicksand(
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.blue[400],
+                        _userHasData
+                            ? RichText(
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.visible,
+                                text: TextSpan(
+                                  text: 'You seems old user ',
+                                  style: TextStyle(
+                                    fontFamily: 'Quicksand',
+                                    fontSize: 1.75 * SizeConfig.textMultiplier,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                  children: <InlineSpan>[
+                                    TextSpan(
+                                      text: 'LOGIN',
+                                      style: TextStyle(
+                                        fontFamily: 'Quicksand',
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.blue[400],
+                                      ),
+                                      recognizer: _loginTapGesture,
+                                    ),
+                                  ],
                                 ),
-                                recognizer: _signupTapGesture,
+                              )
+                            : const SizedBox(
+                                height: 0,
                               ),
-                            ],
-                          ),
+                        SizedBox(
+                          height: !_userHasData
+                              ? 0
+                              : 2 * SizeConfig.heightMultiplier,
                         ),
+                        _userHasData
+                            ? RichText(
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.visible,
+                                text: TextSpan(
+                                  text: 'Wanna change master image? ',
+                                  style: TextStyle(
+                                    fontFamily: 'Quicksand',
+                                    fontSize: 1.75 * SizeConfig.textMultiplier,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                  children: <InlineSpan>[
+                                    TextSpan(
+                                      text: 'CHANGE IMAGE',
+                                      style: TextStyle(
+                                        fontFamily: 'Quicksand',
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.blue[400],
+                                      ),
+                                      recognizer: _signupTapGesture,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : const SizedBox(
+                                height: 0,
+                              ),
                       ],
                     ),
                   ),

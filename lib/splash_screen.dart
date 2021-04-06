@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:passman/Components/constants.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/services/state_check.dart';
 
@@ -20,7 +21,7 @@ class SplashScreen extends StatelessWidget {
               child: Hero(
                 tag: 'logo',
                 child: Lottie.asset(
-                  'assets/lottie/fingerprint.json',
+                  LottieFiles.fingerprint,
                   height: 30 * SizeConfig.imageSizeMultiplier,
                 ),
               ),

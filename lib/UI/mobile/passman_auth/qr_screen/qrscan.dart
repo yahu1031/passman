@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:logger/logger.dart';
 import 'package:lottie/lottie.dart';
-import 'package:passman/.dart';
+import 'package:passman/Components/constants.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/UI/mobile/passman_auth/qr_screen/web_logged_in_qr_screen.dart';
 import 'package:passman/services/decryption.dart';
@@ -21,7 +21,6 @@ import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 class QRScan extends StatefulWidget {
   const QRScan({Key? key}) : super(key: key);
-  static const String id = '/qrcode';
   @override
   _QRScanState createState() => _QRScanState();
 }
@@ -171,7 +170,7 @@ class _QRScanState extends State<QRScan> {
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Lottie.asset('assets/lottie/network.json'),
+                      Lottie.asset(LottieFiles.network),
                       Text(
                         'Sorry, check internet connection',
                         style: GoogleFonts.lexendDeca(

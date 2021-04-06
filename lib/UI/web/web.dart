@@ -1,3 +1,4 @@
+import 'package:passman/Components/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,7 +12,6 @@ import 'package:passman/Components/size_config.dart';
 import 'package:passman/services/authentication.dart';
 import 'package:passman/services/encryption.dart';
 import 'package:passman/services/random.dart';
-import 'package:passman/.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -27,7 +27,6 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
   );
   final String _url = 'https://github.com/yahu1031/passman';
   FirebaseAuth mAuth = FirebaseAuth.instance;
-    String? uuid = FirebaseAuth.instance.currentUser!.uid;
 
   final BoxDecoration pinPutDecoration = BoxDecoration(
     color: Colors.grey[300],
@@ -107,7 +106,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                 .whenComplete(
                   () async {
                     if (mAuth.currentUser != null) {
-                      if (event.data()!['uid'] != uuid) {
+                      if (event.data()!['uid'] != mAuth.currentUser!.uid) {
                         await googleProvider.logout();
                         print('User tried to login didn\'t match');
                         const CircularProgressIndicator();
@@ -184,7 +183,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                 child: Hero(
                   tag: 'logo',
                   child: Lottie.asset(
-                    'assets/lottie/fingerprint.json',
+                    LottieFiles.fingerprint,
                     height: 10 * SizeConfig.imageSizeMultiplier,
                     reverse: true,
                   ),
@@ -197,8 +196,9 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                   children: <Widget>[
                     Text.rich(
                       TextSpan(
-                        text: 'Version : 2.2.3-alpha ',
-                        style: GoogleFonts.quicksand(
+                        text: 'Version : 2.2.4-alpha ',
+                          style: TextStyle(
+                            fontFamily: 'Quicksand',
                           fontSize: 1 * SizeConfig.textMultiplier,
                           fontWeight: FontWeight.w900,
                           color: Colors.black,

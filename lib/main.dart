@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:passman/Components/constants.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/Components/theme_color.dart';
 import 'package:passman/UI/desktop/desktop.dart';
 import 'package:passman/UI/google_loggedin.dart';
 import 'package:passman/UI/mobile/mobile.dart';
-import 'package:passman/UI/mobile/passman_auth/login.dart';
-import 'package:passman/UI/mobile/passman_auth/signup.dart';
+import 'package:passman/UI/mobile/passman_auth/en_de_code_screens/decode_screen.dart';
+import 'package:passman/UI/mobile/passman_auth/en_de_code_screens/encode_screen.dart';
+import 'package:passman/UI/mobile/passman_auth/passman_auth_screens/login.dart';
+import 'package:passman/UI/mobile/passman_auth/passman_auth_screens/signup.dart';
 import 'package:passman/UI/mobile/passman_auth/qr_screen/qrscan.dart';
 import 'package:passman/UI/web/not_found.dart';
 import 'package:passman/UI/web/web.dart';
@@ -52,25 +55,75 @@ class MyApp extends StatelessWidget {
                   ),
                 ),
               ),
-              initialRoute: '/',
+              initialRoute: PageRoutes.routeHome,
               routes: <String, WidgetBuilder>{
-                '/': (BuildContext context) => const SplashScreen(),
-                '/state': (BuildContext context) => const StateCheck(),
-                '/mobile': (BuildContext context) => const Mobile(),
-                '/googleloggedin': (BuildContext context) =>
+                PageRoutes.routeHome: (BuildContext context) =>
+                    const SplashScreen(),
+                PageRoutes.routeState: (BuildContext context) =>
+                    const StateCheck(),
+                PageRoutes.routeMobile: (BuildContext context) =>
+                    const Mobile(),
+                PageRoutes.routeGoogleLoggedin: (BuildContext context) =>
                     const GoogleLoggedInScreen(),
-                '/passmanlogin': (BuildContext context) => const PassmanLogin(),
-                '/passmansignup': (BuildContext context) =>
+                PageRoutes.routePassmanLogin: (BuildContext context) =>
+                    const PassmanLogin(),
+                PageRoutes.routePassmanEncodingScreen: (BuildContext context) =>
+                    EncodingResultScreen(),
+                PageRoutes.routePassmanDecodingScreen: (BuildContext context) =>
+                    DecodingResultScreen(
+                      ModalRoute.of(context)!.settings.arguments,
+                    ),
+                PageRoutes.routePassmanSignup: (BuildContext context) =>
                     const PassmanSignup(),
-                '/qrscan': (BuildContext context) => const QRScan(),
-                '/desktop': (BuildContext context) => const Desktop(),
-                '/web': (BuildContext context) => const Web(),
-                NotFoundScreen.id: (BuildContext context) => NotFoundScreen(),
+                PageRoutes.routeQRScan: (BuildContext context) =>
+                    const QRScan(),
+                PageRoutes.routeDesktop: (BuildContext context) =>
+                    const Desktop(),
+                PageRoutes.routeWeb: (BuildContext context) => const Web(),
+                PageRoutes.routeNotFound: (BuildContext context) =>
+                    NotFoundScreen(),
               },
               onUnknownRoute: (RouteSettings settings) =>
                   MaterialPageRoute<void>(
                 builder: (BuildContext context) => NotFoundScreen(),
               ),
+              onGenerateRoute: (RouteSettings settings) {
+                late Widget page;
+                switch (settings.name) {
+                  case PageRoutes.routeHome:
+                    page = const SplashScreen();
+                    break;
+                  case PageRoutes.routeState:
+                    page = const StateCheck();
+                    break;
+                  case PageRoutes.routeGoogleLoggedin:
+                    page = const GoogleLoggedInScreen();
+                    break;
+                  case PageRoutes.routePassmanLogin:
+                    page = const PassmanLogin();
+                    break;
+                  case PageRoutes.routePassmanSignup:
+                    page = const PassmanSignup();
+                    break;
+                  case PageRoutes.routePassmanEncodingScreen:
+                    page = EncodingResultScreen();
+                    break;
+                  case PageRoutes.routeQRScan:
+                    page = const QRScan();
+                    break;
+                  case PageRoutes.routeDesktop:
+                    page = const Desktop();
+                    break;
+                  case PageRoutes.routeMobile:
+                    page = const Mobile();
+                    break;
+                  case PageRoutes.routeWeb:
+                    page = const Web();
+                    break;
+                  default:
+                    return null;
+                }
+              },
             );
           },
         ),

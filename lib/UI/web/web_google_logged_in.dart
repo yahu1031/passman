@@ -1,6 +1,6 @@
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:passman/.dart';
-import 'package:passman/services/fetch_ip.dart';
+import 'package:passman/Components/constants.dart';
+import 'package:passman/services/internet_services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -78,7 +78,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Lottie.asset(
-                    'assets/lottie/google.json',
+                    LottieFiles.google,
                     height: 30 * SizeConfig.heightMultiplier,
                   ),
                   Row(
@@ -86,8 +86,9 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                     children: <Widget>[
                       Text.rich(
                         TextSpan(
-                          text: 'Version : 2.2.3-alpha ',
-                          style: GoogleFonts.quicksand(
+                          text: 'Version : 2.2.4-alpha ',
+                          style: TextStyle(
+                            fontFamily: 'Quicksand',
                             fontSize: 1 * SizeConfig.textMultiplier,
                             fontWeight: FontWeight.w900,
                             color: Colors.black,
