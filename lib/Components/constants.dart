@@ -23,6 +23,7 @@ class LottieFiles {
   static const String earth = 'assets/lottie/earth.json';
   static const String google = 'assets/lottie/google.json';
   static const String network = 'assets/lottie/network.json';
+  static const String sorry = 'assets/lottie/sorry.json';
 }
 
 FirebaseAuth mAuth = FirebaseAuth.instance;

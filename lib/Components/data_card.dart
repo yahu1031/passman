@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
 class DataCard extends StatefulWidget {
-  const DataCard(this.title, this.content, {required this.onPressed});
-  final String title, content;
+  const DataCard(
+    this.accountName, {
+    this.title,
+    this.content,
+    required this.onPressed,
+  });
+  final String? title, content, accountName;
   final Function onPressed;
   @override
   _DataCardState createState() => _DataCardState();
@@ -21,30 +26,20 @@ class _DataCardState extends State<DataCard> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Column(
-              children: <Widget>[
-                Text(
-                  widget.title,
-                  style: const TextStyle(
-                    color: Colors.transparent,
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  widget.content,
-                  style: const TextStyle(
-                    color: Colors.transparent,
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.normal,
-                  ),
-                )
-              ],
+            Text(
+              widget.accountName!,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 22.0,
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
+              softWrap: true,
             ),
             IconButton(
               icon: const Icon(
-                Icons.delete,
-                color: Colors.redAccent,
+                IconData(0xea7a, fontFamily: 'IconsFont'),
+                color: Colors.grey,
               ),
               onPressed: () => widget.onPressed,
             )
@@ -52,3 +47,11 @@ class _DataCardState extends State<DataCard> {
         ),
       );
 }
+// Text(
+                //   widget.content!,
+                //   style: const TextStyle(
+                //     color: Colors.grey,
+                //     fontSize: 18.0,
+                //     fontWeight: FontWeight.normal,
+                //   ),
+                // )

@@ -6,6 +6,8 @@ import 'package:passman/Components/screen_adapter.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/UI/mobile/pass_not_match.dart';
 import 'package:passman/services/decode.dart';
+import 'package:passman/services/decryption.dart';
+import 'package:passman/services/encryption.dart';
 
 class DecodingResultScreen extends StatefulWidget {
   DecodingResultScreen(this.decodeResultData);
@@ -17,26 +19,33 @@ class DecodingResultScreen extends StatefulWidget {
 
 class _DecodingResultScreen extends State<DecodingResultScreen> {
   Future<String>? decodedMsg;
-  String accountName = '';
-  String username = '';
-  String password = '';
-  String? tempacc;
-  String? uuid = mAuth.currentUser!.uid;
-  void createpasss() {
-    DocumentReference documentReference =
-        FirebaseFirestore.instance.collection(uuid!).doc(accountName);
-    Map<String, String> passs = <String, String>{
-      'Username': username,
-      'password': password
+  String? accountName,
+      username,
+      password,
+      pass,
+      uName,
+      tempacc,
+      uuid = mAuth.currentUser!.uid;
+  final Encryption encryption = Encryption();
+  final Decryption decryption = Decryption();
+  void uploadAccData() {
+    DocumentReference documentReference = FirebaseFirestore.instance
+        .collection('UserData/${uuid!}/Accounts')
+        .doc(accountName);
+    uName = encryption.stringEncryption(username!).base64;
+    pass = encryption.stringEncryption(password!).base64;
+    Map<String, String> userData = <String, String>{
+      'username': uName!,
+      'password': pass!
     };
 
-    documentReference.set(passs).whenComplete(() {
+    documentReference.set(userData).whenComplete(() {
       print('$username created');
       // print();
     });
   }
 
-  void deletepasss(dynamic item) {
+  void deleteAccData(dynamic item) {
     DocumentReference documentReference =
         FirebaseFirestore.instance.collection(uuid!).doc(item);
     documentReference.delete().whenComplete(() {
@@ -47,11 +56,8 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // if (ModalRoute.of(context).settings.arguments != null) {
     DecodeRequest req = widget.decodeResultData.request;
-    // DecodeRequest req = ModalRoute.of(context).settings.arguments;
     decodedMsg = decodeMsg(req);
-    // }
   }
 
   Future<String> decodeMsg(DecodeRequest req) async {
@@ -68,8 +74,27 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
           builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
             if (!snapshot.hasData ||
                 snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
+              return Scaffold(
+                body: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      const CircularProgressIndicator(),
+                      SizedBox(
+                        height: 5 * SizeConfig.heightMultiplier,
+                      ),
+                      Text(
+                        'Fetching your data...',
+                        style: TextStyle(
+                          fontFamily: 'Quicksand',
+                          fontSize: 1.75 * SizeConfig.textMultiplier,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               );
             } else if (snapshot.hasData) {
               if (snapshot.data! == widget.decodeResultData.points) {
@@ -122,7 +147,7 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
                                           username = value;
                                         },
                                         decoration: const InputDecoration(
-                                          hintText: 'Username / Email',
+                                          hintText: 'username / Email',
                                         ),
                                       ),
                                       const SizedBox(
@@ -142,7 +167,7 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
                                 actions: <Widget>[
                                   TextButton(
                                       onPressed: () {
-                                        createpasss();
+                                        uploadAccData();
                                         Navigator.of(context).pop();
                                       },
                                       child: const Text('Add'))
@@ -155,55 +180,51 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
                     ),
                   ),
                   body: StreamBuilder<QuerySnapshot?>(
-                      stream: FirebaseFirestore.instance
-                          .collection(uuid!)
-                          .snapshots(),
-                      builder: (BuildContext context,
-                           AsyncSnapshot<QuerySnapshot?> snapshots) {
-                        if (!snapshots.hasData || snapshots.hasData) {
-                          if (!snapshots.hasData) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                const CircularProgressIndicator(),
-                                SizedBox(
-                                  height: 5 * SizeConfig.heightMultiplier,
-                                ),
-                                Text(
-                                  'Trying to fetch your data...',
-                                  style: TextStyle(
-                                    fontFamily: 'Quicksand',
-                                    fontSize: 1.75 * SizeConfig.textMultiplier,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            );
-                          } else {
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: snapshots.data!.docs.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                DocumentSnapshot documentSnapshot =
-                                    snapshots.data!.docs[index];
-                                return DataCard(
-                                  documentSnapshot['Username'],
-                                  documentSnapshot['password'],
-                                  onPressed: () {
-                                    deletepasss(documentSnapshot.id);
-                                  },
-                                );
+                    stream: FirebaseFirestore.instance
+                        .collection('UserData/${uuid!}/Accounts')
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot?> snapshots) {
+                      if (snapshots.hasData) {
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshots.data!.docs.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            DocumentSnapshot documentSnapshot =
+                                snapshots.data!.docs[index];
+                            return DataCard(
+                              decryption.stringDecryption(
+                                  documentSnapshot['username']),
+                              // documentSnapshot['password'],
+                              onPressed: () {
+                                deleteAccData(documentSnapshot.id);
                               },
                             );
-                          }
-                        } else {
-                          return const Align(
-                            alignment: FractionalOffset.bottomCenter,
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                      }),
+                          },
+                        );
+                      } else if (!snapshots.hasData) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            const CircularProgressIndicator(),
+                            SizedBox(
+                              height: 5 * SizeConfig.heightMultiplier,
+                            ),
+                            Text(
+                              'Trying to fetch your data...',
+                              style: TextStyle(
+                                fontFamily: 'Quicksand',
+                                fontSize: 1.75 * SizeConfig.textMultiplier,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                    return const CircularProgressIndicator();
+                    },
+                  ),
                 );
               } else {
                 print("doesn't match");

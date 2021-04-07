@@ -21,7 +21,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
   FirebaseAuth mAuth = FirebaseAuth.instance;
   bool _userHasData = false;
   void _loginWithImage() {
-    Navigator.pushReplacementNamed(context, PageRoutes.routePassmanLogin);
+    Navigator.pushNamed(context, PageRoutes.routePassmanLogin);
   }
 
   Future<void> checkUserDB() async {
@@ -77,6 +77,17 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
     if (!kIsWeb) {
       checkUserDB();
     }
+    String file = '${mAuth.currentUser!.uid}.png';
+    storageRef
+        .child('UserImgData/$file')
+        .getDownloadURL()
+        .then((String? value) {
+      if (mounted) {
+        setState(() {
+          value != null ? _userHasData = true : _userHasData = false;
+        });
+      }
+    });
     _loginTapGesture = TapGestureRecognizer()..onTap = _loginWithImage;
     _signupTapGesture = TapGestureRecognizer()..onTap = _signupWithImage;
   }
@@ -85,23 +96,6 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
   Widget build(BuildContext context) {
     GoogleSignInProvider provider =
         Provider.of<GoogleSignInProvider>(context, listen: false);
-    String file = '${mAuth.currentUser!.uid}.png';
-    try {
-      storageRef
-          .child('UserImgData/$file')
-          .getDownloadURL()
-          .then((String? value) {
-        setState(() {
-          value != null ? _userHasData = true : _userHasData = false;
-        });
-      });
-    } catch (error) {
-      print('On Catching error: ${error.toString()}');
-      setState(() {
-        _userHasData = false;
-      });
-    }
-
     return Scaffold(
       body: SafeArea(
         child: kIsWeb

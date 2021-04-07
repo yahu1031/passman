@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as imglib;
 import 'package:logger/logger.dart';
 import 'package:passman/Components/constants.dart';
-import 'package:passman/keys.dart';
+import 'package:passman/.dart';
 import 'package:passman/Components/markers.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/models/points.dart';
@@ -37,17 +37,18 @@ class _PassmanLoginState extends State<PassmanLogin> {
   File? _selectedImage, _image;
 
   Future<String> _getImage() async {
-    setState(() {
-      loadingState = LoadingState.LOADING;
-    });
+    if (mounted) {
+      setState(() {
+        loadingState = LoadingState.LOADING;
+      });
+    }
     String? uuid = mAuth.currentUser!.uid;
     String? _imageLink;
     DefaultCacheManager cache = DefaultCacheManager();
-    await userDataColRef.doc(uuid).get().then(
-          (DocumentSnapshot value) => setState(() {
-            _imageLink = value.data()!['img'];
-          }),
-        );
+    DocumentSnapshot value = await userDataColRef.doc(uuid).get();
+    setState(() {
+      _imageLink = value.data()!['img'];
+    });
 
     _image = await cache.getSingleFile(_imageLink!);
     _selectedImage = File(_image!.path);
@@ -57,14 +58,14 @@ class _PassmanLoginState extends State<PassmanLogin> {
         _selectedImage!,
       ),
     );
-    setState(() {
-      editableImage = response.editableImage;
-      pickedImg = true;
-      image = response.displayableImage;
-    });
-    setState(() {
-      loadingState = LoadingState.SUCCESS;
-    });
+    if (mounted) {
+      setState(() {
+        editableImage = response.editableImage;
+        pickedImg = true;
+        image = response.displayableImage;
+        loadingState = LoadingState.SUCCESS;
+      });
+    }
     return _imageLink!;
   }
 
@@ -73,21 +74,12 @@ class _PassmanLoginState extends State<PassmanLogin> {
     super.initState();
     loadingState = LoadingState.PENDING;
     _getImage();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _getImage();
+    password!.removeRange(0, password!.length);
   }
 
   @override
   Widget build(BuildContext context) {
-    for (Points item in password!) {
-      print('${item.x}  ${item.y}');
-    }
     Future<void> sendToDecode() async {
-      // ignore: unused_local_variable
       String pointString =
           password!.map((Points pass) => '(${pass.x} ${pass.y})').join('');
       DecodeRequest req =

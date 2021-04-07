@@ -7,7 +7,7 @@ pipelines:
           name: 'Adding required files'
           script:
             - echo $GOOGLE_SERVICE_JSON | base64 --decode > android/app/google-services.json
-            - echo $ENCRYPTION_KEYS | base64 --decode > lib/keys.dart
+            - echo $ENCRYPTION_KEYS | base64 --decode > lib/.dart
       - step:
           name: 'Analyzing the code'
           script: 
@@ -22,7 +22,7 @@ pipelines:
           name: 'Adding required files'
           script:
             - echo $GOOGLE_SERVICE_JSON | base64 --decode > android/app/google-services.json
-            - echo $ENCRYPTION_KEYS | base64 --decode > lib/keys.dart
+            - echo $ENCRYPTION_KEYS | base64 --decode > lib/.dart
       - step:
           name: 'Building android applications'
           script:
