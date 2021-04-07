@@ -85,7 +85,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                     children: <Widget>[
                       Text.rich(
                         TextSpan(
-                          text: 'Version : 2.2.5-alpha ',
+                          text: 'Version : 2.2.6-alpha ',
                           style: TextStyle(
                             fontFamily: 'Quicksand',
                             fontSize: 1 * SizeConfig.textMultiplier,
