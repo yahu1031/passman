@@ -2,7 +2,7 @@ name: passman
 description: Password Manager, Stores your all passwords. No one knows your
   passwords. Hide from everyone, sometimes from us and you.
 
-version: 2.2.4-alpha
+version: 2.2.5-alpha
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -19,7 +19,7 @@ dependencies:
   firebase_storage: ^8.0.0
   flutter:
     sdk: flutter
-  flutter_tabler_icons: ^1.0.3-rc.1
+  flutter_cache_manager: ^3.0.1
   google_fonts: ^2.0.0
   google_sign_in: ^5.0.1
   image: ^3.0.2

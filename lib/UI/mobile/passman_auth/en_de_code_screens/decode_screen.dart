@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:passman/Components/constants.dart';
 import 'package:passman/Components/data_card.dart';
 import 'package:passman/Components/screen_adapter.dart';
+import 'package:passman/Components/size_config.dart';
 import 'package:passman/UI/mobile/pass_not_match.dart';
 import 'package:passman/services/decode.dart';
 
@@ -65,7 +66,8 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
         child: FutureBuilder<String>(
           future: decodedMsg,
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-            if (!snapshot.hasData) {
+            if (!snapshot.hasData ||
+                snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
@@ -75,6 +77,19 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
                 return Scaffold(
                   appBar: AppBar(
                     title: Text(mAuth.currentUser!.displayName!),
+                    centerTitle: true,
+                    automaticallyImplyLeading: false,
+                    actions: <Widget>[
+                      IconButton(
+                        icon: const Icon(
+                          IconData(
+                            0xeba8,
+                            fontFamily: 'IconsFont',
+                          ),
+                        ),
+                        onPressed: () => Navigator.of(context).pop(true),
+                      ),
+                    ],
                   ),
                   floatingActionButton: FloatingActionButton(
                     onPressed: () {
@@ -143,7 +158,27 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshots) {
                         if (!snapshots.hasData || snapshots.hasData) {
-                          return ListView.builder(
+                          if (!snapshot.hasData) {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                const CircularProgressIndicator(),
+                                SizedBox(
+                                  height: 5 * SizeConfig.heightMultiplier,
+                                ),
+                                Text(
+                                  'Trying to fetch your data...',
+                                  style: TextStyle(
+                                    fontFamily: 'Quicksand',
+                                    fontSize: 1.75 * SizeConfig.textMultiplier,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return ListView.builder(
                               shrinkWrap: true,
                               itemCount: snapshots.data!.docs.length,
                               itemBuilder: (BuildContext context, int index) {
@@ -156,7 +191,9 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
                                     deletepasss(documentSnapshot.id);
                                   },
                                 );
-                              });
+                              },
+                            );
+                          }
                         } else {
                           return const Align(
                             alignment: FractionalOffset.bottomCenter,

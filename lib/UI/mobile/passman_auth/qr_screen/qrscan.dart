@@ -17,7 +17,6 @@ import 'package:passman/UI/mobile/passman_auth/qr_screen/web_logged_in_qr_screen
 import 'package:passman/services/decryption.dart';
 import 'package:passman/services/random.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 class QRScan extends StatefulWidget {
   const QRScan({Key? key}) : super(key: key);
@@ -141,8 +140,14 @@ class _QRScanState extends State<QRScan> {
                                         AsyncSnapshot<bool?> snapshot) =>
                                     Icon(
                                   flash
-                                      ? TablerIcons.bulb
-                                      : TablerIcons.bulb_off,
+                                      ? const IconData(
+                                          0xea51,
+                                          fontFamily: 'IconsFont',
+                                        )
+                                      : const IconData(
+                                          0xea50,
+                                          fontFamily: 'IconsFont',
+                                        ),
                                   color: flash
                                       ? Colors.white
                                       : Colors.grey[300]!.withOpacity(0.3),
@@ -159,7 +164,10 @@ class _QRScanState extends State<QRScan> {
                                 Navigator.pop(context);
                               },
                               icon: Icon(
-                                TablerIcons.x,
+                                const IconData(
+                                          0xea55,
+                                          fontFamily: 'IconsFont',
+                                        ),
                                 color: Colors.white,
                                 size: 5 * SizeConfig.imageSizeMultiplier,
                               ),

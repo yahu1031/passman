@@ -25,7 +25,13 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Widget? page;
   @override
   Widget build(BuildContext context) => LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) =>
@@ -88,7 +94,6 @@ class MyApp extends StatelessWidget {
                 builder: (BuildContext context) => NotFoundScreen(),
               ),
               onGenerateRoute: (RouteSettings settings) {
-                late Widget page;
                 switch (settings.name) {
                   case PageRoutes.routeHome:
                     page = const SplashScreen();
@@ -107,6 +112,11 @@ class MyApp extends StatelessWidget {
                     break;
                   case PageRoutes.routePassmanEncodingScreen:
                     page = EncodingResultScreen();
+                    break;
+                  case PageRoutes.routePassmanDecodingScreen:
+                    page = DecodingResultScreen(
+                      ModalRoute.of(context)!.settings.arguments,
+                    );
                     break;
                   case PageRoutes.routeQRScan:
                     page = const QRScan();

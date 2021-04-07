@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:passman/.dart';
+import 'package:passman/keys.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as imglib;
@@ -61,14 +61,18 @@ class _PassmanSignupState extends State<PassmanSignup> {
     });
   }
 
-
-
   @override
   void initState() {
     super.initState();
     _isImgPicked = false;
     password = <Points>[];
     uploadingState = LoadingState.PENDING;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _pickImage();
   }
 
   @override
@@ -81,7 +85,7 @@ class _PassmanSignupState extends State<PassmanSignup> {
     Future<void> sendToEncode() async {
       EncodeRequest req =
           EncodeRequest(editableImage!, pointString, token: imgSecretPassKey);
-      await Navigator.pushReplacementNamed(
+      await Navigator.pushNamed(
           context, PageRoutes.routePassmanEncodingScreen,
           arguments: req);
     }
@@ -100,13 +104,13 @@ class _PassmanSignupState extends State<PassmanSignup> {
                               GestureDetector(
                                 onPanDown: (DragDownDetails details) {
                                   double clickX =
-                                      details.localPosition.dx.toDouble();
+                                      details.localPosition.dx.floorToDouble();
                                   double clickY =
-                                      details.localPosition.dy.toDouble();
+                                      details.localPosition.dy.floorToDouble();
                                   password!.add(
                                     Points(
-                                      clickX.toDouble(),
-                                      clickY.toDouble(),
+                                      (clickX / binSize).floorToDouble(),
+                                      (clickY / binSize).floorToDouble(),
                                     ),
                                   );
                                   setState(() {
@@ -136,8 +140,8 @@ class _PassmanSignupState extends State<PassmanSignup> {
                                     ),
                                     for (Points pass in password!)
                                       Marker(
-                                        dx: pass.x,
-                                        dy: pass.y,
+                                        dx: pass.x * binSize,
+                                        dy: pass.y * binSize,
                                       ),
                                   ],
                                 ),
@@ -187,7 +191,7 @@ class _PassmanSignupState extends State<PassmanSignup> {
                                         'Change Image',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w900,
-                              fontFamily: 'Quicksand',
+                                          fontFamily: 'Quicksand',
                                           fontSize:
                                               3 * SizeConfig.textMultiplier,
                                           color: Colors.blue[400],

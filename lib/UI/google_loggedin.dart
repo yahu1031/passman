@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:passman/Components/constants.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/UI/web/web_google_logged_in.dart';
@@ -86,7 +85,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
   Widget build(BuildContext context) {
     GoogleSignInProvider provider =
         Provider.of<GoogleSignInProvider>(context, listen: false);
-        String file = '${mAuth.currentUser!.uid}.png';
+    String file = '${mAuth.currentUser!.uid}-1.png';
     try {
       storageRef
           .child('UserImgData/$file')
@@ -102,7 +101,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
         _userHasData = false;
       });
     }
-    
+
     return Scaffold(
       body: SafeArea(
         child: kIsWeb
@@ -168,7 +167,10 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
                     child: IconButton(
                       tooltip: 'Login to Computer',
                       icon: const Icon(
-                        TablerIcons.qrcode,
+                        IconData(
+                          0xeb11,
+                          fontFamily: 'IconsFont',
+                        ),
                         color: Colors.black,
                       ),
                       onPressed: () {

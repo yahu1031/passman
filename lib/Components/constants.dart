@@ -35,3 +35,5 @@ CollectionReference qrColRef =
 
 Reference storageRef =
     FirebaseStorage.instance.ref();
+
+int binSize = 20;

@@ -75,7 +75,8 @@ EncodeResponse encodeMessageIntoImage(EncodeRequest req) {
       Uint8List.fromList(
         imglib.encodePng(editableImage),
       ),
-      fit: BoxFit.fitWidth);
+                                        fit: BoxFit.cover,
+  );
   Uint8List data = Uint8List.fromList(imglib.encodePng(editableImage));
   EncodeResponse response =
       EncodeResponse(editableImage, displayableImage, data);

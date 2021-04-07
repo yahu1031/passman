@@ -1,4 +1,4 @@
-import 'dart:developer';
+// import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -51,23 +51,15 @@ class _EncodingResultScreen extends State<EncodingResultScreen> {
     setState(() {
       uploadingToStorageState = LoadingState.LOADING;
     });
-    String filename = '$uuid-1.png';
-    storageRef.child('UserImgData/$filename');
-    try {
-      UploadTask uploadTask = storageRef.putData(_imageData!);
-      await uploadTask.whenComplete(() async {
-        String downImg = await uploadTask.snapshot.ref.getDownloadURL();
-        await userDataColRef.doc(uuid).update(<String, dynamic>{
-          'img': downImg,
-        }).catchError((dynamic updataImageError) {
-          log(updataImageError.toString());
-        }).onError((Object? onupdataImageError, StackTrace stackTrace) {
-          log(onupdataImageError.toString());
-        });
+    String filename = '$uuid.png';
+    Reference pathRef = storageRef.child('UserImgData').child(filename);
+    UploadTask uploadTask = pathRef.putData(_imageData!);
+    await uploadTask.whenComplete(() async {
+      String downImg = await uploadTask.snapshot.ref.getDownloadURL();
+      await userDataColRef.doc(uuid).update(<String, dynamic>{
+        'img': downImg,
       });
-    } catch (e) {
-      print(e.toString());
-    }
+    });
     setState(() {
       uploadingToStorageState = LoadingState.SUCCESS;
     });
@@ -119,7 +111,8 @@ class _EncodingResultScreen extends State<EncodingResultScreen> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(7),
                                   child: Image.memory(
-                                      snapshot.data!.encodedByteImage),
+                                    snapshot.data!.encodedByteImage,
+                                  ),
                                 ),
                               ),
                               Container(

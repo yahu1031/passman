@@ -1,6 +1,6 @@
-import 'dart:developer';
 import 'dart:io';
 
+// import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as imglib;
 import 'package:logger/logger.dart';
 import 'package:passman/Components/constants.dart';
-import 'package:passman/.dart';
+import 'package:passman/keys.dart';
 import 'package:passman/Components/markers.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/models/points.dart';
@@ -16,6 +16,7 @@ import 'package:passman/services/decode.dart';
 import 'package:passman/services/image_services/img_to_data.dart';
 import 'package:passman/services/image_services/upload_img_services.dart';
 import 'package:passman/services/utilities/enums.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class PassmanLogin extends StatefulWidget {
   const PassmanLogin({Key? key}) : super(key: key);
@@ -33,33 +34,34 @@ class _PassmanLoginState extends State<PassmanLogin> {
   final ImagePicker picker = ImagePicker();
   LoadingState? loadingState;
   bool pickedImg = false;
+  File? _selectedImage, _image;
 
   Future<String> _getImage() async {
     setState(() {
-      loadingState = LoadingState.SUCCESS;
+      loadingState = LoadingState.LOADING;
     });
     String? uuid = mAuth.currentUser!.uid;
     String? _imageLink;
+    DefaultCacheManager cache = DefaultCacheManager();
     await userDataColRef.doc(uuid).get().then(
           (DocumentSnapshot value) => setState(() {
             _imageLink = value.data()!['img'];
           }),
         );
-    try {
-      UploadedImageConversionResponse response =
-          await convertUploadedImageToDataaAsync(
-        UploadedImageConversionRequest(
-          File(_imageLink!),
-        ),
-      );
+
+    _image = await cache.getSingleFile(_imageLink!);
+    _selectedImage = File(_image!.path);
+    UploadedImageConversionResponse response =
+        await convertUploadedImageToDataaAsync(
+      UploadedImageConversionRequest(
+        _selectedImage!,
+      ),
+    );
+    setState(() {
       editableImage = response.editableImage;
-      setState(() {
-        pickedImg = true;
-        image = response.displayableImage;
-      });
-    } catch (e) {
-      print(e.toString());
-    }
+      pickedImg = true;
+      image = response.displayableImage;
+    });
     setState(() {
       loadingState = LoadingState.SUCCESS;
     });
@@ -70,6 +72,13 @@ class _PassmanLoginState extends State<PassmanLogin> {
   void initState() {
     super.initState();
     loadingState = LoadingState.PENDING;
+    _getImage();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _getImage();
   }
 
   @override
@@ -95,59 +104,61 @@ class _PassmanLoginState extends State<PassmanLogin> {
         child: Stack(
           children: <Widget>[
             Center(
-              child: loadingState == LoadingState.LOADING
+              child: loadingState == LoadingState.PENDING
                   ? const CircularProgressIndicator()
-                  : FutureBuilder<String>(
-                      future: _getImage(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<dynamic> snapshot) {
-                        if (snapshot.hasData) {
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              GestureDetector(
-                                onPanDown: (DragDownDetails details) {
-                                  double clickX =
-                                      details.localPosition.dx.toDouble();
-                                  double clickY =
-                                      details.localPosition.dy.toDouble();
-                                  password!.add(
-                                    Points(
-                                      clickX.toDouble(),
-                                      clickY.toDouble(),
-                                    ),
-                                  );
-                                  setState(() {
-                                    password!.length;
-                                  });
-                                  loggerNoStack
-                                      .d('length is ${password!.length}');
-                                },
-                                child: Stack(
-                                  children: <Widget>[
-                                    Container(
-                                      height: SizeConfig.widthMultiplier * 90,
-                                      width: SizeConfig.widthMultiplier * 90,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          width: 3,
-                                          color: Colors.blue[400]!,
-                                        ),
-                                        borderRadius: BorderRadius.circular(7),
-                                        image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: Image.network(
-                                            snapshot.data.toString(),
-                                          ).image,
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: pickedImg == true
+                          ? <Widget>[
+                              Container(
+                                height: SizeConfig.widthMultiplier * 90,
+                                width: SizeConfig.widthMultiplier * 90,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 3,
+                                    color: Colors.blue[400]!,
+                                  ),
+                                  borderRadius: BorderRadius.circular(7),
+                                ),
+                                child: GestureDetector(
+                                  onPanDown: (DragDownDetails details) {
+                                    double clickX = details.localPosition.dx
+                                        .floorToDouble();
+                                    double clickY = details.localPosition.dy
+                                        .floorToDouble();
+                                    password!.add(
+                                      Points(
+                                        (clickX / binSize).floorToDouble(),
+                                        (clickY / binSize).floorToDouble(),
+                                      ),
+                                    );
+                                    setState(() {
+                                      password!.length;
+                                    });
+                                    loggerNoStack
+                                        .d('length is ${password!.length}');
+                                  },
+                                  child: Stack(
+                                    children: <Widget>[
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: Image(
+                                              image: FileImage(_selectedImage!),
+                                            ).image,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    for (Points pass in password!)
-                                      Marker(
-                                        dx: pass.x,
-                                        dy: pass.y,
-                                      ),
-                                  ],
+                                      for (Points pass in password!)
+                                        Marker(
+                                          dx: pass.x * binSize,
+                                          dy: pass.y * binSize,
+                                        ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               SizedBox(
@@ -177,7 +188,7 @@ class _PassmanLoginState extends State<PassmanLogin> {
                                               setState(() {
                                                 password!.length;
                                               });
-                                              log(
+                                              loggerNoStack.d(
                                                 'length is ${password!.length}',
                                               );
                                             },
@@ -201,7 +212,6 @@ class _PassmanLoginState extends State<PassmanLogin> {
                                           disabledColor: Colors.grey,
                                           onPressed: password!.length > 3
                                               ? () => sendToDecode()
-                                              // ? () {}
                                               : null,
                                         )
                                       : const SizedBox(
@@ -210,30 +220,22 @@ class _PassmanLoginState extends State<PassmanLogin> {
                                         ),
                                 ],
                               ),
-                            ],
-                          );
-                        }
-                        ;
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            const CircularProgressIndicator(),
-                            SizedBox(
-                              height: 5 * SizeConfig.heightMultiplier,
-                            ),
-                            Text(
-                              'Fetching your image...',
-                              style: TextStyle(
-                                fontFamily: 'Quicksand',
-                                fontSize: 1.75 * SizeConfig.textMultiplier,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w900,
+                            ]
+                          : <Widget>[
+                              const CircularProgressIndicator(),
+                              SizedBox(
+                                height: 5 * SizeConfig.heightMultiplier,
                               ),
-                            )
-                          ],
-                        );
-                      },
-                    ),
+                              Text(
+                                'Fetching your data...',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 1.75 * SizeConfig.textMultiplier,
+                                  fontFamily: 'Quicksand',
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ]),
             ),
             Positioned(
               top: 10,

@@ -1,5 +1,5 @@
 import 'package:encrypt/encrypt.dart' as decrypt;
-import 'package:passman/.dart';
+import 'package:passman/keys.dart';
 
 class Decryption {
   final decrypt.Key key = decrypt.Key.fromUtf8(secretPassKey);

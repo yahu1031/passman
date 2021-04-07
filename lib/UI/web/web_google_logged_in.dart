@@ -6,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:passman/Components/size_config.dart';
@@ -86,7 +85,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                     children: <Widget>[
                       Text.rich(
                         TextSpan(
-                          text: 'Version : 2.2.4-alpha ',
+                          text: 'Version : 2.2.5-alpha ',
                           style: TextStyle(
                             fontFamily: 'Quicksand',
                             fontSize: 1 * SizeConfig.textMultiplier,
@@ -135,7 +134,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
               splashColor: Colors.transparent,
               tooltip: '''
 Log out as ${mAuth.currentUser!.displayName.toString().toUpperCase()}.''',
-              icon: const Icon(TablerIcons.logout),
+              icon: const Icon(IconData(0xeba8, fontFamily: 'IconsFont')),
               onPressed: () async {
                 await userDataColRef.doc(uuid).update(
                     <String, dynamic>{

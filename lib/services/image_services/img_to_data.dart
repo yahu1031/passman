@@ -8,7 +8,7 @@ import 'package:passman/services/utilities/get_capacity.dart';
 UploadedImageConversionResponse convertUploadedImageToData(
     UploadedImageConversionRequest req) {
   imglib.Image editableImage = imglib.decodeImage(req.file.readAsBytesSync())!;
-  Image displayableImage = Image.file(req.file, fit: BoxFit.fitWidth);
+  Image displayableImage = Image.file(req.file, fit: BoxFit.cover);
   int imageByteSize = getEncoderCapacity(
       Uint16List.fromList(editableImage.getBytes().toList()));
   UploadedImageConversionResponse response = UploadedImageConversionResponse(

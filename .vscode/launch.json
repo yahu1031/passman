@@ -6,7 +6,7 @@
       "program": "lib/main.dart",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "release",
+      "flutterMode": "debug",
       "args": [
         "-d",
         "edge",

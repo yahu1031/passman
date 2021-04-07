@@ -25,7 +25,7 @@ jobs:
       - name: Adding sign key properties
         run: echo ${{ secrets.KEY_PROPERTIES }} | base64 --decode > android/key.properties
       - name: Adding decoder
-        run: echo ${{ secrets.ENCRYPT_KEY }} | base64 --decode > lib/.dart
+        run: echo ${{ secrets.ENCRYPT_KEY }} | base64 --decode > lib/keys.dart
       - name: Installing dependencies
         run: flutter pub get
       - name: Analyzing application code
@@ -55,7 +55,7 @@ jobs:
       - name: Adding sign key properties
         run: echo ${{ secrets.KEY_PROPERTIES }} | base64 --decode > android/key.properties
       - name: Adding decoder
-        run: echo ${{ secrets.ENCRYPT_KEY }} | base64 --decode > lib/.dart
+        run: echo ${{ secrets.ENCRYPT_KEY }} | base64 --decode > lib/keys.dart
       - name: Cleaning build files
         run: flutter clean
       - name: Installing dependencies
