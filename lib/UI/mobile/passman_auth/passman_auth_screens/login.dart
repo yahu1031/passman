@@ -92,7 +92,7 @@ class _PassmanLoginState extends State<PassmanLogin> {
           password!.map((Points pass) => '(${pass.x} ${pass.y})').join('');
       DecodeRequest req =
           DecodeRequest(editableImage!, token: imgSecretPassKey);
-      await Navigator.pushNamed(
+      await Navigator.pushReplacementNamed(
         context,
         PageRoutes.routePassmanDecodingScreen,
         arguments: DecodeResultData(pointString, req),

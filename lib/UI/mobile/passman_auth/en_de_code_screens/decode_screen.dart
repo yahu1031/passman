@@ -63,16 +63,16 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
 
   @override
   Widget build(BuildContext context) => ScreenAdapter(
-        child: FutureBuilder<String>(
+        child: FutureBuilder<String?>(
           future: decodedMsg,
-          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+          builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
             if (!snapshot.hasData ||
                 snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
             } else if (snapshot.hasData) {
-              if (snapshot.data == widget.decodeResultData.points) {
+              if (snapshot.data! == widget.decodeResultData.points) {
                 print('matches');
                 return Scaffold(
                   appBar: AppBar(
@@ -87,7 +87,10 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
                             fontFamily: 'IconsFont',
                           ),
                         ),
-                        onPressed: () => Navigator.of(context).pop(true),
+                        onPressed: () => Navigator.pushReplacementNamed(
+                          context,
+                          PageRoutes.routeState,
+                        ),
                       ),
                     ],
                   ),
@@ -151,14 +154,14 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
                       color: Colors.white,
                     ),
                   ),
-                  body: StreamBuilder<QuerySnapshot>(
+                  body: StreamBuilder<QuerySnapshot?>(
                       stream: FirebaseFirestore.instance
                           .collection(uuid!)
                           .snapshots(),
                       builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot> snapshots) {
+                           AsyncSnapshot<QuerySnapshot?> snapshots) {
                         if (!snapshots.hasData || snapshots.hasData) {
-                          if (!snapshot.hasData) {
+                          if (!snapshots.hasData) {
                             return Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[

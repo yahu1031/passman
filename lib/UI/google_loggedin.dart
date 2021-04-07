@@ -21,7 +21,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
   FirebaseAuth mAuth = FirebaseAuth.instance;
   bool _userHasData = false;
   void _loginWithImage() {
-    Navigator.pushNamed(context, PageRoutes.routePassmanLogin);
+    Navigator.pushReplacementNamed(context, PageRoutes.routePassmanLogin);
   }
 
   Future<void> checkUserDB() async {
@@ -64,7 +64,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
 
   String? tempPlat;
   void _signupWithImage() {
-    Navigator.pushNamed(
+    Navigator.restorablePushReplacementNamed(
       context,
       PageRoutes.routePassmanSignup,
     );
@@ -85,7 +85,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
   Widget build(BuildContext context) {
     GoogleSignInProvider provider =
         Provider.of<GoogleSignInProvider>(context, listen: false);
-    String file = '${mAuth.currentUser!.uid}-1.png';
+    String file = '${mAuth.currentUser!.uid}.png';
     try {
       storageRef
           .child('UserImgData/$file')

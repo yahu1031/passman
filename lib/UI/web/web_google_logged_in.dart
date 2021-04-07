@@ -137,13 +137,15 @@ Log out as ${mAuth.currentUser!.displayName.toString().toUpperCase()}.''',
               icon: const Icon(IconData(0xeba8, fontFamily: 'IconsFont')),
               onPressed: () async {
                 await userDataColRef.doc(uuid).update(
-                    <String, dynamic>{
-                      'web_login': false,
-                      'platform': 'No records',
+                  <String, dynamic>{
+                    'web_login': false,
+                    'platform': 'No records',
                     'logged_in_time': 'No records',
                     'ip': 'No records'
-                    },
-                  ).then((_) async => provider.logout());
+                  },
+                ).whenComplete(() async {
+                  await provider.logout();
+                });
               },
             ),
           ),

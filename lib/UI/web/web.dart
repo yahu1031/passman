@@ -97,6 +97,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
     DocumentReference docRef = qrColRef.doc(generatedString);
     docRef.snapshots().listen(
       (DocumentSnapshot event) async {
+        print('someone scanned');
         if (event.exists) {
           if (generatedString == docRef.id.toString()) {
             GoogleSignInProvider googleProvider =
@@ -111,7 +112,6 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                         print('User tried to login didn\'t match');
                         const CircularProgressIndicator();
                         await qrColRef.doc(generatedString).delete();
-                        // await showCode(context);
                       } else {
                         await qrColRef.doc(generatedString).delete();
                       }

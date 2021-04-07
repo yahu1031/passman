@@ -26,7 +26,7 @@ class _DataCardState extends State<DataCard> {
                 Text(
                   widget.title,
                   style: const TextStyle(
-                    color: Colors.black,
+                    color: Colors.transparent,
                     fontSize: 22.0,
                     fontWeight: FontWeight.bold,
                   ),
@@ -34,7 +34,7 @@ class _DataCardState extends State<DataCard> {
                 Text(
                   widget.content,
                   style: const TextStyle(
-                    color: Colors.grey,
+                    color: Colors.transparent,
                     fontSize: 18.0,
                     fontWeight: FontWeight.normal,
                   ),
