@@ -86,7 +86,7 @@ class _NotFoundScreenState extends State<NotFoundScreen> {
               right: 20,
               child: Text.rich(
                 TextSpan(
-                  text: 'Version : 2.2.6-alpha ',
+                  text: 'Version : 2.2.6-alpha.2 ',
                   style: TextStyle(
                     fontFamily: 'Quicksand',
                     fontSize: 1 * SizeConfig.textMultiplier,

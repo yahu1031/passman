@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -39,9 +40,9 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
           'logged_in_time': 'No records',
           'ip': 'No records'
         }).onError((dynamic firestoreError, StackTrace stackTrace) {
-          print(firestoreError.toString());
+          log(firestoreError.toString());
         }).catchError((dynamic onFirestoreError) {
-          print(onFirestoreError.toString());
+          log(onFirestoreError.toString());
         });
       } else {
         await userDataDocRef.set(<String, dynamic>{
@@ -52,13 +53,13 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
           'logged_in_time': 'No records',
           'ip': 'No records'
         }).onError((dynamic firestoreError, StackTrace stackTrace) {
-          print(firestoreError.toString());
+          log(firestoreError.toString());
         }).catchError((dynamic onFirestoreError) {
-          print(onFirestoreError.toString());
+          log(onFirestoreError.toString());
         });
       }
     } catch (err) {
-      print(err.toString());
+      log(err.toString());
     }
   }
 

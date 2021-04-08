@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as imglib;
-import 'package:logger/logger.dart';
 import 'package:passman/Components/constants.dart';
 import 'package:passman/.dart';
 import 'package:passman/Components/markers.dart';
@@ -25,9 +24,6 @@ class PassmanLogin extends StatefulWidget {
 }
 
 class _PassmanLoginState extends State<PassmanLogin> {
-  Logger loggerNoStack = Logger(
-    printer: PrettyPrinter(methodCount: 0),
-  );
   Image? image;
   imglib.Image? editableImage;
   List<Points>? password = <Points>[];
@@ -127,8 +123,6 @@ class _PassmanLoginState extends State<PassmanLogin> {
                                     setState(() {
                                       password!.length;
                                     });
-                                    loggerNoStack
-                                        .d('length is ${password!.length}');
                                   },
                                   child: Stack(
                                     children: <Widget>[
@@ -180,9 +174,6 @@ class _PassmanLoginState extends State<PassmanLogin> {
                                               setState(() {
                                                 password!.length;
                                               });
-                                              loggerNoStack.d(
-                                                'length is ${password!.length}',
-                                              );
                                             },
                                           ),
                                         )

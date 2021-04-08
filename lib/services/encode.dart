@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -87,7 +88,7 @@ Future<EncodeResponse> encodeMessageIntoImageAsync(EncodeRequest req,
     {required BuildContext? context}) async {
   EncodeResponse res =
       await compute(encodeMessageIntoImage, req).catchError((dynamic onError) {
-    print('Error while encoding message into image : ${onError.toString()}');
+    log('Error while encoding message into image : ${onError.toString()}');
   });
   return res;
 }

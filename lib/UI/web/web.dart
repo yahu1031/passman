@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logger/logger.dart';
 import 'package:lottie/lottie.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/services/authentication.dart';
@@ -22,9 +21,6 @@ class Web extends StatefulWidget {
 }
 
 class _WebState extends State<Web> with TickerProviderStateMixin {
-  Logger loggerNoStack = Logger(
-    printer: PrettyPrinter(methodCount: 0),
-  );
   final String _url = 'https://github.com/yahu1031/passman';
   FirebaseAuth mAuth = FirebaseAuth.instance;
 
@@ -71,7 +67,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
         ),
       );
     } catch (e) {
-      loggerNoStack.e(e.toString());
+      throw e.toString();
     }
   }
 
@@ -97,7 +93,6 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
     DocumentReference docRef = qrColRef.doc(generatedString);
     docRef.snapshots().listen(
       (DocumentSnapshot event) async {
-        print('someone scanned');
         if (event.exists) {
           if (generatedString == docRef.id.toString()) {
             GoogleSignInProvider googleProvider =
@@ -109,9 +104,9 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                     if (mAuth.currentUser != null) {
                       if (event.data()!['uid'] != mAuth.currentUser!.uid) {
                         await googleProvider.logout();
-                        print('User tried to login didn\'t match');
                         const CircularProgressIndicator();
                         await qrColRef.doc(generatedString).delete();
+                        throw 'User tried to login didn\'t match';
                       } else {
                         await qrColRef.doc(generatedString).delete();
                       }
@@ -196,7 +191,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                   children: <Widget>[
                     Text.rich(
                       TextSpan(
-                        text: 'Version : 2.2.6-alpha ',
+                        text: 'Version : 2.2.6-alpha.2 ',
                           style: TextStyle(
                             fontFamily: 'Quicksand',
                           fontSize: 1 * SizeConfig.textMultiplier,

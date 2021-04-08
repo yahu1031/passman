@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:passman/Components/constants.dart';
 import 'package:passman/services/internet_services.dart';
@@ -52,12 +53,12 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                 'logged_in_time': Timestamp.now()
               },
             ).catchError((dynamic onError) {
-              print('Update catch error: ${onError.toString()}');
+              log('Update catch error: ${onError.toString()}');
             }).onError((Object? error, StackTrace stackTrace) {
-              print('Update on error: ${error.toString()}');
+              log('Update on error: ${error.toString()}');
             });
           } catch (err) {
-            print('Update try catch error: ${err.toString()}');
+            log('Update try catch error: ${err.toString()}');
           }
         }
       }
@@ -85,7 +86,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                     children: <Widget>[
                       Text.rich(
                         TextSpan(
-                          text: 'Version : 2.2.6-alpha ',
+                          text: 'Version : 2.2.6-alpha.2 ',
                           style: TextStyle(
                             fontFamily: 'Quicksand',
                             fontSize: 1 * SizeConfig.textMultiplier,
@@ -136,15 +137,16 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
 Log out as ${mAuth.currentUser!.displayName.toString().toUpperCase()}.''',
               icon: const Icon(IconData(0xeba8, fontFamily: 'IconsFont')),
               onPressed: () async {
-                await userDataColRef.doc(uuid).update(
-                  <String, dynamic>{
-                    'web_login': false,
-                    'platform': 'No records',
-                    'logged_in_time': 'No records',
-                    'ip': 'No records'
-                  },
-                ).whenComplete(() async {
-                  await provider.logout();
+                String? userUID = mAuth.currentUser!.uid;
+                await provider.logout().then((_) async {
+                  await userDataColRef.doc(userUID).update(
+                    <String, dynamic>{
+                      'web_login': false,
+                      'platform': 'No records',
+                      'logged_in_time': 'No records',
+                      'ip': 'No records'
+                    },
+                  );
                 });
               },
             ),

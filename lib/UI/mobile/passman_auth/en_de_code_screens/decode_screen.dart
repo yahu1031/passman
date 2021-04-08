@@ -28,7 +28,7 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
       uuid = mAuth.currentUser!.uid;
   final Encryption encryption = Encryption();
   final Decryption decryption = Decryption();
-  void uploadAccData() {
+  Future<void> uploadAccData() async {
     DocumentReference documentReference = FirebaseFirestore.instance
         .collection('UserData/${uuid!}/Accounts')
         .doc(accountName);
@@ -38,19 +38,13 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
       'username': uName!,
       'password': pass!
     };
-
-    documentReference.set(userData).whenComplete(() {
-      print('$username created');
-      // print();
-    });
+    await documentReference.set(userData);
   }
 
-  void deleteAccData(dynamic item) {
+  Future<void> deleteAccData(String? item) async {
     DocumentReference documentReference =
         FirebaseFirestore.instance.collection(uuid!).doc(item);
-    documentReference.delete().whenComplete(() {
-      print('$item deleted');
-    });
+    await documentReference.delete();
   }
 
   @override
@@ -98,7 +92,6 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
               );
             } else if (snapshot.hasData) {
               if (snapshot.data! == widget.decodeResultData.points) {
-                print('matches');
                 return Scaffold(
                   appBar: AppBar(
                     title: Text(mAuth.currentUser!.displayName!),
@@ -166,8 +159,8 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
                                 ),
                                 actions: <Widget>[
                                   TextButton(
-                                      onPressed: () {
-                                        uploadAccData();
+                                      onPressed: () async {
+                                        await uploadAccData();
                                         Navigator.of(context).pop();
                                       },
                                       child: const Text('Add'))
@@ -196,8 +189,8 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
                               decryption.stringDecryption(
                                   documentSnapshot['username']),
                               // documentSnapshot['password'],
-                              onPressed: () {
-                                deleteAccData(documentSnapshot.id);
+                              onPressed: () async {
+                                await deleteAccData(documentSnapshot.id);
                               },
                             );
                           },
@@ -222,12 +215,11 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
                           ],
                         );
                       }
-                    return const CircularProgressIndicator();
+                      return const CircularProgressIndicator();
                     },
                   ),
                 );
               } else {
-                print("doesn't match");
                 return SorryPage();
               }
             } else if (snapshot.hasError) {

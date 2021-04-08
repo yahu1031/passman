@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as imglib;
@@ -111,7 +112,7 @@ Future<DecodeResponse> decodeMessageFromImageAsync(DecodeRequest req,
     {BuildContext? context}) async {
   DecodeResponse res =
       await compute(decodeMessageFromImage, req).catchError((dynamic onError) {
-    print('Error while decoding message from image : ${onError.toString()}');
+    log('Error while decoding message from image : ${onError.toString()}');
   });
   ;
   return res;

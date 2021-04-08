@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 
@@ -9,7 +10,7 @@ class FetchIP {
       http.Response response = await http.get(uri);
       return response.statusCode == 200 ? response.body : null;
     } catch (ipTryCatchError) {
-      print('IP error: ' + ipTryCatchError.toString());
+      log('IP error: ' + ipTryCatchError.toString());
     }
   }
 }

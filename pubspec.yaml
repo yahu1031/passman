@@ -2,7 +2,7 @@ name: passman
 description: Password Manager, Stores your all passwords. No one knows your
   passwords. Hide from everyone, sometimes from us and you.
 
-version: 2.2.6-alpha
+version: 2.2.6-alpha.2
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -24,7 +24,6 @@ dependencies:
   google_sign_in: ^5.0.1
   image: ^3.0.2
   image_picker: ^0.7.3
-  logger: ^1.0.0
   lottie: ^1.0.1
   network_to_file_image: ^3.0.0
   path_provider: ^2.0.1

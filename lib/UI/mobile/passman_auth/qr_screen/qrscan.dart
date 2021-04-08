@@ -9,7 +9,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logger/logger.dart';
 import 'package:lottie/lottie.dart';
 import 'package:passman/Components/constants.dart';
 import 'package:passman/Components/size_config.dart';
@@ -30,10 +29,6 @@ class _QRScanState extends State<QRScan> {
   final Decryption decryption = Decryption();
   final RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator();
   late String generatedString;
-  final Logger logger = Logger(
-    printer: PrettyPrinter(methodCount: 0),
-  );
-  // ConnectivityResult _connectionStatus = ConnectivityResult.none;
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
   ConnectivityResult _connectionStatus = ConnectivityResult.none;
@@ -46,8 +41,7 @@ class _QRScanState extends State<QRScan> {
     try {
       result = await _connectivity.checkConnectivity();
     } on PlatformException catch (platformExceptionError) {
-      logger.e(platformExceptionError.message.toString());
-      return;
+      throw platformExceptionError.message.toString();
     }
 
     if (!mounted) {
@@ -202,12 +196,12 @@ class _QRScanState extends State<QRScan> {
         'logged_in_time': Timestamp.now(),
         'uid': uuid
       }).onError((dynamic signinError, StackTrace stackTrace) {
-        logger.e(signinError.toString());
+        throw signinError.toString();
       }).catchError((dynamic onSigninError) {
-        logger.e(onSigninError.toString());
+        throw onSigninError.toString();
       });
     } catch (e) {
-      logger.e(e.toString);
+      throw e.toString;
     }
     Center(
       child: Container(

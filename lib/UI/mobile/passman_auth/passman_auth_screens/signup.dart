@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:developer';
 
 import 'package:passman/.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,7 +8,6 @@ import 'package:image/image.dart' as imglib;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:passman/Components/constants.dart';
 import 'package:passman/Components/markers.dart';
 import 'package:passman/Components/size_config.dart';
@@ -24,9 +24,6 @@ class PassmanSignup extends StatefulWidget {
 }
 
 class _PassmanSignupState extends State<PassmanSignup> {
-  Logger loggerNoStack = Logger(
-    printer: PrettyPrinter(methodCount: 0),
-  );
   FirebaseAuth mAuth = FirebaseAuth.instance;
   imglib.Image? editableImage;
   PickedFile? _image;
@@ -78,7 +75,7 @@ class _PassmanSignupState extends State<PassmanSignup> {
   @override
   Widget build(BuildContext context) {
     for (Points item in password!) {
-      print('${item.x}  ${item.y}');
+      log('${item.x}  ${item.y}');
     }
     String pointString =
         password!.map((Points pass) => '(${pass.x} ${pass.y})').join('');
@@ -116,8 +113,6 @@ class _PassmanSignupState extends State<PassmanSignup> {
                                   setState(() {
                                     password!.length;
                                   });
-                                  loggerNoStack
-                                      .d('length is ${password!.length}');
                                 },
                                 child: Stack(
                                   children: <Widget>[
@@ -173,9 +168,6 @@ class _PassmanSignupState extends State<PassmanSignup> {
                                               setState(() {
                                                 password!.length;
                                               });
-                                              loggerNoStack.d(
-                                                'length is ${password!.length}',
-                                              );
                                             },
                                           ),
                                         )
