@@ -9,7 +9,7 @@
       "flutterMode": "debug",
       "args": [
         "-d",
-        "edge",
+        "chrome",
         "--web-port",
         "1031",
         "-v"
@@ -20,17 +20,8 @@
       "program": "lib/main.dart",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "debug",
-      "args": ["-v"]
+      "flutterMode": "debug"
     }
-    // {
-    //   "name": "Windows",
-    //   "program": "lib/main.dart",
-    //   "request": "launch",
-    //   "type": "dart",
-    //   "deviceId": "windows",
-    //   "flutterMode": "debug"
-    // }
   ],
   "compounds": [
     {

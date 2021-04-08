@@ -25,7 +25,7 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
       pass,
       uName,
       tempacc,
-      uuid = mAuth.currentUser!.uid;
+      uuid = fireServer.mAuth.currentUser!.uid;
   final Encryption encryption = Encryption();
   final Decryption decryption = Decryption();
   Future<void> uploadAccData() async {
@@ -94,16 +94,13 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
               if (snapshot.data! == widget.decodeResultData.points) {
                 return Scaffold(
                   appBar: AppBar(
-                    title: Text(mAuth.currentUser!.displayName!),
+                    title: Text(fireServer.mAuth.currentUser!.displayName!),
                     centerTitle: true,
                     automaticallyImplyLeading: false,
                     actions: <Widget>[
                       IconButton(
                         icon: const Icon(
-                          IconData(
-                            0xeba8,
-                            fontFamily: 'IconsFont',
-                          ),
+                          Iconsdata.logout,
                         ),
                         onPressed: () => Navigator.pushReplacementNamed(
                           context,

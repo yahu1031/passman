@@ -15,6 +15,7 @@ import 'package:passman/Components/size_config.dart';
 import 'package:passman/UI/mobile/passman_auth/qr_screen/web_logged_in_qr_screen.dart';
 import 'package:passman/services/decryption.dart';
 import 'package:passman/services/random.dart';
+import 'package:passman/services/utilities/enums.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRScan extends StatefulWidget {
@@ -28,9 +29,11 @@ class _QRScanState extends State<QRScan> {
   bool flash = false;
   final Decryption decryption = Decryption();
   final RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator();
-  late String generatedString;
+  String? generatedString;
   final Connectivity _connectivity = Connectivity();
-  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  StreamSubscription<ConnectivityResult>? _connectivitySubscription;
+  LoadingState? loadingState;
+
   ConnectivityResult _connectionStatus = ConnectivityResult.none;
   QRViewController? controller;
   String? uuid = FirebaseAuth.instance.currentUser!.uid;
@@ -61,20 +64,25 @@ class _QRScanState extends State<QRScan> {
 
   @override
   void initState() {
+    loadingState = LoadingState.PENDING;
     super.initState();
     initConnectivity();
-
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
-    userDataColRef.doc(uuid).snapshots().listen((DocumentSnapshot event) async {
+    fireServer.userDataColRef
+        .doc(uuid)
+        .snapshots()
+        .listen((DocumentSnapshot event) async {
       if (event.exists) {
         if (event.data()!['web_login'] == true) {
           setState(() {
             isWebLoggedin = true;
+            loadingState = LoadingState.SUCCESS;
           });
         } else {
           setState(() {
             isWebLoggedin = false;
+            loadingState = LoadingState.SUCCESS;
           });
           await controller?.resumeCamera();
         }
@@ -85,7 +93,7 @@ class _QRScanState extends State<QRScan> {
   @override
   void dispose() {
     controller?.dispose();
-    _connectivitySubscription.cancel();
+    _connectivitySubscription?.cancel();
     super.dispose();
   }
 
@@ -104,71 +112,66 @@ class _QRScanState extends State<QRScan> {
             child: _connectionStatus != ConnectivityResult.none
                 ? isWebLoggedin
                     ? WebLoggedinQRScreen()
-                    : Stack(
-                        children: <Widget>[
-                          QRView(
-                            key: qrKey,
-                            onQRViewCreated: _onQRViewCreated,
-                            overlay: QrScannerOverlayShape(
-                              borderRadius: 10,
-                              borderLength: 30,
-                              borderWidth: 10,
-                              cutOutSize: scanArea,
-                            ),
-                          ),
-                          Positioned(
-                            top: 10,
-                            right: 10,
-                            child: IconButton(
-                              onPressed: () async {
-                                await controller?.toggleFlash();
-                                setState(
-                                  () {
-                                    flash = !flash;
-                                  },
-                                );
-                              },
-                              icon: FutureBuilder<bool?>(
-                                future: controller?.getFlashStatus(),
-                                builder: (BuildContext context,
-                                        AsyncSnapshot<bool?> snapshot) =>
-                                    Icon(
-                                  flash
-                                      ? const IconData(
-                                          0xea51,
-                                          fontFamily: 'IconsFont',
-                                        )
-                                      : const IconData(
-                                          0xea50,
-                                          fontFamily: 'IconsFont',
-                                        ),
-                                  color: flash
-                                      ? Colors.white
-                                      : Colors.grey[300]!.withOpacity(0.3),
-                                  size: 10 * SizeConfig.imageSizeMultiplier,
+                    : loadingState == LoadingState.LOADING
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : Stack(
+                            children: <Widget>[
+                              QRView(
+                                key: qrKey,
+                                onQRViewCreated: _onQRViewCreated,
+                                overlay: QrScannerOverlayShape(
+                                  borderRadius: 10,
+                                  borderLength: 30,
+                                  borderWidth: 10,
+                                  cutOutSize: scanArea,
                                 ),
                               ),
-                            ),
-                          ),
-                          Positioned(
-                            top: 10,
-                            left: 10,
-                            child: IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: Icon(
-                                const IconData(
-                                          0xeb55,
-                                          fontFamily: 'IconsFont',
-                                        ),
-                                color: Colors.white,
-                                size: 5 * SizeConfig.imageSizeMultiplier,
+                              Positioned(
+                                top: 10,
+                                right: 10,
+                                child: IconButton(
+                                  onPressed: () async {
+                                    await controller?.toggleFlash();
+                                    setState(
+                                      () {
+                                        flash = !flash;
+                                      },
+                                    );
+                                  },
+                                  icon: FutureBuilder<bool?>(
+                                    future: controller?.getFlashStatus(),
+                                    builder: (BuildContext context,
+                                            AsyncSnapshot<bool?> snapshot) =>
+                                        Icon(
+                                      flash
+                                          ? Iconsdata.flashOn
+                                          : Iconsdata.flashOff,
+                                      color: flash
+                                          ? Colors.white
+                                          : Colors.grey[300]!.withOpacity(0.3),
+                                      size: 10 * SizeConfig.imageSizeMultiplier,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ],
-                      )
+                              Positioned(
+                                top: 10,
+                                left: 10,
+                                child: IconButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  icon: Icon(
+                                    Iconsdata.x,
+                                    color: Colors.white,
+                                    size: 5 * SizeConfig.imageSizeMultiplier,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -187,11 +190,9 @@ class _QRScanState extends State<QRScan> {
       );
 
   Future<void> codeLogin(Barcode? result) async {
-    Decryption decryption = Decryption();
     String code = decryption.stringDecryption(result!.code.toString());
-    String uuid = mAuth.currentUser!.uid;
     try {
-      await qrColRef.doc(code).set(<String, dynamic>{
+      await fireServer.qrColRef.doc(code).set(<String, dynamic>{
         'flag': false,
         'logged_in_time': Timestamp.now(),
         'uid': uuid
@@ -203,11 +204,6 @@ class _QRScanState extends State<QRScan> {
     } catch (e) {
       throw e.toString;
     }
-    Center(
-      child: Container(
-        child: const CircularProgressIndicator(),
-      ),
-    );
   }
 
   void _onQRViewCreated(QRViewController? controller) {

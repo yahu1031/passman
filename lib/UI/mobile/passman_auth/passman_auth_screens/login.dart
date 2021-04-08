@@ -38,10 +38,10 @@ class _PassmanLoginState extends State<PassmanLogin> {
         loadingState = LoadingState.LOADING;
       });
     }
-    String? uuid = mAuth.currentUser!.uid;
+    String? uuid = fireServer.mAuth.currentUser!.uid;
     String? _imageLink;
     DefaultCacheManager cache = DefaultCacheManager();
-    DocumentSnapshot value = await userDataColRef.doc(uuid).get();
+    DocumentSnapshot value = await fireServer.userDataColRef.doc(uuid).get();
     setState(() {
       _imageLink = value.data()!['img'];
     });

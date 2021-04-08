@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/widgets.dart';
 
 class PageRoutes {
   static const String routeHome = '/';
@@ -26,15 +27,39 @@ class LottieFiles {
   static const String sorry = 'assets/lottie/sorry.json';
 }
 
-FirebaseAuth mAuth = FirebaseAuth.instance;
+class FireServer {
+  FirebaseAuth mAuth = FirebaseAuth.instance;
 
-CollectionReference userDataColRef =
-    FirebaseFirestore.instance.collection('UserData');
+  CollectionReference userDataColRef =
+      FirebaseFirestore.instance.collection('UserData');
 
-CollectionReference qrColRef =
-    FirebaseFirestore.instance.collection('TempUserID');
+  CollectionReference qrColRef =
+      FirebaseFirestore.instance.collection('TempUserID');
 
-Reference storageRef =
-    FirebaseStorage.instance.ref();
+  Reference storageRef = FirebaseStorage.instance.ref();
+}
 
-int binSize = 20;
+FireServer fireServer = FireServer();
+
+const int binSize = 20;
+
+class Iconsdata {
+  static const IconData x = IconData(0xeb55, fontFamily: 'IconsFont');
+  static const IconData flashOff = IconData(0xea50, fontFamily: 'IconsFont');
+  static const IconData flashOn = IconData(0xea51, fontFamily: 'IconsFont');
+  static const IconData copy = IconData(0xea7a, fontFamily: 'IconsFont');
+  static const IconData ip = IconData(0xebb7, fontFamily: 'IconsFont');
+  static const IconData testtube = IconData(0xeb3a, fontFamily: 'IconsFont');
+  static const IconData device = IconData(0xeb87, fontFamily: 'IconsFont');
+  static const IconData logout = IconData(0xeba8, fontFamily: 'IconsFont');
+  static const IconData windows = IconData(0xecd8, fontFamily: 'IconsFont');
+  static const IconData mac = IconData(0xec17, fontFamily: 'IconsFont');
+  static const IconData linux = IconData(0xea45, fontFamily: 'IconsFont');
+  static const IconData plus = IconData(0xeb0b, fontFamily: 'IconsFont');
+  static const IconData edge = IconData(0xecfc, fontFamily: 'IconsFont');
+  static const IconData chrome = IconData(0xec18, fontFamily: 'IconsFont');
+  static const IconData firefox = IconData(0xecfd, fontFamily: 'IconsFont');
+  static const IconData safari = IconData(0xec23, fontFamily: 'IconsFont');
+  static const IconData opera = IconData(0xec21, fontFamily: 'IconsFont');
+  static const IconData github = IconData(0xec1c, fontFamily: 'IconsFont');
+}

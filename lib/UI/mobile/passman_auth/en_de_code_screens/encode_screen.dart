@@ -52,11 +52,12 @@ class _EncodingResultScreen extends State<EncodingResultScreen> {
       uploadingToStorageState = LoadingState.LOADING;
     });
     String filename = '$uuid.png';
-    Reference pathRef = storageRef.child('UserImgData').child(filename);
+    Reference pathRef =
+        fireServer.storageRef.child('UserImgData').child(filename);
     UploadTask uploadTask = pathRef.putData(_imageData!);
     await uploadTask.whenComplete(() async {
       String downImg = await uploadTask.snapshot.ref.getDownloadURL();
-      await userDataColRef.doc(uuid).update(<String, dynamic>{
+      await fireServer.userDataColRef.doc(uuid).update(<String, dynamic>{
         'img': downImg,
       });
     });

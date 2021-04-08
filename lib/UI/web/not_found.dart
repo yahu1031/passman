@@ -86,7 +86,7 @@ class _NotFoundScreenState extends State<NotFoundScreen> {
               child: Row(
                 children: <Widget>[
                   Text(
-                    'Version : 2.3.3-alpha ',
+                    'Version : 2.3.3-alpha.5 ',
                     style: TextStyle(
                       fontFamily: 'Quicksand',
                       fontSize: 1 * SizeConfig.textMultiplier,
@@ -95,10 +95,7 @@ class _NotFoundScreenState extends State<NotFoundScreen> {
                     ),
                   ),
                   Icon(
-                    const IconData(
-                      0xeb3a,
-                      fontFamily: 'IconsFont',
-                    ),
+                    Iconsdata.github,
                     color: Colors.black,
                     size: 1.5 * SizeConfig.textMultiplier,
                   ),

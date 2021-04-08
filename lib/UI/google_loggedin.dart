@@ -20,6 +20,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
   late TapGestureRecognizer _loginTapGesture, _signupTapGesture;
   FirebaseAuth mAuth = FirebaseAuth.instance;
   bool _userHasData = false;
+
   void _loginWithImage() {
     Navigator.pushNamed(context, PageRoutes.routePassmanLogin);
   }
@@ -78,7 +79,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
       checkUserDB();
     }
     String file = '${mAuth.currentUser!.uid}.png';
-    storageRef
+    fireServer.storageRef
         .child('UserImgData/$file')
         .getDownloadURL()
         .then((String? value) {
@@ -161,10 +162,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
                     child: IconButton(
                       tooltip: 'Login to Computer',
                       icon: const Icon(
-                        IconData(
-                          0xeb87,
-                          fontFamily: 'IconsFont',
-                        ),
+                        Iconsdata.device,
                         color: Colors.black,
                       ),
                       onPressed: () {

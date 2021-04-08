@@ -92,7 +92,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
     super.initState();
     _controller = AnimationController(vsync: this);
     timerFunc();
-    DocumentReference docRef = qrColRef.doc(generatedString);
+    DocumentReference docRef = fireServer.qrColRef.doc(generatedString);
     docRef.snapshots().listen(
       (DocumentSnapshot event) async {
         if (event.exists) {
@@ -109,10 +109,10 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                       if (event.data()!['uid'] != mAuth.currentUser!.uid) {
                         await googleProvider.logout();
                         const CircularProgressIndicator();
-                        await qrColRef.doc(generatedString).delete();
+                        await fireServer.qrColRef.doc(generatedString).delete();
                         throw 'User tried to login didn\'t match';
                       } else {
-                        await qrColRef.doc(generatedString).delete();
+                        await fireServer.qrColRef.doc(generatedString).delete();
                       }
                     }
                   },
@@ -149,7 +149,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) => Scaffold(
         body: StreamBuilder<Object?>(
-          stream: qrColRef.doc(generatedString).snapshots(),
+          stream: fireServer.qrColRef.doc(generatedString).snapshots(),
           builder: (BuildContext context, AsyncSnapshot<Object?> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
@@ -194,7 +194,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                   child: Row(
                     children: <Widget>[
                       Text(
-                        'Version : 2.3.3-alpha ',
+                        'Version : 2.3.3-alpha.5 ',
                         style: TextStyle(
                           fontFamily: 'Quicksand',
                           fontSize: 1 * SizeConfig.textMultiplier,
@@ -203,10 +203,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                         ),
                       ),
                       Icon(
-                        const IconData(
-                          0xeb3a,
-                          fontFamily: 'IconsFont',
-                        ),
+                        Iconsdata.testtube,
                         color: Colors.black,
                         size: 1.5 * SizeConfig.textMultiplier,
                       ),
@@ -217,10 +214,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                         splashColor: Colors.transparent,
                         tooltip: 'Github repository',
                         icon: Icon(
-                          const IconData(
-                            0xec1c,
-                            fontFamily: 'IconsFont',
-                          ),
+                          Iconsdata.github,
                           size: 1.5 * SizeConfig.textMultiplier,
                         ),
                         onPressed: _openGitLink,

@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
 import 'package:passman/Components/constants.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/models/user_data.dart';
@@ -14,27 +13,58 @@ class WebLoggedinQRScreen extends StatefulWidget {
 
 class _WebLoggedinQRScreenState extends State<WebLoggedinQRScreen> {
   String? uuid = FirebaseAuth.instance.currentUser!.uid;
-
+  String? plat;
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Center(
           child: StreamBuilder<DocumentSnapshot?>(
-              stream: userDataColRef.doc(uuid).snapshots(),
+              stream: fireServer.userDataColRef.doc(uuid).snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<DocumentSnapshot?> snapshot) {
                 if (snapshot.hasData) {
                   UserData userData = UserData.fromDocument(snapshot.data!);
+                  plat = userData.platform!;
                   return Stack(
                     children: <Widget>[
                       Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            Lottie.asset(
-                              LottieFiles.earth,
-                              height: 20 * SizeConfig.widthMultiplier,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Tooltip(
+                                  message: 'Windows',
+                                  child: Icon(
+                                    plat!.contains('window')
+                                        ? Iconsdata.windows
+                                        : plat!.contains('Macintosh')
+                                            ? Iconsdata.mac
+                                            : Iconsdata.linux,
+                                    color: Colors.black,
+                                    size: 7 * SizeConfig.textMultiplier,
+                                  ),
+                                ),
+                                Icon(
+                                  Iconsdata.plus,
+                                  color: Colors.black,
+                                  size: 3 * SizeConfig.textMultiplier,
+                                ),
+                                Tooltip(
+                                  message: 'Edge',
+                                  child: Icon(
+                                    Iconsdata.edge,
+                                    color: Colors.black,
+                                    size: 7 * SizeConfig.textMultiplier,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10 * SizeConfig.heightMultiplier,
                             ),
                             Text(
                               '''

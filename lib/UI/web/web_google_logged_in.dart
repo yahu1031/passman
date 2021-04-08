@@ -25,18 +25,26 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
   Future<void> _openGitLink() async => await canLaunch(_url)
       ? await launch(_url)
       : throw 'Could not launch $_url';
+  WebBrowserInfo? browserInfo;
   Future<String> platformInfo() async {
-    WebBrowserInfo webBrowserInfo = await deviceInfo.webBrowserInfo;
-    String platform =
-        webBrowserInfo.userAgent.toString().split(' ')[1].substring(1);
-    return platform;
+    browserInfo = await deviceInfo.webBrowserInfo;
+    String? browserPlat = browserInfo!.platform;
+    switch (browserPlat) {
+      case 'win32':
+        return 'Windows';
+      default:
+        return 'Unix';
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    userDataColRef.doc(uuid).snapshots().listen((DocumentSnapshot event) async {
-      if (mAuth.currentUser != null) {
+    fireServer.userDataColRef
+        .doc(uuid)
+        .snapshots()
+        .listen((DocumentSnapshot event) async {
+      if (fireServer.mAuth.currentUser != null) {
         String? ipAddress = await FetchIP.getIP();
         String? loggedInPlatform = await platformInfo();
         if (event.exists) {
@@ -44,7 +52,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
               event.data()!['logged_in_time'] == 'No records' ||
               event.data()!['platform'] == 'No records') {
             try {
-              await userDataColRef.doc(uuid).update(
+              await fireServer.userDataColRef.doc(uuid).update(
                 <String, dynamic>{
                   'web_login': true,
                   'platform': loggedInPlatform,
@@ -85,7 +93,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Version : 2.3.3-alpha ',
+                        'Version : 2.3.3-alpha.5 ',
                         style: TextStyle(
                           fontFamily: 'Quicksand',
                           fontSize: 1 * SizeConfig.textMultiplier,
@@ -94,10 +102,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                         ),
                       ),
                       Icon(
-                        const IconData(
-                          0xeb3a,
-                          fontFamily: 'IconsFont',
-                        ),
+                        Iconsdata.testtube,
                         color: Colors.black,
                         size: 1.5 * SizeConfig.textMultiplier,
                       ),
@@ -107,10 +112,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                         focusColor: Colors.transparent,
                         splashColor: Colors.transparent,
                         icon: Icon(
-                          const IconData(
-                            0xec1c,
-                            fontFamily: 'IconsFont',
-                          ),
+                          Iconsdata.github,
                           size: 1.5 * SizeConfig.textMultiplier,
                         ),
                         onPressed: _openGitLink,
@@ -130,17 +132,14 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
               focusColor: Colors.transparent,
               splashColor: Colors.transparent,
               tooltip: '''
-Log out as ${mAuth.currentUser!.displayName.toString().toUpperCase()}.''',
+Log out as ${fireServer.mAuth.currentUser!.displayName.toString().toUpperCase()}.''',
               icon: const Icon(
-                IconData(
-                  0xeba8,
-                  fontFamily: 'IconsFont',
-                ),
+                Iconsdata.logout,
               ),
               onPressed: () async {
-                String? userUID = mAuth.currentUser!.uid;
+                String? userUID = fireServer.mAuth.currentUser!.uid;
                 await provider.logout();
-                await userDataColRef.doc(userUID).update(
+                await fireServer.userDataColRef.doc(userUID).update(
                   <String, dynamic>{
                     'web_login': false,
                     'platform': 'No records',

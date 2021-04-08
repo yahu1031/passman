@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:passman/Components/constants.dart';
 
 class DataCard extends StatefulWidget {
   const DataCard(
@@ -38,7 +39,7 @@ class _DataCardState extends State<DataCard> {
             ),
             IconButton(
               icon: const Icon(
-                IconData(0xea7a, fontFamily: 'IconsFont'),
+                Iconsdata.copy,
                 color: Colors.grey,
               ),
               onPressed: () => widget.onPressed,
