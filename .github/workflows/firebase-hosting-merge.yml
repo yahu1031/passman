@@ -17,17 +17,11 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: "stable"
-      - name: Adding google-service file
-        run: echo ${{ secrets.GOOGLE_SERVICE_JSON }} | base64 --decode > android/app/google-services.json
-      - name: Adding secret file
-        run: echo ${{ secrets.ENCRYPT_KEY }} | base64 --decode > lib/.dart
-      - name: Adding firebase configuration file
-        run: echo ${{ secrets.WEB_FIREBASE_CONFIG }} | base64 --decode > web/js/firebase-config.js
-      - name: Installing dependencies
-        run: flutter pub get
-      - name: Bulding web
-        run: flutter build web
-      - name: Deploying site into firebase
+      - run: echo ${{ secrets.GOOGLE_SERVICE_JSON }} | base64 --decode > android/app/google-services.json
+      - run: echo ${{ secrets.ENCRYPT_KEY }} | base64 --decode > lib/.dart
+      - run: echo ${{ secrets.WEB_FIREBASE_CONFIG }} | base64 --decode > web/js/firebase-config.js
+      - run: flutter pub get
+      - run: flutter build web
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
