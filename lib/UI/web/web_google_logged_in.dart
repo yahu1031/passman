@@ -86,26 +86,22 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text.rich(
-                        TextSpan(
-                          text: 'Version : 2.3.0-alpha ',
-                          style: TextStyle(
-                            fontFamily: 'Quicksand',
-                            fontSize: 1 * SizeConfig.textMultiplier,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.black,
-                          ),
-                          children: <InlineSpan>[
-                            TextSpan(
-                              text: '🧪',
-                              style: GoogleFonts.notoSans(
-                                fontSize: 1 * SizeConfig.textMultiplier,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ],
+                      Text(
+                        'Version : 2.3.1-alpha ',
+                        style: TextStyle(
+                          fontFamily: 'Quicksand',
+                          fontSize: 1 * SizeConfig.textMultiplier,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.black,
                         ),
+                      ),
+                      Icon(
+                        const IconData(
+                          0xeb3a,
+                          fontFamily: 'IconsFont',
+                        ),
+                        color: Colors.black,
+                        size: 1.5 * SizeConfig.textMultiplier,
                       ),
                       IconButton(
                         splashRadius: 0.001,

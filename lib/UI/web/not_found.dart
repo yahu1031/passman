@@ -84,26 +84,26 @@ class _NotFoundScreenState extends State<NotFoundScreen> {
             Positioned(
               top: 20,
               right: 20,
-              child: Text.rich(
-                TextSpan(
-                  text: 'Version : 2.3.0-alpha ',
-                  style: TextStyle(
-                    fontFamily: 'Quicksand',
-                    fontSize: 1 * SizeConfig.textMultiplier,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.black,
-                  ),
-                  children: <InlineSpan>[
-                    TextSpan(
-                      text: '🧪',
-                      style: GoogleFonts.notoSans(
-                        fontSize: 1 * SizeConfig.textMultiplier,
-                        fontWeight: FontWeight.w900,
-                        color: Colors.black,
-                      ),
+              child: Row(
+                children: <Widget>[
+                  Text(
+                    'Version : 2.3.1-alpha ',
+                    style: TextStyle(
+                      fontFamily: 'Quicksand',
+                      fontSize: 1 * SizeConfig.textMultiplier,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.black,
                     ),
-                  ],
-                ),
+                  ),
+                  Icon(
+                    const IconData(
+                      0xeb3a,
+                      fontFamily: 'IconsFont',
+                    ),
+                    color: Colors.black,
+                    size: 1.5 * SizeConfig.textMultiplier,
+                  ),
+                ],
               ),
             ),
           ],

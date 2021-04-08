@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:passman/Components/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
@@ -94,6 +96,8 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
     docRef.snapshots().listen(
       (DocumentSnapshot event) async {
         if (event.exists) {
+          log('Generated String $generatedString');
+          log('Scanned String ${docRef.id.toString()}');
           if (generatedString == docRef.id.toString()) {
             GoogleSignInProvider googleProvider =
                 Provider.of<GoogleSignInProvider>(context, listen: false);
@@ -144,93 +148,89 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      body: StreamBuilder<Object?>(
-        stream: qrColRef.doc(generatedString).snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<Object?> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          return Stack(
-            children: <Widget>[
-              Center(
-                child: Container(
-                  height: 35 * SizeConfig.imageSizeMultiplier,
-                  width: 35 * SizeConfig.imageSizeMultiplier,
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                  child: FittedBox(
-                    child: QrImage(
-                      data: encryptedString,
-                      version: 7,
-                      size: 40 * SizeConfig.widthMultiplier,
+        body: StreamBuilder<Object?>(
+          stream: qrColRef.doc(generatedString).snapshots(),
+          builder: (BuildContext context, AsyncSnapshot<Object?> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return Stack(
+              children: <Widget>[
+                Center(
+                  child: Container(
+                    height: 35 * SizeConfig.imageSizeMultiplier,
+                    width: 35 * SizeConfig.imageSizeMultiplier,
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    child: FittedBox(
+                      child: QrImage(
+                        data: encryptedString,
+                        version: 7,
+                        size: 40 * SizeConfig.widthMultiplier,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Positioned(
-                top: 20,
-                left: 20,
-                child: Hero(
-                  tag: 'logo',
-                  child: Lottie.asset(
-                    LottieFiles.fingerprint,
-                    height: 10 * SizeConfig.imageSizeMultiplier,
-                    reverse: true,
+                Positioned(
+                  top: 20,
+                  left: 20,
+                  child: Hero(
+                    tag: 'logo',
+                    child: Lottie.asset(
+                      LottieFiles.fingerprint,
+                      height: 10 * SizeConfig.imageSizeMultiplier,
+                      reverse: true,
+                    ),
                   ),
                 ),
-              ),
-              Positioned(
-                top: 20,
-                right: 20,
-                child: Row(
-                  children: <Widget>[
-                    Text.rich(
-                      TextSpan(
-                        text: 'Version : 2.3.0-alpha ',
-                          style: TextStyle(
-                            fontFamily: 'Quicksand',
+                Positioned(
+                  top: 20,
+                  right: 20,
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        'Version : 2.3.1-alpha ',
+                        style: TextStyle(
+                          fontFamily: 'Quicksand',
                           fontSize: 1 * SizeConfig.textMultiplier,
                           fontWeight: FontWeight.w900,
                           color: Colors.black,
                         ),
-                        children: <InlineSpan>[
-                          TextSpan(
-                            text: '🧪',
-                            style: GoogleFonts.notoSans(
-                              fontSize: 1 * SizeConfig.textMultiplier,
-                              fontWeight: FontWeight.w900,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
                       ),
-                    ),
-                    IconButton(
-                      splashRadius: 0.001,
-                      hoverColor: Colors.transparent,
-                      focusColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      tooltip: 'Github repository',
-                      icon: Icon(
+                      Icon(
                         const IconData(
-                          0xec1c,
+                          0xeb3a,
                           fontFamily: 'IconsFont',
                         ),
+                        color: Colors.black,
                         size: 1.5 * SizeConfig.textMultiplier,
                       ),
-                      onPressed: _openGitLink,
-                    )
-                  ],
+                      IconButton(
+                        splashRadius: 0.001,
+                        hoverColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        tooltip: 'Github repository',
+                        icon: Icon(
+                          const IconData(
+                            0xec1c,
+                            fontFamily: 'IconsFont',
+                          ),
+                          size: 1.5 * SizeConfig.textMultiplier,
+                        ),
+                        onPressed: _openGitLink,
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
-      ),
-    );
+              ],
+            );
+          },
+        ),
+      );
 }
