@@ -20,12 +20,14 @@ jobs:
       - uses: subosito/flutter-action@v1.4.0
         with:
           channel: stable
-      - name: Adding service files
+      - name: Adding google-service file
         run: echo ${{ secrets.GOOGLE_SERVICE_JSON }} | base64 --decode > android/app/google-services.json
       - name: Adding sign key properties
         run: echo ${{ secrets.KEY_PROPERTIES }} | base64 --decode > android/key.properties
-      - name: Adding decoder
+      - name: Adding secret file
         run: echo ${{ secrets.ENCRYPT_KEY }} | base64 --decode > lib/.dart
+      - name: Adding firebase configuration file
+        run: echo ${{ secrets.WEB_FIREBASE_CONFIG }} | base64 --decode > web/js/firebase-config.js
       - name: Installing dependencies
         run: flutter pub get
       - name: Analyzing application code
@@ -56,6 +58,8 @@ jobs:
         run: echo ${{ secrets.KEY_PROPERTIES }} | base64 --decode > android/key.properties
       - name: Adding decoder
         run: echo ${{ secrets.ENCRYPT_KEY }} | base64 --decode > lib/.dart
+      - name: Adding firebase configuration file
+        run: echo ${{ secrets.WEB_FIREBASE_CONFIG }} | base64 --decode > web/js/firebase-config.js
       - name: Cleaning build files
         run: flutter clean
       - name: Installing dependencies
