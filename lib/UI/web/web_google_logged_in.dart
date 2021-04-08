@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:passman/Components/constants.dart';
 import 'package:passman/services/internet_services.dart';
@@ -7,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/services/authentication.dart';
@@ -54,12 +52,12 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                   'logged_in_time': Timestamp.now()
                 },
               ).catchError((dynamic onError) {
-                log('Update catch error: ${onError.toString()}');
+                throw 'Update catch error: ${onError.toString()}';
               }).onError((Object? error, StackTrace stackTrace) {
-                log('Update on error: ${error.toString()}');
+                throw 'Update on error: ${error.toString()}';
               });
             } catch (err) {
-              log('Update try catch error: ${err.toString()}');
+              throw 'Update try catch error: ${err.toString()}';
             }
           }
         }
@@ -87,7 +85,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Version : 2.3.1-alpha ',
+                        'Version : 2.3.2-alpha ',
                         style: TextStyle(
                           fontFamily: 'Quicksand',
                           fontSize: 1 * SizeConfig.textMultiplier,

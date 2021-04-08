@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:passman/Components/constants.dart';
 import 'package:passman/Components/size_config.dart';
@@ -87,7 +86,7 @@ class _NotFoundScreenState extends State<NotFoundScreen> {
               child: Row(
                 children: <Widget>[
                   Text(
-                    'Version : 2.3.1-alpha ',
+                    'Version : 2.3.2-alpha ',
                     style: TextStyle(
                       fontFamily: 'Quicksand',
                       fontSize: 1 * SizeConfig.textMultiplier,

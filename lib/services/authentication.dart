@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -57,10 +55,10 @@ class GoogleSignInProvider extends ChangeNotifier {
             (UserCredential value) {},
           )
           .onError((dynamic error, StackTrace stackTrace) {
-        log(error.toString());
+        throw error.toString();
       });
     } catch (e) {
-      log(e.toString());
+      throw e.toString();
     }
   }
 
@@ -70,9 +68,9 @@ class GoogleSignInProvider extends ChangeNotifier {
       GoogleSignInAccount? user = await googleSignIn
           .signIn()
           .onError((dynamic signinError, StackTrace stackTrace) {
-        log(signinError.toString());
+        throw signinError.toString();
       }).catchError((dynamic onSigninError) {
-        log(onSigninError.toString());
+        throw onSigninError.toString();
       });
       if (user == null) {
         isSigningIn = false;
@@ -87,14 +85,14 @@ class GoogleSignInProvider extends ChangeNotifier {
         await FirebaseAuth.instance
             .signInWithCredential(credential)
             .catchError((dynamic onSigninCredsError) {
-          log(onSigninCredsError.toString());
+          throw onSigninCredsError.toString();
         });
         isSigningIn = false;
       }
     } on PlatformException catch (err) {
-      log(err.toString());
+      throw err.toString();
     } catch (error) {
-      log(error.toString());
+      throw error.toString();
     }
   }
 
@@ -107,9 +105,9 @@ class GoogleSignInProvider extends ChangeNotifier {
       });
       await FirebaseAuth.instance.signOut();
     } on PlatformException catch (err) {
-      log(err.toString());
+      throw err.toString();
     } catch (error) {
-      log(error.toString());
+      throw error.toString();
     }
   }
 }
