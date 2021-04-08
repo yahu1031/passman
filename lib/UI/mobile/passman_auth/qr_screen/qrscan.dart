@@ -159,7 +159,7 @@ class _QRScanState extends State<QRScan> {
                               },
                               icon: Icon(
                                 const IconData(
-                                          0xea55,
+                                          0xeb55,
                                           fontFamily: 'IconsFont',
                                         ),
                                 color: Colors.white,

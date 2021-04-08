@@ -38,27 +38,29 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
   void initState() {
     super.initState();
     userDataColRef.doc(uuid).snapshots().listen((DocumentSnapshot event) async {
-      String? ipAddress = await FetchIP.getIP();
-      String? loggedInPlatform = await platformInfo();
-      if (event.exists) {
-        if (event.data()!['ip'] == 'No records' ||
-            event.data()!['logged_in_time'] == 'No records' ||
-            event.data()!['platform'] == 'No records') {
-          try {
-            await userDataColRef.doc(uuid).update(
-              <String, dynamic>{
-                'web_login': true,
-                'platform': loggedInPlatform,
-                'ip': ipAddress,
-                'logged_in_time': Timestamp.now()
-              },
-            ).catchError((dynamic onError) {
-              log('Update catch error: ${onError.toString()}');
-            }).onError((Object? error, StackTrace stackTrace) {
-              log('Update on error: ${error.toString()}');
-            });
-          } catch (err) {
-            log('Update try catch error: ${err.toString()}');
+      if (mAuth.currentUser != null) {
+        String? ipAddress = await FetchIP.getIP();
+        String? loggedInPlatform = await platformInfo();
+        if (event.exists) {
+          if (event.data()!['ip'] == 'No records' ||
+              event.data()!['logged_in_time'] == 'No records' ||
+              event.data()!['platform'] == 'No records') {
+            try {
+              await userDataColRef.doc(uuid).update(
+                <String, dynamic>{
+                  'web_login': true,
+                  'platform': loggedInPlatform,
+                  'ip': ipAddress,
+                  'logged_in_time': Timestamp.now()
+                },
+              ).catchError((dynamic onError) {
+                log('Update catch error: ${onError.toString()}');
+              }).onError((Object? error, StackTrace stackTrace) {
+                log('Update on error: ${error.toString()}');
+              });
+            } catch (err) {
+              log('Update try catch error: ${err.toString()}');
+            }
           }
         }
       }
@@ -86,7 +88,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                     children: <Widget>[
                       Text.rich(
                         TextSpan(
-                          text: 'Version : 2.2.6-alpha.2 ',
+                          text: 'Version : 2.3.0-alpha ',
                           style: TextStyle(
                             fontFamily: 'Quicksand',
                             fontSize: 1 * SizeConfig.textMultiplier,
@@ -135,19 +137,23 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
               splashColor: Colors.transparent,
               tooltip: '''
 Log out as ${mAuth.currentUser!.displayName.toString().toUpperCase()}.''',
-              icon: const Icon(IconData(0xeba8, fontFamily: 'IconsFont')),
+              icon: const Icon(
+                IconData(
+                  0xeba8,
+                  fontFamily: 'IconsFont',
+                ),
+              ),
               onPressed: () async {
                 String? userUID = mAuth.currentUser!.uid;
-                await provider.logout().then((_) async {
-                  await userDataColRef.doc(userUID).update(
-                    <String, dynamic>{
-                      'web_login': false,
-                      'platform': 'No records',
-                      'logged_in_time': 'No records',
-                      'ip': 'No records'
-                    },
-                  );
-                });
+                await provider.logout();
+                await userDataColRef.doc(userUID).update(
+                  <String, dynamic>{
+                    'web_login': false,
+                    'platform': 'No records',
+                    'logged_in_time': 'No records',
+                    'ip': 'No records'
+                  },
+                );
               },
             ),
           ),

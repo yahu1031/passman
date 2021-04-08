@@ -103,7 +103,7 @@ class GoogleSignInProvider extends ChangeNotifier {
       await googleSignIn
           .disconnect()
           .onError((Object? error, StackTrace stackTrace) async {
-        await FirebaseAuth.instance.signOut();
+        await FirebaseAuth.instance.signOut(); 
       });
       await FirebaseAuth.instance.signOut();
     } on PlatformException catch (err) {

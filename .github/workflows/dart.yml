@@ -9,7 +9,7 @@ on:
 
 jobs:
   flutter_test:
-    name: Ananlyzing v2.2.6-alpha.2
+    name: Ananlyzing v2.3.0-alpha
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -32,7 +32,7 @@ jobs:
         run: flutter analyze
 
   build-artifact:
-    name: Build Android apk - v2.2.6-alpha.2
+    name: Build Android apk - v2.3.0-alpha
     needs: [flutter_test]
     runs-on: ubuntu-latest
     steps:
@@ -60,9 +60,9 @@ jobs:
         run: flutter clean
       - name: Installing dependencies
         run: flutter pub get
-      - name: Building APK - v2.2.6-alpha.2
+      - name: Building APK - v2.3.0-alpha
         run: flutter build apk -t lib/main.dart --split-per-abi
-      - name: Releasing APK - v2.2.6-alpha.2
+      - name: Releasing APK - v2.3.0-alpha
         uses: ncipollo/release-action@v1
         with:
           artifacts: "build/app/outputs/apk/release/*.apk"

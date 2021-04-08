@@ -163,7 +163,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
                       tooltip: 'Login to Computer',
                       icon: const Icon(
                         IconData(
-                          0xeb11,
+                          0xeb3a,
                           fontFamily: 'IconsFont',
                         ),
                         color: Colors.black,
