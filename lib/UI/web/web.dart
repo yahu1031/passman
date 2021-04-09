@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:passman/Components/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
@@ -7,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/services/authentication.dart';
@@ -32,6 +29,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
   );
   final Encryption encryption = Encryption();
   late AnimationController _controller;
+  late StreamSubscription<DocumentSnapshot> _listenToScans;
   late String generatedString, encryptedString;
   bool isPin = false, stringMatched = false, isStarted = true;
   late Timer timer;
@@ -42,15 +40,18 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
         builder: (BuildContext context) => AlertDialog(
           title: Text(
             'Sorry',
-            style: GoogleFonts.lexendDeca(
+            style: TextStyle(
+              fontFamily: 'LexendDeca',
               fontSize: 5 * SizeConfig.textMultiplier,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w900,
             ),
           ),
           content: Text(
             'User tried to login didn\'t match.',
-            style: GoogleFonts.lexendDeca(
+            style: TextStyle(
+              fontFamily: 'LexendDeca',
               fontSize: 3 * SizeConfig.textMultiplier,
+              fontWeight: FontWeight.w900,
             ),
           ),
           actions: <Widget>[
@@ -60,8 +61,10 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
               },
               child: Text(
                 'OK',
-                style: GoogleFonts.lexendDeca(
+                style: TextStyle(
+                  fontFamily: 'LexendDeca',
                   fontSize: 2 * SizeConfig.textMultiplier,
+                  fontWeight: FontWeight.w900,
                 ),
               ),
             ),
@@ -89,15 +92,15 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    DocumentReference docRef = fireServer.qrColRef.doc(generatedString);
     super.initState();
     _controller = AnimationController(vsync: this);
     timerFunc();
-    DocumentReference docRef = fireServer.qrColRef.doc(generatedString);
-    docRef.snapshots().listen(
+    _listenToScans = docRef.snapshots().listen(
       (DocumentSnapshot event) async {
         if (event.exists) {
-          log('Generated String $generatedString');
-          log('Scanned String ${docRef.id.toString()}');
+          // ignore: avoid_print
+          print('Login token :$generatedString');
           if (generatedString == docRef.id.toString()) {
             GoogleSignInProvider googleProvider =
                 Provider.of<GoogleSignInProvider>(context, listen: false);
@@ -105,13 +108,17 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                 .login()
                 .whenComplete(
                   () async {
+                    _listenToScans.pause();
                     if (mAuth.currentUser != null) {
                       if (event.data()!['uid'] != mAuth.currentUser!.uid) {
                         await googleProvider.logout();
                         const CircularProgressIndicator();
                         await fireServer.qrColRef.doc(generatedString).delete();
+                        await showCode(context);
+                        _listenToScans.resume();
                         throw 'User tried to login didn\'t match';
                       } else {
+                        await _listenToScans.cancel();
                         await fireServer.qrColRef.doc(generatedString).delete();
                       }
                     }
@@ -143,6 +150,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
   void dispose() {
     _controller.dispose();
     timer.cancel();
+    _listenToScans.cancel();
     super.dispose();
   }
 
@@ -194,9 +202,9 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                   child: Row(
                     children: <Widget>[
                       Text(
-                        'Version : 2.3.3-alpha.5 ',
+                        'Version : 2.4.0-alpha ',
                         style: TextStyle(
-                          fontFamily: 'Quicksand',
+                          fontFamily: 'LexendDeca',
                           fontSize: 1 * SizeConfig.textMultiplier,
                           fontWeight: FontWeight.w900,
                           color: Colors.black,

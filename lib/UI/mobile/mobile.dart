@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:passman/Components/icons/google.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/services/authentication.dart';
@@ -38,9 +37,10 @@ class _MobileState extends State<Mobile> {
                       children: <Widget>[
                         Text(
                           'Signin with ',
-                          style: GoogleFonts.lexendDeca(
+                          style: TextStyle(
+                            fontFamily: 'LexendDeca',
                             fontSize: 2 * SizeConfig.textMultiplier,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
                         CustomPaint(

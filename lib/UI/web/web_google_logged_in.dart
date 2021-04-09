@@ -1,15 +1,20 @@
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:passman/Components/constants.dart';
-import 'package:passman/services/internet_services.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:lottie/lottie.dart';
-import 'package:passman/Components/size_config.dart';
-import 'package:passman/services/authentication.dart';
+import 'package:passman/models/location_info.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:passman/Components/constants.dart';
+import 'package:passman/Components/size_config.dart';
+import 'package:passman/models/device_info.dart';
+import 'package:passman/services/authentication.dart';
+import 'package:passman/services/internet_services.dart';
 
 class WebGoogleLoggedin extends StatefulWidget {
   @override
@@ -19,34 +24,84 @@ class WebGoogleLoggedin extends StatefulWidget {
 class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   String? uuid = FirebaseAuth.instance.currentUser!.uid;
-  List<String>? webPlatform;
-  Map<String, dynamic> map = <String, dynamic>{};
   final String _url = 'https://github.com/yahu1031/passman';
+  WebBrowserInfo? browserInfo;
+  IconData? browserIcon, platformIcon;
+
   Future<void> _openGitLink() async => await canLaunch(_url)
       ? await launch(_url)
       : throw 'Could not launch $_url';
-  WebBrowserInfo? browserInfo;
-  Future<String> platformInfo() async {
+
+  Future<String?> get locationInfo async {
+    Position location = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best);
+    LocationInfo locationData = await FetchLocation()
+        .getLocationDetails(location.latitude, location.longitude);
+    return locationData.address!.village;
+  }
+
+  Future<PlatformInfo> get platformInfo async {
     browserInfo = await deviceInfo.webBrowserInfo;
     String? browserPlat = browserInfo!.platform;
-    switch (browserPlat) {
+    List<String?> brow = browserInfo!.userAgent.split(' ');
+    String? brow1 = brow[brow.length - 1]!.replaceAll(RegExp(r'[0-9\/\.]'), '');
+    String? brow2 = brow[brow.length - 2]!.replaceAll(RegExp(r'[0-9\/\.]'), '');
+    String? brow3 = brow[brow.length - 3]!.replaceAll(RegExp(r'[0-9\/\.]'), '');
+    String? browser;
+    if (brow3.contains(RegExp(r'[\(\)]'))) {
+      if (brow2.contains('Version')) {
+        if (brow1.contains('Safari')) {
+          browser = 'Safari';
+          browserIcon = Iconsdata.safari;
+        }
+      } else if (brow2.contains('Chrome')) {
+        if (brow1.contains('Safari')) {
+          browser = 'Chrome';
+          browserIcon = Iconsdata.chrome;
+        }
+      } else if (brow2.contains('Gecko')) {
+        if (brow1.contains('Firefox')) {
+          browser = 'Firefox';
+          browserIcon = Iconsdata.firefox;
+        }
+      }
+    } else if (brow3.contains('Chrome')) {
+      if (brow2.contains('Safari')) {
+        if (brow1.contains('Edg')) {
+          browser = 'Edge';
+          browserIcon = Iconsdata.edge;
+        } else if (brow1.contains('OPR')) {
+          browser = 'Opera';
+          browserIcon = Iconsdata.opera;
+        }
+      }
+    }
+    switch (browserPlat.toLowerCase()) {
       case 'win32':
-        return 'Windows';
+        return PlatformInfo(os: 'Windows', browser: browser!);
+      case 'macintel':
+        platformIcon = Iconsdata.mac;
+        return PlatformInfo(os: 'Macos', browser: browser!);
       default:
-        return 'Unix';
+        platformIcon = Iconsdata.linux;
+        return PlatformInfo(os: 'Unix', browser: browser!);
     }
   }
 
   @override
   void initState() {
     super.initState();
+
+    GoogleSignInProvider provider =
+        Provider.of<GoogleSignInProvider>(context, listen: false);
     fireServer.userDataColRef
         .doc(uuid)
         .snapshots()
         .listen((DocumentSnapshot event) async {
       if (fireServer.mAuth.currentUser != null) {
         String? ipAddress = await FetchIP.getIP();
-        String? loggedInPlatform = await platformInfo();
+        String? area = await locationInfo;
+        PlatformInfo loggedInPlatform = await platformInfo;
         if (event.exists) {
           if (event.data()!['ip'] == 'No records' ||
               event.data()!['logged_in_time'] == 'No records' ||
@@ -55,16 +110,21 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
               await fireServer.userDataColRef.doc(uuid).update(
                 <String, dynamic>{
                   'web_login': true,
-                  'platform': loggedInPlatform,
+                  'platform': loggedInPlatform.os,
+                  'browser': loggedInPlatform.browser,
                   'ip': ipAddress,
+                  'location': area,
                   'logged_in_time': Timestamp.now()
                 },
               ).catchError((dynamic onError) {
+                provider.logout();
                 throw 'Update catch error: ${onError.toString()}';
               }).onError((Object? error, StackTrace stackTrace) {
+                provider.logout();
                 throw 'Update on error: ${error.toString()}';
               });
             } catch (err) {
+              await provider.logout();
               throw 'Update try catch error: ${err.toString()}';
             }
           }
@@ -93,9 +153,9 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Version : 2.3.3-alpha.5 ',
+                        'Version : 2.4.0-alpha ',
                         style: TextStyle(
-                          fontFamily: 'Quicksand',
+                          fontFamily: 'LexendDeca',
                           fontSize: 1 * SizeConfig.textMultiplier,
                           fontWeight: FontWeight.w900,
                           color: Colors.black,
@@ -143,7 +203,9 @@ Log out as ${fireServer.mAuth.currentUser!.displayName.toString().toUpperCase()}
                   <String, dynamic>{
                     'web_login': false,
                     'platform': 'No records',
+                    'browser': 'No records',
                     'logged_in_time': 'No records',
+                    'location': 'No records',
                     'ip': 'No records'
                   },
                 );

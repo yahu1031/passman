@@ -80,7 +80,7 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
                       Text(
                         'Fetching your data...',
                         style: TextStyle(
-                          fontFamily: 'Quicksand',
+                          fontFamily: 'LexendDeca',
                           fontSize: 1.75 * SizeConfig.textMultiplier,
                           fontWeight: FontWeight.w700,
                           color: Colors.black,
@@ -203,7 +203,7 @@ class _DecodingResultScreen extends State<DecodingResultScreen> {
                             Text(
                               'Trying to fetch your data...',
                               style: TextStyle(
-                                fontFamily: 'Quicksand',
+                                fontFamily: 'LexendDeca',
                                 fontSize: 1.75 * SizeConfig.textMultiplier,
                                 fontWeight: FontWeight.w700,
                                 color: Colors.black,

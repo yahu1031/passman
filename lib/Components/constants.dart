@@ -48,7 +48,10 @@ class Iconsdata {
   static const IconData flashOff = IconData(0xea50, fontFamily: 'IconsFont');
   static const IconData flashOn = IconData(0xea51, fontFamily: 'IconsFont');
   static const IconData copy = IconData(0xea7a, fontFamily: 'IconsFont');
-  static const IconData ip = IconData(0xebb7, fontFamily: 'IconsFont');
+  static const IconData time = IconData(0xea70, fontFamily: 'IconsFont');
+  static const IconData ip = IconData(0xed5e, fontFamily: 'IconsFont');
+  static const IconData browser = IconData(0xebb7, fontFamily: 'IconsFont');
+  static const IconData location = IconData(0xeae7, fontFamily: 'IconsFont');
   static const IconData testtube = IconData(0xeb3a, fontFamily: 'IconsFont');
   static const IconData device = IconData(0xeb87, fontFamily: 'IconsFont');
   static const IconData logout = IconData(0xeba8, fontFamily: 'IconsFont');

@@ -97,39 +97,39 @@ class _MyAppState extends State<MyApp> {
                 switch (settings.name) {
                   case PageRoutes.routeHome:
                     page = const SplashScreen();
-                    break;
+                    return;
                   case PageRoutes.routeState:
                     page = const StateCheck();
-                    break;
+                    return;
                   case PageRoutes.routeGoogleLoggedin:
                     page = const GoogleLoggedInScreen();
-                    break;
+                    return;
                   case PageRoutes.routePassmanLogin:
                     page = const PassmanLogin();
-                    break;
+                    return;
                   case PageRoutes.routePassmanSignup:
                     page = const PassmanSignup();
-                    break;
+                    return;
                   case PageRoutes.routePassmanEncodingScreen:
                     page = EncodingResultScreen();
-                    break;
+                    return;
                   case PageRoutes.routePassmanDecodingScreen:
                     page = DecodingResultScreen(
                       ModalRoute.of(context)!.settings.arguments,
                     );
-                    break;
+                    return;
                   case PageRoutes.routeQRScan:
                     page = const QRScan();
-                    break;
+                    return;
                   case PageRoutes.routeDesktop:
                     page = const Desktop();
-                    break;
+                    return;
                   case PageRoutes.routeMobile:
                     page = const Mobile();
-                    break;
+                    return;
                   case PageRoutes.routeWeb:
                     page = const Web();
-                    break;
+                    return;
                   default:
                     return null;
                 }

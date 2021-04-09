@@ -113,6 +113,7 @@ class _EncodingResultScreen extends State<EncodingResultScreen> {
                                   borderRadius: BorderRadius.circular(7),
                                   child: Image.memory(
                                     snapshot.data!.encodedByteImage,
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
@@ -139,7 +140,7 @@ class _EncodingResultScreen extends State<EncodingResultScreen> {
                                                 : 'Error',
                                     style: TextStyle(
                                       color: Colors.black,
-                                      fontFamily: 'Quicksand',
+                                      fontFamily: 'LexendDeca',
                                       fontWeight: FontWeight.w700,
                                       fontSize: 2 * SizeConfig.textMultiplier,
                                     ),

@@ -69,7 +69,6 @@ class _PassmanSignupState extends State<PassmanSignup> {
   @override
   void dispose() {
     super.dispose();
-    _pickImage();
   }
 
   @override
@@ -183,7 +182,7 @@ class _PassmanSignupState extends State<PassmanSignup> {
                                         'Change Image',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w900,
-                                          fontFamily: 'Quicksand',
+                                          fontFamily: 'LexendDeca',
                                           fontSize:
                                               3 * SizeConfig.textMultiplier,
                                           color: Colors.blue[400],

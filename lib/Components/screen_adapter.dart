@@ -7,8 +7,8 @@ class ScreenAdapter extends StatelessWidget {
   final Widget? child;
   @override
   Widget build(BuildContext context) {
-    double preferredWidth = 600.0;
-    double contentWidth =
+    double preferredWidth = 600.0,
+        contentWidth =
         min(MediaQuery.of(context).size.width, preferredWidth);
     return Container(
       child: Center(

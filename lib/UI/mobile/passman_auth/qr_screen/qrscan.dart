@@ -8,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:passman/Components/constants.dart';
 import 'package:passman/Components/size_config.dart';
@@ -75,10 +74,8 @@ class _QRScanState extends State<QRScan> {
         .listen((DocumentSnapshot event) async {
       if (event.exists) {
         if (event.data()!['web_login'] == true) {
-          setState(() {
             isWebLoggedin = true;
             loadingState = LoadingState.SUCCESS;
-          });
         } else {
           setState(() {
             isWebLoggedin = false;
@@ -178,9 +175,10 @@ class _QRScanState extends State<QRScan> {
                       Lottie.asset(LottieFiles.network),
                       Text(
                         'Sorry, check internet connection',
-                        style: GoogleFonts.lexendDeca(
+                        style: TextStyle(
+                          fontFamily: 'LexendDeca',
                           fontSize: 2 * SizeConfig.textMultiplier,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w900,
                         ),
                       ),
                     ],

@@ -8,6 +8,7 @@
       "type": "dart",
       "flutterMode": "debug",
       "args": [
+        "--no-sound-null-safety",
         "-d",
         "chrome",
         "--web-port",

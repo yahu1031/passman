@@ -26,7 +26,7 @@ class _NotFoundScreenState extends State<NotFoundScreen> {
                   Text(
                     'Seems you are lost',
                     style: TextStyle(
-                      fontFamily: 'Quicksand',
+                      fontFamily: 'LexendDeca',
                       fontSize: 2 * SizeConfig.textMultiplier,
                       fontWeight: FontWeight.w900,
                     ),
@@ -58,7 +58,7 @@ class _NotFoundScreenState extends State<NotFoundScreen> {
                         'Go back to home',
                         style: TextStyle(
                           color: Colors.white,
-                              fontFamily: 'Quicksand',
+                              fontFamily: 'LexendDeca',
                           fontWeight: FontWeight.w500,
                           fontSize: 1 * SizeConfig.textMultiplier,
                         ),
@@ -86,9 +86,9 @@ class _NotFoundScreenState extends State<NotFoundScreen> {
               child: Row(
                 children: <Widget>[
                   Text(
-                    'Version : 2.3.3-alpha.5 ',
+                    'Version : 2.4.0-alpha ',
                     style: TextStyle(
-                      fontFamily: 'Quicksand',
+                      fontFamily: 'LexendDeca',
                       fontSize: 1 * SizeConfig.textMultiplier,
                       fontWeight: FontWeight.w900,
                       color: Colors.black,

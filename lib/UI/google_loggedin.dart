@@ -37,8 +37,10 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
           'name': name,
           'web_login': false,
           'platform': 'No records',
+          'browser': 'No records',
           'logged_in_time': 'No records',
-          'ip': 'No records'
+          'ip': 'No records',
+          'location': 'No records',
         }).onError((dynamic firestoreError, StackTrace stackTrace) {
           throw firestoreError.toString();
         }).catchError((dynamic onFirestoreError) {
@@ -50,7 +52,9 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
           'web_login': false,
           'img': 'No records',
           'platform': 'No records',
+          'browser': 'No records',
           'logged_in_time': 'No records',
+          'location': 'No records',
           'ip': 'No records'
         }).onError((dynamic firestoreError, StackTrace stackTrace) {
           throw firestoreError.toString();
@@ -114,7 +118,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
                           text: TextSpan(
                             text: 'Hello ',
                             style: TextStyle(
-                              fontFamily: 'Quicksand',
+                              fontFamily: 'LexendDeca',
                               fontSize: 2 * SizeConfig.textMultiplier,
                               color: Colors.black,
                               fontWeight: FontWeight.w700,
@@ -123,7 +127,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
                               TextSpan(
                                 text: provider.getCurrentUser().toUpperCase(),
                                 style: TextStyle(
-                                  fontFamily: 'Quicksand',
+                                  fontFamily: 'LexendDeca',
                                   fontWeight: FontWeight.w900,
                                   color: Colors.blue[400],
                                 ),
@@ -159,16 +163,19 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
                   Positioned(
                     top: 10,
                     right: 10,
-                    child: IconButton(
-                      tooltip: 'Login to Computer',
-                      icon: const Icon(
-                        Iconsdata.device,
-                        color: Colors.black,
-                      ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, PageRoutes.routeQRScan);
-                      },
-                    ),
+                    child: _userHasData
+                        ? IconButton(
+                            tooltip: 'Login to Computer',
+                            icon: const Icon(
+                              Iconsdata.device,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                  context, PageRoutes.routeQRScan);
+                            },
+                          )
+                        : const SizedBox(height: 0, width: 0),
                   ),
                   Positioned(
                     bottom: 20,
@@ -181,7 +188,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
                                 text: TextSpan(
                                   text: 'You seems new here ',
                                   style: TextStyle(
-                                    fontFamily: 'Quicksand',
+                                    fontFamily: 'LexendDeca',
                                     fontSize: 1.75 * SizeConfig.textMultiplier,
                                     color: Colors.black,
                                     fontWeight: FontWeight.w700,
@@ -190,7 +197,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
                                     TextSpan(
                                       text: 'SIGNUP',
                                       style: TextStyle(
-                                        fontFamily: 'Quicksand',
+                                        fontFamily: 'LexendDeca',
                                         fontWeight: FontWeight.bold,
                                         color: Colors.blue[400],
                                       ),
@@ -214,7 +221,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
                                 text: TextSpan(
                                   text: 'You seems old user ',
                                   style: TextStyle(
-                                    fontFamily: 'Quicksand',
+                                    fontFamily: 'LexendDeca',
                                     fontSize: 1.75 * SizeConfig.textMultiplier,
                                     color: Colors.black,
                                     fontWeight: FontWeight.w700,
@@ -223,7 +230,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
                                     TextSpan(
                                       text: 'LOGIN',
                                       style: TextStyle(
-                                        fontFamily: 'Quicksand',
+                                        fontFamily: 'LexendDeca',
                                         fontWeight: FontWeight.w900,
                                         color: Colors.blue[400],
                                       ),
@@ -247,7 +254,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
                                 text: TextSpan(
                                   text: 'Wanna change master image? ',
                                   style: TextStyle(
-                                    fontFamily: 'Quicksand',
+                                    fontFamily: 'LexendDeca',
                                     fontSize: 1.75 * SizeConfig.textMultiplier,
                                     color: Colors.black,
                                     fontWeight: FontWeight.w700,
@@ -256,7 +263,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
                                     TextSpan(
                                       text: 'CHANGE IMAGE',
                                       style: TextStyle(
-                                        fontFamily: 'Quicksand',
+                                        fontFamily: 'LexendDeca',
                                         fontWeight: FontWeight.bold,
                                         color: Colors.blue[400],
                                       ),

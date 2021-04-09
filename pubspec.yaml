@@ -2,7 +2,8 @@ name: passman
 description: Password Manager, Stores your all passwords. No one knows your
   passwords. Hide from everyone, sometimes from us and you.
 
-version: 2.3.3-alpha.5
+version: 2.4.0-alpha
+publish_to: none
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -11,7 +12,6 @@ dependencies:
   cloud_firestore: ^1.0.1
   connectivity_plus: ^1.0.0
   cupertino_icons: ^1.0.2
-  device_info: ^2.0.0
   device_info_plus: ^1.0.0
   encrypt: ^5.0.0-beta.1
   firebase_auth: ^1.0.1
@@ -20,15 +20,13 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_cache_manager: ^3.0.1
-  google_fonts: ^2.0.0
+  geolocator: ^7.0.1
   google_sign_in: ^5.0.1
   image: ^3.0.2
   image_picker: ^0.7.3
   lottie: ^1.0.1
-  network_to_file_image: ^3.0.0
   path_provider: ^2.0.1
   pedantic: ^1.11.0
-  permission_handler: ^6.1.1
   provider: ^5.0.0
   qr_code_scanner: ^0.4.0-nullsafety.0
   qr_flutter: ^4.0.0
@@ -50,9 +48,9 @@ flutter:
     - family: IconsFont
       fonts:
         - asset: assets/fonts/icons.ttf
-    - family: QuickSand
+    - family: LexendDeca
       fonts:
-        - asset: assets/fonts/Quicksand.ttf
+        - asset: assets/fonts/LexendDeca.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:

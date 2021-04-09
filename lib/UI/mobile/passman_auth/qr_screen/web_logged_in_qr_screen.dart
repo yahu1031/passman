@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:passman/Components/constants.dart';
+import 'package:passman/Components/login_details.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/models/user_data.dart';
 
@@ -13,7 +13,8 @@ class WebLoggedinQRScreen extends StatefulWidget {
 
 class _WebLoggedinQRScreenState extends State<WebLoggedinQRScreen> {
   String? uuid = FirebaseAuth.instance.currentUser!.uid;
-  String? plat;
+  String? plat, browser;
+  IconData? platformIcons, browserIcons;
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Center(
@@ -24,6 +25,29 @@ class _WebLoggedinQRScreenState extends State<WebLoggedinQRScreen> {
                 if (snapshot.hasData) {
                   UserData userData = UserData.fromDocument(snapshot.data!);
                   plat = userData.platform!;
+                  browser = userData.platform!;
+                  List<String>? time =
+                      userData.logged_in_time!.toDate().toString().split(':');
+                  time.removeLast();
+                  plat!.toLowerCase() == 'windows'
+                      ? platformIcons = Iconsdata.windows
+                      : plat!.toLowerCase() == 'macos'
+                          ? platformIcons = Iconsdata.mac
+                          : plat!.toLowerCase() == 'linux'
+                              ? platformIcons = Iconsdata.linux
+                              : platformIcons = Iconsdata.linux;
+
+                  browser!.toLowerCase() == 'safari'
+                      ? browserIcons = Iconsdata.safari
+                      : browser!.toLowerCase() == 'chrome'
+                          ? browserIcons = Iconsdata.chrome
+                          : browser!.toLowerCase() == 'edge'
+                              ? browserIcons = Iconsdata.edge
+                              : browser!.toLowerCase() == 'opera'
+                                  ? browserIcons = Iconsdata.opera
+                                  : browser!.toLowerCase() == 'firefox'
+                                      ? browserIcons = Iconsdata.firefox
+                                      : browserIcons = Iconsdata.browser;
                   return Stack(
                     children: <Widget>[
                       Center(
@@ -37,13 +61,9 @@ class _WebLoggedinQRScreenState extends State<WebLoggedinQRScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Tooltip(
-                                  message: 'Windows',
+                                  message: plat!,
                                   child: Icon(
-                                    plat!.contains('window')
-                                        ? Iconsdata.windows
-                                        : plat!.contains('Macintosh')
-                                            ? Iconsdata.mac
-                                            : Iconsdata.linux,
+                                    platformIcons,
                                     color: Colors.black,
                                     size: 7 * SizeConfig.textMultiplier,
                                   ),
@@ -54,9 +74,9 @@ class _WebLoggedinQRScreenState extends State<WebLoggedinQRScreen> {
                                   size: 3 * SizeConfig.textMultiplier,
                                 ),
                                 Tooltip(
-                                  message: 'Edge',
+                                  message: browser!,
                                   child: Icon(
-                                    Iconsdata.edge,
+                                    browserIcons,
                                     color: Colors.black,
                                     size: 7 * SizeConfig.textMultiplier,
                                   ),
@@ -66,13 +86,31 @@ class _WebLoggedinQRScreenState extends State<WebLoggedinQRScreen> {
                             SizedBox(
                               height: 10 * SizeConfig.heightMultiplier,
                             ),
-                            Text(
-                              '''
-IP address : ${userData.ip!}\nplatform : ${userData.platform!}\nTime: : ${userData.logged_in_time!.toDate()}''',
-                              style: GoogleFonts.lexendDeca(
-                                fontSize: 2 * SizeConfig.textMultiplier,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              textDirection: TextDirection.ltr,
+                              children: <Widget>[
+                                LoginDetails(
+                                  userData: userData,
+                                  icon: Iconsdata.ip,
+                                  title: 'IP Address',
+                                  content: userData.ip!,
+                                ),
+                                LoginDetails(
+                                  userData: userData,
+                                  icon: Iconsdata.location,
+                                  title: 'Location',
+                                  content: userData.location!,
+                                ),
+                                LoginDetails(
+                                  userData: userData,
+                                  icon: Iconsdata.time,
+                                  title: 'Login Time',
+                                  content: time
+                                      .toString()
+                                      .replaceAll(RegExp(r'[\[\]]'), ''),
+                                ),
+                              ],
                             ),
                           ],
                         ),

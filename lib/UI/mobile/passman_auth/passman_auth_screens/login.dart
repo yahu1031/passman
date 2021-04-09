@@ -214,7 +214,7 @@ class _PassmanLoginState extends State<PassmanLogin> {
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 1.75 * SizeConfig.textMultiplier,
-                                  fontFamily: 'Quicksand',
+                                  fontFamily: 'LexendDeca',
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
