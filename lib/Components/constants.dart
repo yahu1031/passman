@@ -65,4 +65,5 @@ class Iconsdata {
   static const IconData safari = IconData(0xec23, fontFamily: 'IconsFont');
   static const IconData opera = IconData(0xec21, fontFamily: 'IconsFont');
   static const IconData github = IconData(0xec1c, fontFamily: 'IconsFont');
+  static const IconData refresh = IconData(0xeb13, fontFamily: 'IconsFont');
 }

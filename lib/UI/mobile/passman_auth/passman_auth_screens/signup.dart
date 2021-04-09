@@ -9,7 +9,7 @@ import 'package:image/image.dart' as imglib;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:passman/Components/constants.dart';
-import 'package:passman/Components/markers.dart';
+import 'package:passman/Components/icons/markers.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/models/points.dart';
 import 'package:passman/services/encode.dart';
@@ -236,7 +236,10 @@ class _PassmanSignupState extends State<PassmanSignup> {
                   Icons.arrow_back_ios_outlined,
                 ),
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.pushReplacementNamed(
+                    context,
+                    PageRoutes.routeState,
+                  );
                 },
               ),
             ),

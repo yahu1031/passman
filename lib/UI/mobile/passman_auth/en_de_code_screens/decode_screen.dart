@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:passman/Components/constants.dart';
-import 'package:passman/Components/data_card.dart';
-import 'package:passman/Components/screen_adapter.dart';
+import 'package:passman/Components/widgets/data_card.dart';
+import 'package:passman/Components/widgets/screen_adapter.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/UI/mobile/pass_not_match.dart';
 import 'package:passman/services/decode.dart';

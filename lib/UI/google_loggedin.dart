@@ -69,7 +69,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
 
   String? tempPlat;
   void _signupWithImage() {
-    Navigator.restorablePushReplacementNamed(
+    Navigator.pushNamed(
       context,
       PageRoutes.routePassmanSignup,
     );
@@ -125,7 +125,8 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
                             ),
                             children: <TextSpan>[
                               TextSpan(
-                                text: provider.getCurrentUser().toUpperCase(),
+                                text: mAuth.currentUser!.displayName!
+                                    .toUpperCase(),
                                 style: TextStyle(
                                   fontFamily: 'LexendDeca',
                                   fontWeight: FontWeight.w900,
@@ -147,14 +148,16 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
                     child: GestureDetector(
                       onDoubleTap: () => provider.logout(),
                       child: Tooltip(
-                        message: provider.getCurrentUser().toUpperCase(),
+                        message: mAuth.currentUser!.displayName!.toUpperCase(),
                         child: CircleAvatar(
-                          backgroundImage:
-                              provider.getUserImage() as ImageProvider,
+                          backgroundImage: NetworkImage(
+                            mAuth.currentUser!.photoURL.toString(),
+                          ),
                           foregroundColor: Colors.transparent,
                           backgroundColor: Colors.transparent,
-                          foregroundImage:
-                              provider.getUserImage() as ImageProvider,
+                          foregroundImage: NetworkImage(
+                            mAuth.currentUser!.photoURL.toString(),
+                          ),
                           minRadius: 6 * SizeConfig.imageSizeMultiplier,
                         ),
                       ),

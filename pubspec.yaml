@@ -2,7 +2,7 @@ name: passman
 description: Password Manager, Stores your all passwords. No one knows your
   passwords. Hide from everyone, sometimes from us and you.
 
-version: 2.4.0-alpha
+version: 2.4.0-alpha.3
 publish_to: none
 
 environment:

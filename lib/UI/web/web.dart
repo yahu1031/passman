@@ -33,52 +33,11 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
   late String generatedString, encryptedString;
   bool isPin = false, stringMatched = false, isStarted = true;
   late Timer timer;
-  Future<void> showCode(BuildContext context) async {
-    try {
-      return showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: Text(
-            'Sorry',
-            style: TextStyle(
-              fontFamily: 'LexendDeca',
-              fontSize: 5 * SizeConfig.textMultiplier,
-              fontWeight: FontWeight.w900,
-            ),
-          ),
-          content: Text(
-            'User tried to login didn\'t match.',
-            style: TextStyle(
-              fontFamily: 'LexendDeca',
-              fontSize: 3 * SizeConfig.textMultiplier,
-              fontWeight: FontWeight.w900,
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(context);
-              },
-              child: Text(
-                'OK',
-                style: TextStyle(
-                  fontFamily: 'LexendDeca',
-                  fontSize: 2 * SizeConfig.textMultiplier,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    } catch (e) {
-      throw e.toString();
-    }
-  }
 
   Future<void> _openGitLink() async => await canLaunch(_url)
       ? await launch(_url)
       : throw 'Could not launch $_url';
+
   void timerFunc() {
     generatedString = RandomNumberGenerator().randomStringGenerator(6);
     encryptedString = encryption.stringEncryption(generatedString).base64;
@@ -108,17 +67,13 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                 .login()
                 .whenComplete(
                   () async {
-                    _listenToScans.pause();
                     if (mAuth.currentUser != null) {
                       if (event.data()!['uid'] != mAuth.currentUser!.uid) {
                         await googleProvider.logout();
                         const CircularProgressIndicator();
                         await fireServer.qrColRef.doc(generatedString).delete();
-                        await showCode(context);
-                        _listenToScans.resume();
                         throw 'User tried to login didn\'t match';
                       } else {
-                        await _listenToScans.cancel();
                         await fireServer.qrColRef.doc(generatedString).delete();
                       }
                     }
@@ -202,7 +157,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                   child: Row(
                     children: <Widget>[
                       Text(
-                        'Version : 2.4.0-alpha ',
+                        'Version : 2.4.0-alpha.3 ',
                         style: TextStyle(
                           fontFamily: 'LexendDeca',
                           fontSize: 1 * SizeConfig.textMultiplier,

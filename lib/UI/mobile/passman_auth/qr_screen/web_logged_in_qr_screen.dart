@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:passman/Components/constants.dart';
-import 'package:passman/Components/login_details.dart';
+import 'package:passman/Components/widgets/login_details.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/models/user_data.dart';
 

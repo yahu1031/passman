@@ -6,7 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:passman/Components/constants.dart';
-import 'package:passman/Components/screen_adapter.dart';
+import 'package:passman/Components/widgets/screen_adapter.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/services/decode.dart';
 import 'package:passman/services/encode.dart';
@@ -210,7 +210,10 @@ class _EncodingResultScreen extends State<EncodingResultScreen> {
                   icon: const Icon(
                     Icons.arrow_back_ios_outlined,
                   ),
-                  onPressed: () => Navigator.of(context).pop(true),
+                  onPressed: () => Navigator.pushReplacementNamed(
+                    context,
+                    PageRoutes.routeState,
+                  ),
                 ),
               ),
             ],

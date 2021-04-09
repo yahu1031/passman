@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as imglib;
 import 'package:passman/Components/constants.dart';
 import 'package:passman/.dart';
-import 'package:passman/Components/markers.dart';
+import 'package:passman/Components/icons/markers.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/models/points.dart';
 import 'package:passman/services/decode.dart';

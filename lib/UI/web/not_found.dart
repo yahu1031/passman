@@ -86,7 +86,7 @@ class _NotFoundScreenState extends State<NotFoundScreen> {
               child: Row(
                 children: <Widget>[
                   Text(
-                    'Version : 2.4.0-alpha ',
+                    'Version : 2.4.0-alpha.3 ',
                     style: TextStyle(
                       fontFamily: 'LexendDeca',
                       fontSize: 1 * SizeConfig.textMultiplier,
