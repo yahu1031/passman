@@ -92,10 +92,10 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    DocumentReference docRef = fireServer.qrColRef.doc(generatedString);
     super.initState();
     _controller = AnimationController(vsync: this);
     timerFunc();
+    DocumentReference docRef = fireServer.qrColRef.doc(generatedString);
     _listenToScans = docRef.snapshots().listen(
       (DocumentSnapshot event) async {
         if (event.exists) {
