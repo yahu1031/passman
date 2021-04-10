@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:lottie/lottie.dart';
+import 'package:passman/Components/widgets/dialog.dart';
 import 'package:passman/models/location_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -27,6 +28,8 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
   final String _url = 'https://github.com/yahu1031/passman';
   WebBrowserInfo? browserInfo;
   IconData? browserIcon, platformIcon;
+  bool isDataFetched = false;
+  FireServer fireServer = FireServer();
 
   Future<void> _openGitLink() async => await canLaunch(_url)
       ? await launch(_url)
@@ -52,85 +55,105 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
       if (brow2.contains('Version')) {
         if (brow1.contains('Safari')) {
           browser = 'Safari';
-          browserIcon = Iconsdata.safari;
+          setState(() {
+            browserIcon = Iconsdata.safari;
+          });
         }
       } else if (brow2.contains('Chrome')) {
         if (brow1.contains('Safari')) {
           browser = 'Chrome';
-          browserIcon = Iconsdata.chrome;
+          setState(() {
+            browserIcon = Iconsdata.chrome;
+          });
         }
       } else if (brow2.contains('Gecko')) {
         if (brow1.contains('Firefox')) {
           browser = 'Firefox';
-          browserIcon = Iconsdata.firefox;
+          setState(() {
+            browserIcon = Iconsdata.firefox;
+          });
         }
       }
     } else if (brow3.contains('Chrome')) {
       if (brow2.contains('Safari')) {
         if (brow1.contains('Edg')) {
           browser = 'Edge';
-          browserIcon = Iconsdata.edge;
+          setState(() {
+            browserIcon = Iconsdata.edge;
+          });
         } else if (brow1.contains('OPR')) {
           browser = 'Opera';
-          browserIcon = Iconsdata.opera;
+          setState(() {
+            browserIcon = Iconsdata.opera;
+          });
         }
       }
     }
-    switch (browserPlat.toLowerCase()) {
-      case 'win32':
-        return PlatformInfo(os: 'Windows', browser: browser!);
-      case 'macintel':
-        platformIcon = Iconsdata.mac;
-        return PlatformInfo(os: 'Macos', browser: browser!);
-      default:
-        platformIcon = Iconsdata.linux;
-        return PlatformInfo(os: 'Unix', browser: browser!);
+    if (browserPlat.toLowerCase() == 'win32') {
+      return PlatformInfo(os: 'Windows', browser: browser!);
+    } else if (browserPlat.toLowerCase() == 'macintel') {
+      return PlatformInfo(os: 'Macos', browser: browser!);
+    } else {
+      return PlatformInfo(os: 'Linux', browser: browser!);
+    }
+  }
+
+  Future<void> updateDB(GoogleSignInProvider provider) async {
+    if (fireServer.mAuth.currentUser != null) {
+      try {
+      String? ipAddress = await FetchIP.getIP();
+      String? area = await locationInfo;
+      PlatformInfo loggedInPlatform = await platformInfo;
+        await fireServer.userDataColRef.doc(uuid).update(
+          <String, dynamic>{
+            'web_login': true,
+            'platform': loggedInPlatform.os,
+            'browser': loggedInPlatform.browser,
+            'ip': ipAddress,
+            'location': area,
+            'logged_in_time': Timestamp.now()
+          },
+        ).whenComplete(() {
+          if (mounted) {
+            setState(() {
+              isDataFetched = true;
+            });
+          }
+        }).catchError((dynamic onError) async {
+          await Dialogs.yesAbortDialog(context, 'Sorry', 'Wrong user');
+          if (mounted) {
+            setState(() {
+              isDataFetched = false;
+            });
+          }
+          await provider.logout();
+          throw 'Update catch error: ${onError.toString()}';
+        }).onError((Object? error, StackTrace stackTrace) async {
+          await Dialogs.yesAbortDialog(context, 'Sorry', 'Wrong user');
+          if (mounted) {
+            setState(() {
+              isDataFetched = false;
+            });
+          }
+          await provider.logout();
+          throw 'Update on error: ${error.toString()}';
+        });
+      } catch (err) {
+        await Dialogs.yesAbortDialog(context, 'Sorry', 'Wrong user');
+        await provider.logout();
+        throw 'Update try catch error: ${err.toString()}';
+      }
+    } else {
+      await fireServer.mAuth.currentUser!.reload();
     }
   }
 
   @override
   void initState() {
     super.initState();
-
     GoogleSignInProvider provider =
         Provider.of<GoogleSignInProvider>(context, listen: false);
-    fireServer.userDataColRef
-        .doc(uuid)
-        .snapshots()
-        .listen((DocumentSnapshot event) async {
-      if (fireServer.mAuth.currentUser != null) {
-        String? ipAddress = await FetchIP.getIP();
-        String? area = await locationInfo;
-        PlatformInfo loggedInPlatform = await platformInfo;
-        if (event.exists) {
-          if (event.data()!['ip'] == 'No records' ||
-              event.data()!['logged_in_time'] == 'No records' ||
-              event.data()!['platform'] == 'No records') {
-            try {
-              await fireServer.userDataColRef.doc(uuid).update(
-                <String, dynamic>{
-                  'web_login': true,
-                  'platform': loggedInPlatform.os,
-                  'browser': loggedInPlatform.browser,
-                  'ip': ipAddress,
-                  'location': area,
-                  'logged_in_time': Timestamp.now()
-                },
-              ).catchError((dynamic onError) {
-                provider.logout();
-                throw 'Update catch error: ${onError.toString()}';
-              }).onError((Object? error, StackTrace stackTrace) {
-                provider.logout();
-                throw 'Update on error: ${error.toString()}';
-              });
-            } catch (err) {
-              await provider.logout();
-              throw 'Update try catch error: ${err.toString()}';
-            }
-          }
-        }
-      }
-    });
+    updateDB(provider);
   }
 
   @override
@@ -138,7 +161,26 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
     GoogleSignInProvider provider =
         Provider.of<GoogleSignInProvider>(context, listen: false);
     return Scaffold(
-      body: Stack(
+      body: !isDataFetched
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const CircularProgressIndicator(),
+                  SizedBox(height: 5 * SizeConfig.heightMultiplier),
+                  Text(
+                    'Fetching your data...',
+                    style: TextStyle(
+                      fontFamily: 'LexendDeca',
+                      fontSize: 1.75 * SizeConfig.textMultiplier,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : Stack(
         children: <Widget>[
           Center(
             child: SingleChildScrollView(
@@ -153,7 +195,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Version : 2.4.0-alpha.3 ',
+                        'Version : 2.5.0-alpha ',
                         style: TextStyle(
                           fontFamily: 'LexendDeca',
                           fontSize: 1 * SizeConfig.textMultiplier,
@@ -192,7 +234,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
               focusColor: Colors.transparent,
               splashColor: Colors.transparent,
               tooltip: '''
-Log out as ${fireServer.mAuth.currentUser!.displayName.toString().toUpperCase()}.''',
+Log out as ${fireServer.mAuth.currentUser!.displayName!.toUpperCase()}.''',
               icon: const Icon(
                 Iconsdata.logout,
               ),
@@ -216,12 +258,17 @@ Log out as ${fireServer.mAuth.currentUser!.displayName.toString().toUpperCase()}
             top: 20,
             left: 20,
             child: Tooltip(
-              message: provider.getCurrentUser().toUpperCase(),
+              message: fireServer.mAuth.currentUser!.displayName!
+                        .toUpperCase(),
               child: CircleAvatar(
-                backgroundImage: provider.getUserImage() as ImageProvider,
+                backgroundImage: NetworkImage(
+                        fireServer.mAuth.currentUser!.photoURL!,
+                      ),
                 foregroundColor: Colors.transparent,
                 backgroundColor: Colors.transparent,
-                foregroundImage: provider.getUserImage() as ImageProvider,
+                foregroundImage: NetworkImage(
+                        fireServer.mAuth.currentUser!.photoURL!,
+                      ),
                 minRadius: 4 * SizeConfig.imageSizeMultiplier,
               ),
             ),

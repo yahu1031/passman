@@ -25,7 +25,7 @@ class _WebLoggedinQRScreenState extends State<WebLoggedinQRScreen> {
                 if (snapshot.hasData) {
                   UserData userData = UserData.fromDocument(snapshot.data!);
                   plat = userData.platform!;
-                  browser = userData.platform!;
+                  browser = userData.browser;
                   List<String>? time =
                       userData.logged_in_time!.toDate().toString().split(':');
                   time.removeLast();
@@ -108,7 +108,8 @@ class _WebLoggedinQRScreenState extends State<WebLoggedinQRScreen> {
                                   title: 'Login Time',
                                   content: time
                                       .toString()
-                                      .replaceAll(RegExp(r'[\[\]]'), ''),
+                                      .replaceAll(RegExp(r'[\[\]]'), '')
+                                      .replaceAll(', ', ':'),
                                 ),
                               ],
                             ),

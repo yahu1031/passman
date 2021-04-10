@@ -8,12 +8,10 @@
       "type": "dart",
       "flutterMode": "debug",
       "args": [
-        "--no-sound-null-safety",
         "-d",
         "chrome",
         "--web-port",
-        "1031",
-        "-v"
+        "1031"
       ]
     },
     {
@@ -21,7 +19,11 @@
       "program": "lib/main.dart",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "debug"
+      "flutterMode": "debug",
+      "args": [
+        "--web-port",
+        "1031"
+      ]
     }
   ],
   "compounds": [

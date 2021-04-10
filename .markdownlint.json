@@ -13,6 +13,7 @@
     "MD033": {
         "allowed_elements": [
             "a",
+            "b",
             "br",
             "div",
             "h1",
@@ -22,6 +23,8 @@
             "img",
             "p",
             "path",
+            "pre",
+            "span",
             "svg"
         ]
     },

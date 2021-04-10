@@ -15,30 +15,33 @@ class LoginDetails extends StatelessWidget {
   final IconData icon;
 
   @override
-  Widget build(BuildContext context) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(
-            icon,
-            color: Colors.black,
-            size: 2 * SizeConfig.textMultiplier,
+  Widget build(BuildContext context) => Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Icon(
+          icon,
+          color: Colors.black,
+          size: 2 * SizeConfig.textMultiplier,
+        ),
+        Text(
+          '$title :',
+          style: TextStyle(
+            fontFamily: 'LexendDeca',
+            fontSize: 2.25 * SizeConfig.textMultiplier,
+            fontWeight: FontWeight.w900,
           ),
-          Text(
-            '$title :',
-            style: TextStyle(
-              fontFamily: 'LexendDeca',
-              fontSize: 2 * SizeConfig.textMultiplier,
-              fontWeight: FontWeight.w900,
-            ),
+        ),
+        Text(
+          content,
+          style: TextStyle(
+            fontFamily: 'LexendDeca',
+            fontSize: 2 * SizeConfig.textMultiplier,
+            fontWeight: FontWeight.w500,
           ),
-          Text(
-            content,
-            style: TextStyle(
-              fontFamily: 'LexendDeca',
-              fontSize: 2 * SizeConfig.textMultiplier,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      );
+        ),
+      ],
+    ),
+  );
 }

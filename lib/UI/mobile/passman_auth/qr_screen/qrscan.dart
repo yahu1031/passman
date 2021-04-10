@@ -36,7 +36,7 @@ class _QRScanState extends State<QRScan> {
   ConnectivityResult _connectionStatus = ConnectivityResult.none;
   QRViewController? controller;
   String? uuid = FirebaseAuth.instance.currentUser!.uid;
-  bool isWebLoggedin = false;
+  bool isWebLoggedin = false, isLoading = false;
   FirebaseAuth mAuth = FirebaseAuth.instance;
   Future<void> initConnectivity() async {
     ConnectivityResult result;
@@ -64,6 +64,7 @@ class _QRScanState extends State<QRScan> {
   @override
   void initState() {
     loadingState = LoadingState.PENDING;
+    isLoading = false;
     super.initState();
     initConnectivity();
     _connectivitySubscription =
@@ -74,14 +75,21 @@ class _QRScanState extends State<QRScan> {
         .listen((DocumentSnapshot event) async {
       if (event.exists) {
         if (event.data()!['web_login'] == true) {
-            isWebLoggedin = true;
-            loadingState = LoadingState.SUCCESS;
+          if (mounted) {
+            setState(() {
+              isWebLoggedin = true;
+              loadingState = LoadingState.SUCCESS;
+              isLoading = false;
+            });
+          }
         } else {
-          setState(() {
-            isWebLoggedin = false;
-            loadingState = LoadingState.SUCCESS;
-          });
-          await controller?.resumeCamera();
+          if (mounted) {
+            setState(() {
+              isWebLoggedin = false;
+              loadingState = LoadingState.SUCCESS;
+              isLoading = false;
+            });
+          }
         }
       }
     });
@@ -109,7 +117,7 @@ class _QRScanState extends State<QRScan> {
             child: _connectionStatus != ConnectivityResult.none
                 ? isWebLoggedin
                     ? WebLoggedinQRScreen()
-                    : loadingState == LoadingState.LOADING
+                    : loadingState == LoadingState.LOADING || isLoading
                         ? const Center(
                             child: CircularProgressIndicator(),
                           )
@@ -194,6 +202,10 @@ class _QRScanState extends State<QRScan> {
         'flag': false,
         'logged_in_time': Timestamp.now(),
         'uid': uuid
+      }).whenComplete(() {
+        setState(() {
+          loadingState == LoadingState.SUCCESS;
+        });
       }).onError((dynamic signinError, StackTrace stackTrace) {
         throw signinError.toString();
       }).catchError((dynamic onSigninError) {
@@ -209,7 +221,12 @@ class _QRScanState extends State<QRScan> {
       this.controller = controller;
     });
     controller?.scannedDataStream.listen((Barcode scanData) async {
-      await controller.pauseCamera();
+      // await controller.pauseCamera();
+      controller.dispose();
+      setState(() {
+        loadingState == LoadingState.LOADING;
+        isLoading = true;
+      });
       await codeLogin(scanData);
     });
   }

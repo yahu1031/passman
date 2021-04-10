@@ -33,19 +33,21 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
     try {
       DocumentSnapshot checkData = await userDataDocRef.get();
       if (checkData.exists) {
-        await userDataDocRef.update(<String, dynamic>{
-          'name': name,
-          'web_login': false,
-          'platform': 'No records',
-          'browser': 'No records',
-          'logged_in_time': 'No records',
-          'ip': 'No records',
-          'location': 'No records',
-        }).onError((dynamic firestoreError, StackTrace stackTrace) {
-          throw firestoreError.toString();
-        }).catchError((dynamic onFirestoreError) {
-          throw onFirestoreError.toString();
-        });
+        if (checkData.data()!['web_login'] == false) {
+          await userDataDocRef.update(<String, dynamic>{
+            'name': name,
+            'web_login': false,
+            'platform': 'No records',
+            'browser': 'No records',
+            'logged_in_time': 'No records',
+            'ip': 'No records',
+            'location': 'No records',
+          }).onError((dynamic firestoreError, StackTrace stackTrace) {
+            throw firestoreError.toString();
+          }).catchError((dynamic onFirestoreError) {
+            throw onFirestoreError.toString();
+          });
+        }
       } else {
         await userDataDocRef.set(<String, dynamic>{
           'name': name,
@@ -83,15 +85,26 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
       checkUserDB();
     }
     String file = '${mAuth.currentUser!.uid}.png';
+
     fireServer.storageRef
         .child('UserImgData/$file')
         .getDownloadURL()
-        .then((String? value) {
-      if (mounted) {
+        .then((String? value) async {
+      DocumentSnapshot userImgData =
+          await fireServer.userDataColRef.doc(mAuth.currentUser!.uid).get();
+      if (userImgData.data()!['img'] == 'No records') {
+        if (mounted) {
+          setState(() {
+            _userHasData = false;
+          });
+        }
+      } else if (mounted) {
         setState(() {
-          value != null ? _userHasData = true : _userHasData = false;
+          _userHasData = true;
         });
       }
+    }).onError((dynamic error, StackTrace stackTrace) {
+      throw error.toString();
     });
     _loginTapGesture = TapGestureRecognizer()..onTap = _loginWithImage;
     _signupTapGesture = TapGestureRecognizer()..onTap = _signupWithImage;

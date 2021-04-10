@@ -157,7 +157,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                   child: Row(
                     children: <Widget>[
                       Text(
-                        'Version : 2.4.0-alpha.3 ',
+                        'Version : 2.5.0-alpha ',
                         style: TextStyle(
                           fontFamily: 'LexendDeca',
                           fontSize: 1 * SizeConfig.textMultiplier,
