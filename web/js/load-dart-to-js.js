@@ -48,7 +48,7 @@ if ('serviceWorker' in navigator) {
         function waitForActivation(serviceWorker) {
           serviceWorker.addEventListener('statechange', () => {
             if (serviceWorker.state == 'activated') {
-          console.log('%c version 2.5.0-alpha.', 'font-family: \'Lexend Deca\';font-weight: 300; font-size: 10px;color: green;');
+          console.log('%c version 2.5.5-alpha.', 'font-family: \'Lexend Deca\';font-weight: 300; font-size: 10px;color: green;');
               console.log('%c Installed new service worker.', 'font-family: \'Lexend Deca\';font-weight: 500; font-size: 14px;color: green;');
               loadMainDartJs();
             }
@@ -61,13 +61,13 @@ if ('serviceWorker' in navigator) {
         } else if (!reg.active.scriptURL.endsWith(serviceWorkerVersion)) {
           // When the app updates the serviceWorkerVersion changes, so we
           // need to ask the service worker to update.
-          console.log('%c version 2.5.0-alpha.', 'font-family: \'Lexend Deca\';font-weight: 300; font-size: 10px;color: green;');
+          console.log('%c version 2.5.5-alpha.', 'font-family: \'Lexend Deca\';font-weight: 300; font-size: 10px;color: green;');
           console.log('%c New service worker available.', 'font-family: \'Lexend Deca\';font-weight: 500; font-size: 14px;color: green;');
           reg.update();
           waitForActivation(reg.installing);
         } else {
           // Existing service worker is still good.
-          console.log('%c version 2.5.0-alpha.', 'font-family: \'Lexend Deca\';font-weight: 300; font-size: 10px;color: green;');
+          console.log('%c version 2.5.5-alpha.', 'font-family: \'Lexend Deca\';font-weight: 300; font-size: 10px;color: green;');
           console.log('%c Loading app from service worker.', 'font-family: \'Lexend Deca\';font-weight: 500; font-size: 14px;color: green;');
           loadMainDartJs();
         }
