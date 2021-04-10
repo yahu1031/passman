@@ -61,40 +61,67 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
           // ignore: avoid_print
           print('Login token :$generatedString');
           if (generatedString == docRef.id.toString()) {
-            GoogleSignInProvider googleProvider =
-                Provider.of<GoogleSignInProvider>(context, listen: false);
-            await googleProvider
-                .login()
-                .whenComplete(
-                  () async {
-                    if (mAuth.currentUser != null) {
-                      if (event.data()!['uid'] != mAuth.currentUser!.uid) {
-                        await googleProvider.logout();
-                        const CircularProgressIndicator();
-                        await fireServer.qrColRef.doc(generatedString).delete();
-                        throw 'User tried to login didn\'t match';
-                      } else {
-                        await fireServer.qrColRef.doc(generatedString).delete();
+            try {
+              GoogleSignInProvider googleProvider =
+                  Provider.of<GoogleSignInProvider>(context, listen: false);
+              await googleProvider
+                  .login()
+                  .whenComplete(
+                    () async {
+                      if (mAuth.currentUser != null) {
+                        if (event.data()!['uid'] != mAuth.currentUser!.uid) {
+                          await googleProvider.logout();
+                          if (!mounted) {
+                            const CircularProgressIndicator();
+                            await fireServer.qrColRef
+                                .doc(generatedString)
+                                .delete();
+                            throw 'User tried to login didn\'t match';
+                          }
+                        } else {
+                          await fireServer.qrColRef
+                              .doc(generatedString)
+                              .delete();
+                        }
                       }
-                    }
-                  },
-                )
-                .onError(
-                  (Object? error, StackTrace stackTrace) => const Scaffold(
-                    body: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                )
-                .catchError(
-                  (dynamic onError) {
-                    const Scaffold(
+                    },
+                  )
+                  .onError(
+                    (Object? error, StackTrace stackTrace) => Scaffold(
                       body: Center(
-                        child: CircularProgressIndicator(),
+                        child: Text(
+                          'User cancelled the operation',
+                          style: TextStyle(
+                            fontFamily: 'LexendDeca',
+                            fontSize: 1.75 * SizeConfig.textMultiplier,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black,
+                          ),
+                        ),
                       ),
-                    );
-                  },
-                );
+                    ),
+                  )
+                  .catchError(
+                    (dynamic onError) {
+                      Scaffold(
+                        body: Center(
+                          child: Text(
+                            'User cancelled the operation',
+                            style: TextStyle(
+                              fontFamily: 'LexendDeca',
+                              fontSize: 1.75 * SizeConfig.textMultiplier,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+            } catch (loginErr) {
+              // ignore: avoid_print
+              print(loginErr.toString());
+            }
           }
         }
       },

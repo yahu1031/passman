@@ -6,12 +6,12 @@
       "program": "lib/main.dart",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "debug",
+      "flutterMode": "release",
       "args": [
         "-d",
-        "chrome",
+        "edge",
         "--web-port",
-        "1031"
+        "1031",
       ]
     },
     {

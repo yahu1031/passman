@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:lottie/lottie.dart';
-import 'package:passman/Components/widgets/dialog.dart';
+// import 'package:passman/Components/widgets/dialog.dart';
 import 'package:passman/models/location_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -98,63 +98,108 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
     }
   }
 
-  Future<void> updateDB(GoogleSignInProvider provider) async {
-    if (fireServer.mAuth.currentUser != null) {
-      try {
-      String? ipAddress = await FetchIP.getIP();
-      String? area = await locationInfo;
-      PlatformInfo loggedInPlatform = await platformInfo;
-        await fireServer.userDataColRef.doc(uuid).update(
-          <String, dynamic>{
-            'web_login': true,
-            'platform': loggedInPlatform.os,
-            'browser': loggedInPlatform.browser,
-            'ip': ipAddress,
-            'location': area,
-            'logged_in_time': Timestamp.now()
-          },
-        ).whenComplete(() {
-          if (mounted) {
-            setState(() {
-              isDataFetched = true;
-            });
-          }
-        }).catchError((dynamic onError) async {
-          await Dialogs.yesAbortDialog(context, 'Sorry', 'Wrong user');
-          if (mounted) {
-            setState(() {
-              isDataFetched = false;
-            });
-          }
-          await provider.logout();
-          throw 'Update catch error: ${onError.toString()}';
-        }).onError((Object? error, StackTrace stackTrace) async {
-          await Dialogs.yesAbortDialog(context, 'Sorry', 'Wrong user');
-          if (mounted) {
-            setState(() {
-              isDataFetched = false;
-            });
-          }
-          await provider.logout();
-          throw 'Update on error: ${error.toString()}';
-        });
-      } catch (err) {
-        await Dialogs.yesAbortDialog(context, 'Sorry', 'Wrong user');
-        await provider.logout();
-        throw 'Update try catch error: ${err.toString()}';
-      }
-    } else {
-      await fireServer.mAuth.currentUser!.reload();
-    }
-  }
+  // Future<void> updateDB(GoogleSignInProvider provider) async {
+  //   if (fireServer.mAuth.currentUser != null) {
+  //     try {
+  //     String? ipAddress = await FetchIP.getIP();
+  //     String? area = await locationInfo;
+  //     PlatformInfo loggedInPlatform = await platformInfo;
+  //       await fireServer.userDataColRef.doc(uuid).update(
+  //         <String, dynamic>{
+  //           'web_login': true,
+  //           'platform': loggedInPlatform.os,
+  //           'browser': loggedInPlatform.browser,
+  //           'ip': ipAddress,
+  //           'location': area,
+  //           'logged_in_time': Timestamp.now()
+  //         },
+  //       ).whenComplete(() {
+  //         if (mounted) {
+  //           setState(() {
+  //             isDataFetched = true;
+  //           });
+  //         }
+  //       }).catchError((dynamic onError) async {
+  //         await Dialogs.yesAbortDialog('Sorry', 'Wrong user');
+  //         if (mounted) {
+  //           setState(() {
+  //             isDataFetched = false;
+  //           });
+  //         }
+  //         await provider.logout();
+  //         throw 'Update catch error: ${onError.toString()}';
+  //       }).onError((Object? error, StackTrace stackTrace) async {
+  //         await Dialogs.yesAbortDialog('Sorry', 'Wrong user');
+  //         if (mounted) {
+  //           setState(() {
+  //             isDataFetched = false;
+  //           });
+  //         }
+  //         await provider.logout();
+  //         throw 'Update on error: ${error.toString()}';
+  //       });
+  //     } catch (err) {
+  //       await Dialogs.yesAbortDialog('Sorry', 'Wrong user');
+  //       await provider.logout();
+  //       throw 'Update try catch error: ${err.toString()}';
+  //     }
+  //   } else {
+  //     await fireServer.mAuth.currentUser!.reload();
+  //   }
+  // }
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   GoogleSignInProvider provider =
+  //       Provider.of<GoogleSignInProvider>(context, listen: false);
+  //   updateDB(provider);
+  // }
   @override
   void initState() {
     super.initState();
+
     GoogleSignInProvider provider =
         Provider.of<GoogleSignInProvider>(context, listen: false);
-    updateDB(provider);
+    fireServer.userDataColRef
+        .doc(uuid)
+        .snapshots()
+        .listen((DocumentSnapshot event) async {
+      if (fireServer.mAuth.currentUser != null) {
+        String? ipAddress = await FetchIP.getIP();
+        String? area = await locationInfo;
+        PlatformInfo loggedInPlatform = await platformInfo;
+        if (event.exists) {
+          if (event.data()!['ip'] == 'No records' ||
+              event.data()!['logged_in_time'] == 'No records' ||
+              event.data()!['platform'] == 'No records') {
+            try {
+              await fireServer.userDataColRef.doc(uuid).update(
+                <String, dynamic>{
+                  'web_login': true,
+                  'platform': loggedInPlatform.os,
+                  'browser': loggedInPlatform.browser,
+                  'ip': ipAddress,
+                  'location': area,
+                  'logged_in_time': Timestamp.now()
+                },
+              ).catchError((dynamic onError) {
+                provider.logout();
+                throw 'Update catch error: ${onError.toString()}';
+              }).onError((Object? error, StackTrace stackTrace) {
+                provider.logout();
+                throw 'Update on error: ${error.toString()}';
+              });
+            } catch (err) {
+              await provider.logout();
+              throw 'Update try catch error: ${err.toString()}';
+            }
+          }
+        }
+      }
+    });
   }
+
 
   @override
   Widget build(BuildContext context) {

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:passman/main.dart';
 
 enum DialogActions { yes, abort }
 
 class Dialogs {
   static Future<dynamic?> yesAbortDialog(
-    BuildContext context,
     String title,
     String body,
   ) async {
     Future<DialogActions>? action = await showDialog(
-      context: context,
+      context: navigatorKey.currentContext!,
       barrierDismissible: false,
       builder: (BuildContext context) => AlertDialog(
         shape: RoundedRectangleBorder(
@@ -20,7 +20,7 @@ class Dialogs {
           TextButton(
             onPressed: () => Navigator.of(context).pop(DialogActions.abort),
             child: Text(
-              'No',
+              'OK',
               style: TextStyle(
                 fontFamily: 'LexendDeca',
                 fontWeight: FontWeight.w900,
