@@ -39,6 +39,8 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
 
   Future<String?> get locationInfo async {
     _locationData = await location.getLocation();
+    print(_locationData!.latitude!);
+    print(_locationData!.longitude!);
     LocationInfo locationData = await FetchLocation().getLocationDetails(
       _locationData!.latitude!,
       _locationData!.longitude!,
