@@ -1,7 +1,7 @@
 <h1 align="center">Password Manager</h1>
 
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-2.5.0--alpha-orange.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-2.6.0--alpha.5-orange.svg?cacheSeconds=2592000" />
   <a href="https://github.com/yahu1031/passman#readme" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-no-brightgreen.svg" />
   </a>
@@ -84,7 +84,7 @@ const String geoEncodingAPI = 'API KEY FOR locationiq.com';
     https://localhost:1031
     ```
 
-    and save them
+    and save them.
 
 > Note: Please use `--web-port 1031` as additional arguments in `flutter run` command. I have already add that in launch.json in VS Code. Users using Android studios must make a note of it.
 
@@ -114,4 +114,16 @@ This project is [MIT](https://github.com/yahu1031/passman/blob/main/LICENSE) lic
 
 ---
 
-<h2 align="center">Made with 💚</h2>
+## Change log: ##
+
+- Added Change log section in [README.md](https://github.com/yahu1031/passman/blob/main/README.md).
+
+- Fixed CI/CD failure.
+
+- Added analyzing the code feature before deploying to firebase.
+
+- Closing #7
+
+---
+
+<p align="center"><b>Coded with 💚</b></p>

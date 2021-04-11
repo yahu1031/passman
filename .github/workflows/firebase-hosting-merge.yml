@@ -22,6 +22,7 @@ jobs:
       - run: echo ${{ secrets.WEB_FIREBASE_CONFIG }} | base64 --decode > web/js/firebase-config.js
       - run: flutter clean
       - run: flutter pub get
+      - run: flutter analyze
       - run: flutter build web
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:

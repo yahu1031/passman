@@ -1,7 +1,7 @@
 <h1 align="center">Contributor Covenant Code of Conduct</h1>
 
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-2.5.0--alpha-orange.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-2.6.0--alpha.5-orange.svg?cacheSeconds=2592000" />
   <a href="https://github.com/yahu1031/passman#readme" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-no-brightgreen.svg" />
   </a>
