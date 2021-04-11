@@ -1,6 +1,5 @@
 import 'package:passman/Components/constants.dart';
 import 'package:passman/services/other.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
