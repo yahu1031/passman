@@ -12,7 +12,7 @@ import 'package:lottie/lottie.dart';
 import 'package:passman/Components/constants.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/UI/mobile/passman_auth/qr_screen/web_logged_in_qr_screen.dart';
-import 'package:passman/services/decryption.dart';
+import 'package:passman/services/en_de_cryption/decryption.dart';
 import 'package:passman/services/random.dart';
 import 'package:passman/services/utilities/enums.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';

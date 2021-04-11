@@ -1,12 +1,10 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:passman/models/location_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:passman/Components/constants.dart';
@@ -14,7 +12,6 @@ import 'package:passman/Components/size_config.dart';
 import 'package:passman/models/device_info.dart';
 import 'package:passman/services/authentication.dart';
 import 'package:passman/services/internet_services.dart';
-import 'package:location/location.dart';
 
 class WebGoogleLoggedin extends StatefulWidget {
   @override
@@ -22,86 +19,15 @@ class WebGoogleLoggedin extends StatefulWidget {
 }
 
 class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
-  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   String? uuid = FirebaseAuth.instance.currentUser!.uid;
   final String _url = 'https://github.com/yahu1031/passman';
-  WebBrowserInfo? browserInfo;
-  IconData? browserIcon, platformIcon;
+  FetchLocation fetchLocation = FetchLocation();
+  // double? _latitude, _longitude;
   bool isDataFetched = false;
-  FireServer fireServer = FireServer();
-  Location location = Location();
-
-  LocationData? _locationData;
 
   Future<void> _openGitLink() async => await canLaunch(_url)
       ? await launch(_url)
       : throw 'Could not launch $_url';
-
-  Future<String?> get locationInfo async {
-    _locationData = await location.getLocation();
-    print(_locationData!.latitude!);
-    print(_locationData!.longitude!);
-    LocationInfo locationData = await FetchLocation().getLocationDetails(
-      _locationData!.latitude!,
-      _locationData!.longitude!,
-    );
-    return locationData.address!.village;
-  }
-
-  Future<PlatformInfo> get platformInfo async {
-    browserInfo = await deviceInfo.webBrowserInfo;
-    String? browserPlat = browserInfo!.platform;
-    List<String?> brow = browserInfo!.userAgent.split(' ');
-    String? brow1 = brow[brow.length - 1]!.replaceAll(RegExp(r'[0-9\/\.]'), '');
-    String? brow2 = brow[brow.length - 2]!.replaceAll(RegExp(r'[0-9\/\.]'), '');
-    String? brow3 = brow[brow.length - 3]!.replaceAll(RegExp(r'[0-9\/\.]'), '');
-    String? browser;
-    if (brow3.contains(RegExp(r'[\(\)]'))) {
-      if (brow2.contains('Version')) {
-        if (brow1.contains('Safari')) {
-          browser = 'Safari';
-          setState(() {
-            browserIcon = Iconsdata.safari;
-          });
-        }
-      } else if (brow2.contains('Chrome')) {
-        if (brow1.contains('Safari')) {
-          browser = 'Chrome';
-          setState(() {
-            browserIcon = Iconsdata.chrome;
-          });
-        }
-      } else if (brow2.contains('Gecko')) {
-        if (brow1.contains('Firefox')) {
-          browser = 'Firefox';
-          setState(() {
-            browserIcon = Iconsdata.firefox;
-          });
-        }
-      }
-    } else if (brow3.contains('Chrome')) {
-      if (brow2.contains('Safari')) {
-        if (brow1.contains('Edg')) {
-          browser = 'Edge';
-          setState(() {
-            browserIcon = Iconsdata.edge;
-          });
-        } else if (brow1.contains('OPR')) {
-          browser = 'Opera';
-          setState(() {
-            browserIcon = Iconsdata.opera;
-          });
-        }
-      }
-    }
-    if (browserPlat.toLowerCase() == 'win32') {
-      return PlatformInfo(os: 'Windows', browser: browser!);
-    } else if (browserPlat.toLowerCase() == 'macintel') {
-      return PlatformInfo(os: 'Macos', browser: browser!);
-    } else {
-      return PlatformInfo(os: 'Linux', browser: browser!);
-    }
-  }
 
   Future<void> updateDB(GoogleSignInProvider provider) async {
     fireServer.userDataColRef
@@ -109,7 +35,26 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
         .snapshots()
         .listen((DocumentSnapshot event) async {
       if (fireServer.mAuth.currentUser != null) {
-        String? area = await locationInfo;
+        // await Dialogs.yesAbortDialog(context, 'title', '$area1', () async {
+        //   detectUserLocation(
+        //     allowInterop(
+        //       (GeolocationPosition pos) {
+        //         setState(() {
+        //           _latitude = pos.coords.latitude;
+        //           _longitude = pos.coords.longitude;
+        //         });
+        //         throw 'got locations';
+        //       },
+        //     ),
+        //   );
+        //   // ignore: avoid_print
+        //   print('$_latitude, $_longitude');
+        //   LocationInfo locationData =
+        //       await FetchLocation()
+        // .getLocationDetails(_latitude!, _longitude!);
+        //   // ignore: avoid_print
+        //   print(locationData.address!.village);
+        // });
         String? ipAddress = await FetchIP.getIP();
         PlatformInfo loggedInPlatform = await platformInfo;
         if (event.exists) {
@@ -124,7 +69,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                   'platform': loggedInPlatform.os,
                   'browser': loggedInPlatform.browser,
                   'ip': ipAddress,
-                  'location': area,
+                  'location': 'area',
                   'logged_in_time': Timestamp.now()
                 },
               ).whenComplete(() {
@@ -173,10 +118,12 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
     updateDB(provider);
   }
 
+  String? area1;
   @override
   Widget build(BuildContext context) {
     GoogleSignInProvider provider =
         Provider.of<GoogleSignInProvider>(context, listen: false);
+
     return Scaffold(
       body: !isDataFetched
           ? Center(
@@ -212,7 +159,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Text(
-                              'Version : 2.5.5-alpha ',
+                              'Version : 2.6.0-alpha ',
                               style: TextStyle(
                                 fontFamily: 'LexendDeca',
                                 fontSize: 1 * SizeConfig.textMultiplier,
@@ -234,8 +181,9 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                                 Iconsdata.github,
                                 size: 1.5 * SizeConfig.textMultiplier,
                               ),
+                              // onPressed: _openGitLink,
                               onPressed: _openGitLink,
-                            )
+                            ),
                           ],
                         ),
                       ],

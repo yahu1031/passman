@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:passman/Components/size_config.dart';
-import 'package:passman/services/encryption.dart';
+import 'package:passman/services/en_de_cryption/encryption.dart';
 import 'package:passman/services/random.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 

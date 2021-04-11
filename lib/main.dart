@@ -17,10 +17,6 @@ import 'package:passman/UI/web/web.dart';
 import 'package:passman/services/state_check.dart';
 import 'package:passman/splash_screen.dart';
 
-
-GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

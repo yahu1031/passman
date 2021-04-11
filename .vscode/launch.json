@@ -9,7 +9,7 @@
       "flutterMode": "debug",
       "args": [
         "-d",
-        "chrome",
+        "edge",
         "--web-port",
         "1031"
       ]

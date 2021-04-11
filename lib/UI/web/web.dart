@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/services/authentication.dart';
-import 'package:passman/services/encryption.dart';
+import 'package:passman/services/en_de_cryption/encryption.dart';
 import 'package:passman/services/random.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -184,7 +184,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                   child: Row(
                     children: <Widget>[
                       Text(
-                        'Version : 2.5.5-alpha ',
+                        'Version : 2.6.0-alpha ',
                         style: TextStyle(
                           fontFamily: 'LexendDeca',
                           fontSize: 1 * SizeConfig.textMultiplier,
