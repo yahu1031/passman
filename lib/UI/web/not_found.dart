@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:passman/Components/constants.dart';
 import 'package:passman/Components/size_config.dart';
+import 'package:passman/services/other.dart';
 import 'package:passman/services/state_check.dart';
 
 class NotFoundScreen extends StatefulWidget {
@@ -84,9 +85,10 @@ class _NotFoundScreenState extends State<NotFoundScreen> {
               top: 20,
               right: 20,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    'Version : 2.6.0-alpha ',
+                    'Version : 2.6.0-alpha.2 ',
                     style: TextStyle(
                       fontFamily: 'LexendDeca',
                       fontSize: 1 * SizeConfig.textMultiplier,
@@ -95,9 +97,21 @@ class _NotFoundScreenState extends State<NotFoundScreen> {
                     ),
                   ),
                   Icon(
-                    Iconsdata.github,
+                    Iconsdata.testtube,
                     color: Colors.black,
                     size: 1.5 * SizeConfig.textMultiplier,
+                  ),
+                  IconButton(
+                    splashRadius: 0.001,
+                    hoverColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    icon: Icon(
+                      Iconsdata.github,
+                      size: 1.5 * SizeConfig.textMultiplier,
+                    ),
+                    // onPressed: _openGitLink,
+                    onPressed: GitLaunch().openGitLink,
                   ),
                 ],
               ),

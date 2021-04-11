@@ -1,4 +1,5 @@
 import 'package:passman/Components/constants.dart';
+import 'package:passman/services/other.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,7 +21,6 @@ class Web extends StatefulWidget {
 }
 
 class _WebState extends State<Web> with TickerProviderStateMixin {
-  final String _url = 'https://github.com/yahu1031/passman';
   FirebaseAuth mAuth = FirebaseAuth.instance;
 
   final BoxDecoration pinPutDecoration = BoxDecoration(
@@ -33,10 +33,6 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
   late String generatedString, encryptedString;
   bool isPin = false, stringMatched = false, isStarted = true;
   late Timer timer;
-
-  Future<void> _openGitLink() async => await canLaunch(_url)
-      ? await launch(_url)
-      : throw 'Could not launch $_url';
 
   void timerFunc() {
     generatedString = RandomNumberGenerator().randomStringGenerator(6);
@@ -184,7 +180,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                   child: Row(
                     children: <Widget>[
                       Text(
-                        'Version : 2.6.0-alpha ',
+                        'Version : 2.6.0-alpha.2 ',
                         style: TextStyle(
                           fontFamily: 'LexendDeca',
                           fontSize: 1 * SizeConfig.textMultiplier,
@@ -207,7 +203,7 @@ class _WebState extends State<Web> with TickerProviderStateMixin {
                           Iconsdata.github,
                           size: 1.5 * SizeConfig.textMultiplier,
                         ),
-                        onPressed: _openGitLink,
+                        onPressed: GitLaunch().openGitLink,
                       )
                     ],
                   ),

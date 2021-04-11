@@ -5,8 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:passman/services/other.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:passman/Components/constants.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/models/device_info.dart';
@@ -20,14 +20,11 @@ class WebGoogleLoggedin extends StatefulWidget {
 
 class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
   String? uuid = FirebaseAuth.instance.currentUser!.uid;
-  final String _url = 'https://github.com/yahu1031/passman';
   FetchLocation fetchLocation = FetchLocation();
   // double? _latitude, _longitude;
   bool isDataFetched = false;
 
-  Future<void> _openGitLink() async => await canLaunch(_url)
-      ? await launch(_url)
-      : throw 'Could not launch $_url';
+
 
   Future<void> updateDB(GoogleSignInProvider provider) async {
     fireServer.userDataColRef
@@ -159,7 +156,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Text(
-                              'Version : 2.6.0-alpha ',
+                              'Version : 2.6.0-alpha.2 ',
                               style: TextStyle(
                                 fontFamily: 'LexendDeca',
                                 fontSize: 1 * SizeConfig.textMultiplier,
@@ -182,7 +179,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                                 size: 1.5 * SizeConfig.textMultiplier,
                               ),
                               // onPressed: _openGitLink,
-                              onPressed: _openGitLink,
+                              onPressed: GitLaunch().openGitLink,
                             ),
                           ],
                         ),
