@@ -1,14 +1,10 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:lottie/lottie.dart';
-import 'package:passman/Components/widgets/dialog.dart';
-import 'package:passman/models/location_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:passman/Components/constants.dart';
@@ -23,129 +19,95 @@ class WebGoogleLoggedin extends StatefulWidget {
 }
 
 class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
-  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   String? uuid = FirebaseAuth.instance.currentUser!.uid;
   final String _url = 'https://github.com/yahu1031/passman';
-  WebBrowserInfo? browserInfo;
-  IconData? browserIcon, platformIcon;
+  FetchLocation fetchLocation = FetchLocation();
+  // double? _latitude, _longitude;
   bool isDataFetched = false;
-  FireServer fireServer = FireServer();
 
   Future<void> _openGitLink() async => await canLaunch(_url)
       ? await launch(_url)
       : throw 'Could not launch $_url';
 
-  Future<String?> get locationInfo async {
-    Position location = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.best);
-    LocationInfo locationData = await FetchLocation()
-        .getLocationDetails(location.latitude, location.longitude);
-    return locationData.address!.village;
-  }
-
-  Future<PlatformInfo> get platformInfo async {
-    browserInfo = await deviceInfo.webBrowserInfo;
-    String? browserPlat = browserInfo!.platform;
-    List<String?> brow = browserInfo!.userAgent.split(' ');
-    String? brow1 = brow[brow.length - 1]!.replaceAll(RegExp(r'[0-9\/\.]'), '');
-    String? brow2 = brow[brow.length - 2]!.replaceAll(RegExp(r'[0-9\/\.]'), '');
-    String? brow3 = brow[brow.length - 3]!.replaceAll(RegExp(r'[0-9\/\.]'), '');
-    String? browser;
-    if (brow3.contains(RegExp(r'[\(\)]'))) {
-      if (brow2.contains('Version')) {
-        if (brow1.contains('Safari')) {
-          browser = 'Safari';
-          setState(() {
-            browserIcon = Iconsdata.safari;
-          });
-        }
-      } else if (brow2.contains('Chrome')) {
-        if (brow1.contains('Safari')) {
-          browser = 'Chrome';
-          setState(() {
-            browserIcon = Iconsdata.chrome;
-          });
-        }
-      } else if (brow2.contains('Gecko')) {
-        if (brow1.contains('Firefox')) {
-          browser = 'Firefox';
-          setState(() {
-            browserIcon = Iconsdata.firefox;
-          });
-        }
-      }
-    } else if (brow3.contains('Chrome')) {
-      if (brow2.contains('Safari')) {
-        if (brow1.contains('Edg')) {
-          browser = 'Edge';
-          setState(() {
-            browserIcon = Iconsdata.edge;
-          });
-        } else if (brow1.contains('OPR')) {
-          browser = 'Opera';
-          setState(() {
-            browserIcon = Iconsdata.opera;
-          });
-        }
-      }
-    }
-    if (browserPlat.toLowerCase() == 'win32') {
-      return PlatformInfo(os: 'Windows', browser: browser!);
-    } else if (browserPlat.toLowerCase() == 'macintel') {
-      return PlatformInfo(os: 'Macos', browser: browser!);
-    } else {
-      return PlatformInfo(os: 'Linux', browser: browser!);
-    }
-  }
-
   Future<void> updateDB(GoogleSignInProvider provider) async {
-    if (fireServer.mAuth.currentUser != null) {
-      try {
-      String? ipAddress = await FetchIP.getIP();
-      String? area = await locationInfo;
-      PlatformInfo loggedInPlatform = await platformInfo;
-        await fireServer.userDataColRef.doc(uuid).update(
-          <String, dynamic>{
-            'web_login': true,
-            'platform': loggedInPlatform.os,
-            'browser': loggedInPlatform.browser,
-            'ip': ipAddress,
-            'location': area,
-            'logged_in_time': Timestamp.now()
-          },
-        ).whenComplete(() {
-          if (mounted) {
-            setState(() {
-              isDataFetched = true;
-            });
+    fireServer.userDataColRef
+        .doc(uuid)
+        .snapshots()
+        .listen((DocumentSnapshot event) async {
+      if (fireServer.mAuth.currentUser != null) {
+        // await Dialogs.yesAbortDialog(context, 'title', '$area1', () async {
+        //   detectUserLocation(
+        //     allowInterop(
+        //       (GeolocationPosition pos) {
+        //         setState(() {
+        //           _latitude = pos.coords.latitude;
+        //           _longitude = pos.coords.longitude;
+        //         });
+        //         throw 'got locations';
+        //       },
+        //     ),
+        //   );
+        //   // ignore: avoid_print
+        //   print('$_latitude, $_longitude');
+        //   LocationInfo locationData =
+        //       await FetchLocation()
+        // .getLocationDetails(_latitude!, _longitude!);
+        //   // ignore: avoid_print
+        //   print(locationData.address!.village);
+        // });
+        String? ipAddress = await FetchIP.getIP();
+        PlatformInfo loggedInPlatform = await platformInfo;
+        if (event.exists) {
+          if (event.data()!['ip'] == 'No records' ||
+              event.data()!['logged_in_time'] == 'No records' ||
+              event.data()!['web_login'] == false ||
+              event.data()!['platform'] == 'No records') {
+            try {
+              await fireServer.userDataColRef.doc(uuid).update(
+                <String, dynamic>{
+                  'web_login': true,
+                  'platform': loggedInPlatform.os,
+                  'browser': loggedInPlatform.browser,
+                  'ip': ipAddress,
+                  'location': 'area',
+                  'logged_in_time': Timestamp.now()
+                },
+              ).whenComplete(() {
+                if (mounted) {
+                  setState(() {
+                    isDataFetched = true;
+                  });
+                }
+              }).catchError((dynamic onError) {
+                if (mounted) {
+                  setState(() {
+                    isDataFetched = false;
+                  });
+                }
+                provider.logout();
+                throw 'Update catch error: ${onError.toString()}';
+              }).onError((Object? error, StackTrace stackTrace) {
+                if (mounted) {
+                  setState(() {
+                    isDataFetched = false;
+                  });
+                }
+                provider.logout();
+                throw 'Update on error: ${error.toString()}';
+              });
+            } catch (err) {
+              if (mounted) {
+                setState(() {
+                  isDataFetched = false;
+                });
+              }
+              await provider.logout();
+              throw 'Update try catch error: ${err.toString()}';
+            }
           }
-        }).catchError((dynamic onError) async {
-          await Dialogs.yesAbortDialog(context, 'Sorry', 'Wrong user');
-          if (mounted) {
-            setState(() {
-              isDataFetched = false;
-            });
-          }
-          await provider.logout();
-          throw 'Update catch error: ${onError.toString()}';
-        }).onError((Object? error, StackTrace stackTrace) async {
-          await Dialogs.yesAbortDialog(context, 'Sorry', 'Wrong user');
-          if (mounted) {
-            setState(() {
-              isDataFetched = false;
-            });
-          }
-          await provider.logout();
-          throw 'Update on error: ${error.toString()}';
-        });
-      } catch (err) {
-        await Dialogs.yesAbortDialog(context, 'Sorry', 'Wrong user');
-        await provider.logout();
-        throw 'Update try catch error: ${err.toString()}';
+        }
       }
-    } else {
-      await fireServer.mAuth.currentUser!.reload();
-    }
+    });
   }
 
   @override
@@ -156,10 +118,12 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
     updateDB(provider);
   }
 
+  String? area1;
   @override
   Widget build(BuildContext context) {
     GoogleSignInProvider provider =
         Provider.of<GoogleSignInProvider>(context, listen: false);
+
     return Scaffold(
       body: !isDataFetched
           ? Center(
@@ -181,100 +145,101 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
               ),
             )
           : Stack(
-        children: <Widget>[
-          Center(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Lottie.asset(
-                    LottieFiles.google,
-                    height: 30 * SizeConfig.heightMultiplier,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Version : 2.5.0-alpha ',
-                        style: TextStyle(
-                          fontFamily: 'LexendDeca',
-                          fontSize: 1 * SizeConfig.textMultiplier,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.black,
+              children: <Widget>[
+                Center(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Lottie.asset(
+                          LottieFiles.google,
+                          height: 30 * SizeConfig.heightMultiplier,
                         ),
-                      ),
-                      Icon(
-                        Iconsdata.testtube,
-                        color: Colors.black,
-                        size: 1.5 * SizeConfig.textMultiplier,
-                      ),
-                      IconButton(
-                        splashRadius: 0.001,
-                        hoverColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        icon: Icon(
-                          Iconsdata.github,
-                          size: 1.5 * SizeConfig.textMultiplier,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'Version : 2.6.0-alpha ',
+                              style: TextStyle(
+                                fontFamily: 'LexendDeca',
+                                fontSize: 1 * SizeConfig.textMultiplier,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.black,
+                              ),
+                            ),
+                            Icon(
+                              Iconsdata.testtube,
+                              color: Colors.black,
+                              size: 1.5 * SizeConfig.textMultiplier,
+                            ),
+                            IconButton(
+                              splashRadius: 0.001,
+                              hoverColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              splashColor: Colors.transparent,
+                              icon: Icon(
+                                Iconsdata.github,
+                                size: 1.5 * SizeConfig.textMultiplier,
+                              ),
+                              // onPressed: _openGitLink,
+                              onPressed: _openGitLink,
+                            ),
+                          ],
                         ),
-                        onPressed: _openGitLink,
-                      )
-                    ],
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            top: 20,
-            right: 20,
-            child: IconButton(
-              splashRadius: 0.001,
-              hoverColor: Colors.transparent,
-              focusColor: Colors.transparent,
-              splashColor: Colors.transparent,
-              tooltip: '''
+                ),
+                Positioned(
+                  top: 20,
+                  right: 20,
+                  child: IconButton(
+                    splashRadius: 0.001,
+                    hoverColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    tooltip: '''
 Log out as ${fireServer.mAuth.currentUser!.displayName!.toUpperCase()}.''',
-              icon: const Icon(
-                Iconsdata.logout,
-              ),
-              onPressed: () async {
-                String? userUID = fireServer.mAuth.currentUser!.uid;
-                await provider.logout();
-                await fireServer.userDataColRef.doc(userUID).update(
-                  <String, dynamic>{
-                    'web_login': false,
-                    'platform': 'No records',
-                    'browser': 'No records',
-                    'logged_in_time': 'No records',
-                    'location': 'No records',
-                    'ip': 'No records'
-                  },
-                );
-              },
-            ),
-          ),
-          Positioned(
-            top: 20,
-            left: 20,
-            child: Tooltip(
-              message: fireServer.mAuth.currentUser!.displayName!
+                    icon: const Icon(
+                      Iconsdata.logout,
+                    ),
+                    onPressed: () async {
+                      String? userUID = fireServer.mAuth.currentUser!.uid;
+                      await provider.logout();
+                      await fireServer.userDataColRef.doc(userUID).update(
+                        <String, dynamic>{
+                          'web_login': false,
+                          'platform': 'No records',
+                          'browser': 'No records',
+                          'logged_in_time': 'No records',
+                          'location': 'No records',
+                          'ip': 'No records'
+                        },
+                      );
+                    },
+                  ),
+                ),
+                Positioned(
+                  top: 20,
+                  left: 20,
+                  child: Tooltip(
+                    message: fireServer.mAuth.currentUser!.displayName!
                         .toUpperCase(),
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(
                         fireServer.mAuth.currentUser!.photoURL!,
                       ),
-                foregroundColor: Colors.transparent,
-                backgroundColor: Colors.transparent,
-                foregroundImage: NetworkImage(
+                      foregroundColor: Colors.transparent,
+                      backgroundColor: Colors.transparent,
+                      foregroundImage: NetworkImage(
                         fireServer.mAuth.currentUser!.photoURL!,
                       ),
-                minRadius: 4 * SizeConfig.imageSizeMultiplier,
-              ),
+                      minRadius: 4 * SizeConfig.imageSizeMultiplier,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }

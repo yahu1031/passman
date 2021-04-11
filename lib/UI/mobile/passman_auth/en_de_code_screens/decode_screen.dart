@@ -5,9 +5,9 @@ import 'package:passman/Components/widgets/data_card.dart';
 import 'package:passman/Components/widgets/screen_adapter.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/UI/mobile/pass_not_match.dart';
-import 'package:passman/services/decode.dart';
-import 'package:passman/services/decryption.dart';
-import 'package:passman/services/encryption.dart';
+import 'package:passman/services/en_de_cryption/decode.dart';
+import 'package:passman/services/en_de_cryption/decryption.dart';
+import 'package:passman/services/en_de_cryption/encryption.dart';
 
 class DecodingResultScreen extends StatefulWidget {
   DecodingResultScreen(this.decodeResultData);

@@ -8,8 +8,8 @@ import 'package:lottie/lottie.dart';
 import 'package:passman/Components/constants.dart';
 import 'package:passman/Components/widgets/screen_adapter.dart';
 import 'package:passman/Components/size_config.dart';
-import 'package:passman/services/decode.dart';
-import 'package:passman/services/encode.dart';
+import 'package:passman/services/en_de_cryption/decode.dart';
+import 'package:passman/services/en_de_cryption/encode.dart';
 import 'package:passman/services/utilities/enums.dart';
 
 class EncodingResultScreen extends StatefulWidget {
