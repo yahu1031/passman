@@ -228,7 +228,8 @@ class _PassmanLoginState extends State<PassmanLogin> {
                   Icons.arrow_back_ios_outlined,
                 ),
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.pushReplacementNamed(
+                      context, PageRoutes.routeState);
                 },
               ),
             ),

@@ -23,6 +23,7 @@ dependencies:
   image: ^3.0.2
   image_picker: ^0.7.3
   js: ^0.6.3
+  location: ^4.1.1
   lottie: ^1.0.1
   pedantic: ^1.11.0
   provider: ^5.0.0

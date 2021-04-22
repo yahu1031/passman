@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:location/location.dart';
+import 'package:passman/models/location_info.dart';
 import 'package:passman/services/other.dart';
 import 'package:provider/provider.dart';
 import 'package:passman/Components/constants.dart';
@@ -21,40 +23,46 @@ class WebGoogleLoggedin extends StatefulWidget {
 class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
   String? uuid = FirebaseAuth.instance.currentUser!.uid;
   FetchLocation fetchLocation = FetchLocation();
-  // double? _latitude, _longitude;
   bool isDataFetched = false;
-
-
+  late String area;
 
   Future<void> updateDB(GoogleSignInProvider provider) async {
+    Location location = Location();
     fireServer.userDataColRef
         .doc(uuid)
         .snapshots()
         .listen((DocumentSnapshot event) async {
       if (fireServer.mAuth.currentUser != null) {
-        // await Dialogs.yesAbortDialog(context, 'title', '$area1', () async {
-        //   detectUserLocation(
-        //     allowInterop(
-        //       (GeolocationPosition pos) {
-        //         setState(() {
-        //           _latitude = pos.coords.latitude;
-        //           _longitude = pos.coords.longitude;
-        //         });
-        //         throw 'got locations';
-        //       },
-        //     ),
-        //   );
-        //   // ignore: avoid_print
-        //   print('$_latitude, $_longitude');
-        //   LocationInfo locationData =
-        //       await FetchLocation()
-        // .getLocationDetails(_latitude!, _longitude!);
-        //   // ignore: avoid_print
-        //   print(locationData.address!.village);
-        // });
+        bool serviceEnabled = await location.serviceEnabled();
+        if (!serviceEnabled) {
+          serviceEnabled = await location.requestService();
+          if (!serviceEnabled) return;
+        } else {
+          PermissionStatus _permissionGranted = await location.hasPermission();
+          if (_permissionGranted == PermissionStatus.granted) {
+            LocationData _location = await location.getLocation();
+            LocationInfo locationData = await FetchLocation()
+                .getLocationDetails(_location.latitude!, _location.longitude!);
+            debugPrint(locationData.address!.village);
+            setState(() {
+              area = locationData.address!.village!;
+            });
+          } else {
+            _permissionGranted = await location.requestPermission();
+          }
+        }
         String? ipAddress = await FetchIP.getIP();
         PlatformInfo loggedInPlatform = await platformInfo;
         if (event.exists) {
+          debugPrint(
+            DateTime.now().isAfter(
+              event.data()!['logged_in_time'].toDate().add(
+                    const Duration(
+                      minutes: 30,
+                    ),
+                  ),
+            ).toString()
+          );
           if (event.data()!['ip'] == 'No records' ||
               event.data()!['logged_in_time'] == 'No records' ||
               event.data()!['web_login'] == false ||
@@ -66,7 +74,7 @@ class _WebGoogleLoggedinState extends State<WebGoogleLoggedin> {
                   'platform': loggedInPlatform.os,
                   'browser': loggedInPlatform.browser,
                   'ip': ipAddress,
-                  'location': 'area',
+                  'location': area,
                   'logged_in_time': Timestamp.now()
                 },
               ).whenComplete(() {

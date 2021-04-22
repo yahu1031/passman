@@ -3,7 +3,6 @@ import 'package:lottie/lottie.dart';
 import 'package:passman/Components/constants.dart';
 import 'package:passman/Components/size_config.dart';
 import 'package:passman/services/other.dart';
-import 'package:passman/services/state_check.dart';
 
 class NotFoundScreen extends StatefulWidget {
   NotFoundScreen({Key? key}) : super(key: key);
@@ -45,11 +44,9 @@ class _NotFoundScreenState extends State<NotFoundScreen> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.pushReplacement(
+                      Navigator.pushReplacementNamed(
                         context,
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) => const StateCheck(),
-                        ),
+                        PageRoutes.routeState,
                       );
                     },
                     child: Padding(

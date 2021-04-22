@@ -22,7 +22,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
   bool _userHasData = false;
 
   void _loginWithImage() {
-    Navigator.pushNamed(context, PageRoutes.routePassmanLogin);
+    Navigator.pushReplacementNamed(context, PageRoutes.routePassmanLogin);
   }
 
   Future<void> checkUserDB() async {
@@ -71,7 +71,7 @@ class _GoogleLoggedInScreenState extends State<GoogleLoggedInScreen> {
 
   String? tempPlat;
   void _signupWithImage() {
-    Navigator.pushNamed(
+    Navigator.pushReplacementNamed(
       context,
       PageRoutes.routePassmanSignup,
     );

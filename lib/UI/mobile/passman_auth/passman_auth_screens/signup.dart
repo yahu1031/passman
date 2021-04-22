@@ -81,7 +81,7 @@ class _PassmanSignupState extends State<PassmanSignup> {
     Future<void> sendToEncode() async {
       EncodeRequest req =
           EncodeRequest(editableImage!, pointString, token: imgSecretPassKey);
-      await Navigator.pushNamed(
+      await Navigator.pushReplacementNamed(
           context, PageRoutes.routePassmanEncodingScreen,
           arguments: req);
     }
