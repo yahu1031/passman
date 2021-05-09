@@ -4,11 +4,23 @@
 name: Deploy to Firebase Hosting on PR
 'on': pull_request
 jobs:
-  build_and_preview:
+  build_and_deploy:
     runs-on: ubuntu-latest
-    steps:
+    steps:     
       - uses: actions/checkout@v2
-      - run: npm run build
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+      - run: echo ${{ secrets.GOOGLE_SERVICE_JSON_DEV }} | base64 --decode > android/app/google-services.json
+      - run: echo ${{ secrets.ENCRYPT_KEY_DEV }} | base64 --decode > lib/.dart
+      - run: echo ${{ secrets.WEB_FIREBASE_CONFIG_DEV }} | base64 --decode > web/js/firebase-config.js
+      - run: flutter clean
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter build web
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
