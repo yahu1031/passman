@@ -8,7 +8,7 @@
     "theme_color": "#0175C2",
     "description": "Password Manager, Stores your all passwords. No one knows your passwords 😎. Hide from everyone, sometimes from us and you.",
     "orientation": "portrait-primary",
-    "prefer_related_applications": false,
+    "prefer_related_applications": true,
     "icons": [
         {
             "src": "assets/icons/Icon-192.png",

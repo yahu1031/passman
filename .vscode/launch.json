@@ -10,6 +10,8 @@
       "args": [
         "-d",
         "edge",
+        "--web-renderer",
+        "html",
         "--web-port",
         "1031"
       ]
@@ -19,17 +21,16 @@
       "program": "lib/main.dart",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "debug",
-      "args": [
-        "--web-port",
-        "1031"
-      ]
+      "flutterMode": "debug"
     }
   ],
   "compounds": [
     {
       "name": "All Devices",
-      "configurations": ["Android", "Web"]
+      "configurations": [
+        "Web",
+        "Android"
+      ]
     }
   ]
 }

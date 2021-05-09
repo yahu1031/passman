@@ -7,7 +7,7 @@ on:
 
 jobs:
   flutter_test:
-    name: Ananlyzing v2.6.0-alpha.5
+    name: Ananlyzing v2.7.0-alpha
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -19,20 +19,20 @@ jobs:
         with:
           channel: stable
       - name: Adding google-service file
-        run: echo ${{ secrets.GOOGLE_SERVICE_JSON }} | base64 --decode > android/app/google-services.json
+        run: echo ${{ secrets.GOOGLE_SERVICE_JSON_DEV }} | base64 --decode > android/app/google-services.json
       - name: Adding sign key properties
-        run: echo ${{ secrets.KEY_PROPERTIES }} | base64 --decode > android/key.properties
+        run: echo ${{ secrets.KEY_PROPERTIES_DEV }} | base64 --decode > android/key.properties
       - name: Adding secret file
-        run: echo ${{ secrets.ENCRYPT_KEY }} | base64 --decode > lib/.dart
+        run: echo ${{ secrets.ENCRYPT_KEY_DEV }} | base64 --decode > lib/.dart
       - name: Adding firebase configuration file
-        run: echo ${{ secrets.WEB_FIREBASE_CONFIG }} | base64 --decode > web/js/firebase-config.js
+        run: echo ${{ secrets.WEB_FIREBASE_CONFIG_DEV }} | base64 --decode > web/js/firebase-config.js
       - name: Installing dependencies
         run: flutter pub get
       - name: Analyzing application code
         run: flutter analyze
 
   build-artifact:
-    name: Build Android apk - v2.6.0-alpha.5
+    name: Build Android apk - v2.7.0-alpha
     needs: [flutter_test]
     runs-on: ubuntu-latest
     steps:
@@ -51,20 +51,20 @@ jobs:
         with:
           channel: stable
       - name: Adding service files
-        run: echo ${{ secrets.GOOGLE_SERVICE_JSON }} | base64 --decode > android/app/google-services.json
+        run: echo ${{ secrets.GOOGLE_SERVICE_JSON_DEV }} | base64 --decode > android/app/google-services.json
       - name: Adding sign key properties
-        run: echo ${{ secrets.KEY_PROPERTIES }} | base64 --decode > android/key.properties
+        run: echo ${{ secrets.KEY_PROPERTIES_DEV }} | base64 --decode > android/key.properties
       - name: Adding decoder
-        run: echo ${{ secrets.ENCRYPT_KEY }} | base64 --decode > lib/.dart
+        run: echo ${{ secrets.ENCRYPT_KEY_DEV }} | base64 --decode > lib/.dart
       - name: Adding firebase configuration file
-        run: echo ${{ secrets.WEB_FIREBASE_CONFIG }} | base64 --decode > web/js/firebase-config.js
+        run: echo ${{ secrets.WEB_FIREBASE_CONFIG_DEV }} | base64 --decode > web/js/firebase-config.js
       - name: Cleaning build files
         run: flutter clean
       - name: Installing dependencies
         run: flutter pub get
-      - name: Building APK - v2.6.0-alpha.5
+      - name: Building APK - v2.7.0-alpha
         run: flutter build apk -t lib/main.dart --split-per-abi
-      - name: Releasing APK - v2.6.0-alpha.5
+      - name: Releasing APK - v2.7.0-alpha
         uses: ncipollo/release-action@v1
         with:
           artifacts: "build/app/outputs/apk/release/*.apk"

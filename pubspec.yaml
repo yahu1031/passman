@@ -1,52 +1,108 @@
 name: passman
-description: Password Manager, Stores your all passwords. No one knows your
-  passwords. Hide from everyone, sometimes from us and you.
+description: A new Flutter project.
 
-version: 2.6.0-alpha.5
+publish_to: "none"
+
+version: 2.7.0-alpha
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
-  cloud_firestore: ^1.0.1
-  connectivity_plus: ^1.0.0
-  cupertino_icons: ^1.0.2
-  device_info_plus: ^1.0.0
-  encrypt: ^5.0.0-beta.1
-  firebase_auth: ^1.0.1
-  firebase_core: ^1.0.1
-  firebase_storage: ^8.0.0
   flutter:
     sdk: flutter
+  cloud_firestore: ^1.0.7
+  device_info_plus: ^1.0.1
+  encrypt: ^5.0.0
+  firebase: ^9.0.1
+  firebase_auth: ^1.1.2
+  firebase_core: ^1.1.0
+  firebase_storage: ^8.0.5
   flutter_cache_manager: ^3.0.1
-  google_sign_in: ^5.0.1
+  google_sign_in: ^5.0.2
   image: ^3.0.2
-  image_picker: ^0.7.3
-  js: ^0.6.3
+  image_picker: ^0.7.4
+  intl: ^0.17.0
   location: ^4.1.1
   lottie: ^1.0.1
   pedantic: ^1.11.0
   provider: ^5.0.0
-  qr_code_scanner: ^0.4.0-nullsafety.0
+  qr_code_scanner: ^0.4.0
   qr_flutter: ^4.0.0
   url_launcher: ^6.0.3
+  velocity_x: ^3.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 flutter:
-
+  # Flutter properties
   uses-material-design: true
+
+  #Assets
   assets:
+
+    # Assets root directory
     - assets/
-    - assets/images/
+
+    # Assets lottie assets directory
     - assets/lottie/
+
+    # Assets images directory
+    - assets/images/
+
+    # Assets 404 assets directory
+    - assets/images/404/
+
+    # Assets logo assets directory
+    - assets/images/logo/
+
+    # Assets intro assets directory
+    - assets/images/intro/
+
+    # Assets icons assets directory
+    - assets/icons/
+
+    # Assets fonts assets directory
     - assets/fonts/
+
+    # Assets inter font directory
+    - assets/fonts/inter/
+
+  # Fonts
   fonts:
+
+    # Tabler icons font
     - family: IconsFont
       fonts:
         - asset: assets/fonts/icons.ttf
+
+    # Lexend-Deca (https://fonts.google.com/specimen/Lexend+Deca) 
     - family: LexendDeca
       fonts:
-        - asset: assets/fonts/LexendDeca.ttf
+        - asset: assets/fonts/lexendDeca.ttf
+
+    # Inter font (https://fonts.google.com/specimen/Inter)
+    - family: Inter
+      fonts:
+
+        # Black weighted font
+        - asset: assets/fonts/inter/Inter-Black.ttf
+          weight: 900
+
+        # Bold weighted font
+        - asset: assets/fonts/inter/Inter-Bold.ttf
+          weight: 800
+
+        # Semi-bold weighted font
+        - asset: assets/fonts/inter/Inter-SemiBold.ttf
+          weight: 700
+
+        # Medium weighted font
+        - asset: assets/fonts/inter/Inter-Medium.ttf
+          weight: 500
+
+        # Regular weighted font
+        - asset: assets/fonts/inter/Inter-Regular.ttf
+          weight: 500
