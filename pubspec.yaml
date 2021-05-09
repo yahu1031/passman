@@ -42,7 +42,6 @@ flutter:
 
   #Assets
   assets:
-
     # Assets root directory
     - assets/
 
@@ -72,21 +71,19 @@ flutter:
 
   # Fonts
   fonts:
-
     # Tabler icons font
     - family: IconsFont
       fonts:
         - asset: assets/fonts/icons.ttf
 
-    # Lexend-Deca (https://fonts.google.com/specimen/Lexend+Deca) 
+    # Lexend-Deca (https://fonts.google.com/specimen/Lexend+Deca)
     - family: LexendDeca
       fonts:
-        - asset: assets/fonts/lexendDeca.ttf
+        - asset: assets/fonts/LexendDeca.ttf
 
     # Inter font (https://fonts.google.com/specimen/Inter)
     - family: Inter
       fonts:
-
         # Black weighted font
         - asset: assets/fonts/inter/Inter-Black.ttf
           weight: 900
