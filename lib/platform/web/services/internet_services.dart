@@ -2,12 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:passman/.dart';
+import 'package:passman/secret.dart';
 import 'package:http/http.dart' as http;
 import 'package:passman/utils/constants.dart';
 import 'package:passman/platform/web/model/device_info.dart';
 import 'package:passman/platform/web/model/location_model.dart';
-
 
 class FetchIP {
   static Future<String?> getIP() async {

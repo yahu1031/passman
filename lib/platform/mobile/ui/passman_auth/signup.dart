@@ -12,7 +12,7 @@ import 'package:passman/platform/mobile/services/image_services/upload_img_servi
 import 'package:passman/platform/mobile/services/en_de_coding/encode.dart';
 import 'package:passman/utils/constants.dart';
 import 'package:passman/platform/mobile/components/marker.dart';
-import 'package:passman/.dart';
+import 'package:passman/secret.dart';
 
 class PassmanSignup extends StatefulWidget {
   @override
@@ -145,7 +145,7 @@ class _PassmanSignupState extends State<PassmanSignup> {
                                 height: 30,
                               ),
                               HStack(
-                                 <Widget>[
+                                <Widget>[
                                   password!.isNotEmpty
                                       ? GestureDetector(
                                           onLongPress: () {
@@ -215,8 +215,7 @@ class _PassmanSignupState extends State<PassmanSignup> {
                                           height: 49,
                                         ),
                                 ],
-                                alignment:
-                                    MainAxisAlignment.spaceBetween,
+                                alignment: MainAxisAlignment.spaceBetween,
                                 crossAlignment: CrossAxisAlignment.center,
                                 axisSize: MainAxisSize.max,
                               ),

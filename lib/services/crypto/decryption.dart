@@ -1,5 +1,5 @@
 import 'package:encrypt/encrypt.dart' as decrypt;
-import 'package:passman/.dart';
+import 'package:passman/secret.dart';
 
 Decryption decryption = Decryption();
 

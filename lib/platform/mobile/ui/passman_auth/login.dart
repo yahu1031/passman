@@ -11,7 +11,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:passman/platform/mobile/services/image_services/upload_img_services.dart';
 import 'package:image/image.dart' as imglib;
 import 'package:passman/platform/mobile/model/points.dart';
-import 'package:passman/.dart';
+import 'package:passman/secret.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class PassmanLogin extends StatefulWidget {

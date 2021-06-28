@@ -1,6 +1,6 @@
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
-import 'package:passman/.dart';
+import 'package:passman/secret.dart';
 
 final Encryption encryption = Encryption();
 
