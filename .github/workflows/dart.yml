@@ -2,8 +2,8 @@ name: Build and release applications
 
 on:
   push:
-    tags:
-    - v*
+    branches:
+      - dev
 
 jobs:
   flutter_test:
