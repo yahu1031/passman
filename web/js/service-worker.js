@@ -1,5 +1,6 @@
 var serviceWorkerVersion = null;
 var scriptLoaded = false;
+document.addEventListener('contextmenu', event => event.preventDefault());
 document.onkeydown = function (e) {
   if (event.keyCode == 123) {
     return false;
@@ -48,7 +49,7 @@ if ('serviceWorker' in navigator) {
         function waitForActivation(serviceWorker) {
           serviceWorker.addEventListener('statechange', () => {
             if (serviceWorker.state == 'activated') {
-          console.log('%c version 2.7.0-alpha.', 'font-family: \'Lexend Deca\';font-weight: 300; font-size: 10px;color: green;');
+              console.log('%c version 2.7.0-alpha.', 'font-family: \'Lexend Deca\';font-weight: 300; font-size: 10px;color: green;');
               console.log('%c Installed new service worker.', 'font-family: \'Lexend Deca\';font-weight: 500; font-size: 14px;color: green;');
               loadMainDartJs();
             }

@@ -11,7 +11,7 @@
         "-d",
         "edge",
         "--web-renderer",
-        "html",
+        "canvaskit",
         "--web-port",
         "1031"
       ]

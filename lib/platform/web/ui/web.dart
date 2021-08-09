@@ -64,9 +64,11 @@ class _WebHomeScreenState extends State<WebHomeScreen> {
             LocationInfo locationData = await FetchLocation()
                 .getLocationDetails(_location.latitude!, _location.longitude!);
             debugPrint(locationData.address!.village);
-            setState(() {
-              area = locationData.address!.village!;
-            });
+            if (mounted) {
+              setState(() {
+                area = locationData.address!.village!;
+              });
+            }
           } else {
             _permissionGranted = await location.requestPermission();
           }
