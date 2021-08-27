@@ -16,4 +16,4 @@ jobs:
       if: contains(github.event.issue.labels.*.name, 'bug')
       with:
         project: 'https://github.com/yahu1031/passman/projects/1'
-        column_name: 'test'
+        column_name: 'test123'
